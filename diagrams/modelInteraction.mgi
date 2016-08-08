@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ClassDiagram>
+    <CommunicationClass
+        name="org.intranet.elevator.model.operate.Building" x="794" y="129">
+        <Association
+            destinationClassName="org.intranet.elevator.model.Car"
+            endpointName="cars" kind="Simple"/>
+        <Association
+            destinationClassName="org.intranet.elevator.model.Floor"
+            endpointName="floors" kind="Simple"/>
+        <Communication destinationClassName="org.intranet.elevator.model.Car"/>
+        <Communication destinationClassName="org.intranet.elevator.model.Floor"/>
+        <Communication destinationClassName="org.intranet.elevator.model.FloorRequestPanel"/>
+        <Communication destinationClassName="org.intranet.elevator.model.MovableLocation"/>
+        <Communication destinationClassName="org.intranet.elevator.model.CarRequestPanel"/>
+    </CommunicationClass>
+    <CommunicationClass
+        name="org.intranet.elevator.model.CarRequestPanel.ButtonListener"
+        x="662" y="337"/>
+    <CommunicationClass name="org.intranet.elevator.model.Car.Listener"
+        x="392" y="109"/>
+    <CommunicationClass
+        name="org.intranet.elevator.model.DoorSensor.ClearEvent" x="621" y="661">
+        <Communication destinationClassName="org.intranet.elevator.model.DoorSensor"/>
+    </CommunicationClass>
+    <CommunicationClass
+        name="org.intranet.elevator.model.CarRequestPanel.Approver"
+        x="489" y="447"/>
+    <CommunicationClass name="org.intranet.elevator.model.Door" x="731" y="469">
+        <Association
+            destinationClassName="org.intranet.elevator.model.Door.Listener"
+            endpointName="priorityListeners" kind="Simple"/>
+        <Association
+            destinationClassName="org.intranet.elevator.model.Door.Listener"
+            endpointName="listeners" kind="Simple"/>
+        <Association
+            destinationClassName="org.intranet.elevator.model.Location"
+            endpointName="from" kind="Simple"/>
+        <Association
+            destinationClassName="org.intranet.elevator.model.Location"
+            endpointName="to" kind="Simple"/>
+        <Communication destinationClassName="org.intranet.elevator.model.Door.Listener"/>
+    </CommunicationClass>
+    <CommunicationClass
+        name="org.intranet.elevator.model.MovableLocation.ArrivalEvent"
+        x="221" y="346">
+        <Communication destinationClassName="org.intranet.elevator.model.MovableLocation"/>
+    </CommunicationClass>
+    <CommunicationClass name="org.intranet.elevator.model.CarEntrance"
+        x="419" y="553">
+        <Association
+            destinationClassName="org.intranet.elevator.model.Door"
+            endpointName="door" kind="Simple"/>
+        <Association
+            destinationClassName="org.intranet.elevator.model.CarEntrance.CarEntranceListener"
+            endpointName="entranceListener" kind="Simple"/>
+        <Association
+            destinationClassName="org.intranet.elevator.model.CarEntrance.DoorWaitListener"
+            endpointName="waiters" kind="Simple"/>
+        <Association
+            destinationClassName="org.intranet.elevator.model.DoorSensor"
+            endpointName="sensor" kind="Simple"/>
+        <Communication destinationClassName="org.intranet.elevator.model.CarEntrance.CarEntranceListener"/>
+        <Communication destinationClassName="org.intranet.elevator.model.Door">
+            <Point x="730" y="545"/>
+        </Communication>
+        <Communication destinationClassName="org.intranet.elevator.model.DoorSensor"/>
+        <Communication destinationClassName="org.intranet.elevator.model.CarEntrance.DoorWaitListener"/>
+    </CommunicationClass>
+    <CommunicationClass
+        name="org.intranet.elevator.model.MovableLocation" x="270" y="269">
+        <Extension destinationClassName="org.intranet.elevator.model.Location"/>
+        <Communication destinationClassName="org.intranet.elevator.model.Location"/>
+    </CommunicationClass>
+    <CommunicationClass
+        name="org.intranet.elevator.model.CarRequestPanel" x="452" y="361">
+        <Association
+            destinationClassName="org.intranet.elevator.model.CarRequestPanel.Approver"
+            endpointName="approver" kind="Simple"/>
+        <Association
+            destinationClassName="org.intranet.elevator.model.CarRequestPanel.ButtonListener"
+            endpointName="buttonListeners" kind="Simple"/>
+        <Association
+            destinationClassName="org.intranet.elevator.model.CarRequestPanel.ArrivalListener"
+            endpointName="arrivalListeners" kind="Simple"/>
+        <Communication destinationClassName="org.intranet.elevator.model.CarRequestPanel.ButtonListener"/>
+        <Communication destinationClassName="org.intranet.elevator.model.CarRequestPanel.ArrivalListener"/>
+        <Communication destinationClassName="org.intranet.elevator.model.CarRequestPanel.Approver"/>
+    </CommunicationClass>
+    <CommunicationClass name="org.intranet.elevator.model.Door.Listener"
+        x="666" y="401"/>
+    <CommunicationClass
+        name="org.intranet.elevator.model.CarEntrance.CarEntranceListener"
+        x="156" y="586"/>
+    <CommunicationClass
+        name="org.intranet.elevator.model.Door.CloseEvent" x="818" y="414">
+        <Communication destinationClassName="org.intranet.elevator.model.Door"/>
+    </CommunicationClass>
+    <CommunicationClass
+        name="org.intranet.elevator.model.FloorRequestPanel" x="143" y="48">
+        <Association
+            destinationClassName="org.intranet.elevator.model.Floor"
+            endpointName="floors" kind="Simple"/>
+        <Association
+            destinationClassName="org.intranet.elevator.model.Floor"
+            endpointName="requestedFloors" kind="Simple"/>
+        <Association
+            destinationClassName="org.intranet.elevator.model.FloorRequestPanel.Listener"
+            endpointName="listeners" kind="Simple"/>
+        <Communication destinationClassName="org.intranet.elevator.model.FloorRequestPanel.Listener"/>
+        <Communication destinationClassName="org.intranet.elevator.model.Location"/>
+    </CommunicationClass>
+    <CommunicationClass name="org.intranet.elevator.model.Location"
+        x="124" y="232"/>
+    <CommunicationClass
+        name="org.intranet.elevator.model.Door.OpenEvent" x="839" y="458">
+        <Communication destinationClassName="org.intranet.elevator.model.Door"/>
+    </CommunicationClass>
+    <CommunicationClass
+        name="org.intranet.elevator.model.FloorRequestPanel.Listener"
+        x="400" y="6"/>
+    <CommunicationClass
+        name="org.intranet.elevator.model.DoorSensor.Listener" x="748" y="662"/>
+    <CommunicationClass name="org.intranet.elevator.model.Car" x="308" y="160">
+        <Extension destinationClassName="org.intranet.elevator.model.MovableLocation"/>
+        <Association
+            destinationClassName="org.intranet.elevator.model.Car.Listener"
+            endpointName="listeners" kind="Simple"/>
+        <Association
+            destinationClassName="org.intranet.elevator.model.Floor"
+            endpointName="destination" kind="Simple"/>
+        <Association
+            destinationClassName="org.intranet.elevator.model.Floor"
+            endpointName="location" kind="Simple"/>
+        <Association
+            destinationClassName="org.intranet.elevator.model.FloorRequestPanel"
+            endpointName="panel" kind="Simple"/>
+        <Communication destinationClassName="org.intranet.elevator.model.FloorRequestPanel"/>
+        <Communication destinationClassName="org.intranet.elevator.model.Location"/>
+        <Communication destinationClassName="org.intranet.elevator.model.Car.Listener"/>
+        <Communication destinationClassName="org.intranet.elevator.model.MovableLocation"/>
+    </CommunicationClass>
+    <CommunicationClass name="org.intranet.elevator.model.Floor" x="176" y="472">
+        <Extension destinationClassName="org.intranet.elevator.model.Location"/>
+        <Association
+            destinationClassName="org.intranet.elevator.model.CarEntrance.CarEntranceListener"
+            endpointName="carEntranceListener" kind="Simple"/>
+        <Association
+            destinationClassName="org.intranet.elevator.model.CarRequestPanel"
+            endpointName="callPanel" kind="Simple"/>
+        <Association
+            destinationClassName="org.intranet.elevator.model.CarEntrance"
+            endpointName="carEntrances" kind="Simple"/>
+        <Communication destinationClassName="org.intranet.elevator.model.Door"/>
+        <Communication destinationClassName="org.intranet.elevator.model.Location"/>
+        <Communication destinationClassName="org.intranet.elevator.model.CarEntrance"/>
+        <Communication destinationClassName="org.intranet.elevator.model.CarRequestPanel"/>
+    </CommunicationClass>
+    <CommunicationClass name="org.intranet.elevator.model.DoorSensor"
+        x="642" y="579">
+        <Association
+            destinationClassName="org.intranet.elevator.model.DoorSensor.Listener"
+            endpointName="listeners" kind="Simple"/>
+        <Communication destinationClassName="org.intranet.elevator.model.DoorSensor.Listener"/>
+    </CommunicationClass>
+    <CommunicationClass
+        name="org.intranet.elevator.model.CarRequestPanel.ArrivalListener"
+        x="677" y="266"/>
+    <CommunicationClass
+        name="org.intranet.elevator.model.CarEntrance.DoorWaitListener"
+        x="287" y="660"/>
+</ClassDiagram>

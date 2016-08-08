@@ -1,0 +1,348 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ClassDiagram>
+    <Class
+        name="org.intranet.elevator.model.CarEntrance.CarEntranceListener"
+        x="583" y="186">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+    </Class>
+    <Class name="org.intranet.elevator.model.Door.CloseEvent" x="857" y="462">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+        <Communication destinationClassName="org.intranet.elevator.model.Door"/>
+    </Class>
+    <Class
+        name="org.intranet.elevator.model.CarRequestPanel.ButtonListener"
+        x="286" y="33">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+    </Class>
+    <Class name="org.intranet.elevator.model.FloorRequestPanel" x="71" y="323">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+        <Association
+            destinationClassName="org.intranet.elevator.model.Floor"
+            endpointName="floors" kind="Simple">
+            <Point x="155" y="228"/>
+        </Association>
+        <Association
+            destinationClassName="org.intranet.elevator.model.Floor"
+            endpointName="requestedFloors" kind="Simple">
+            <Point x="200" y="274"/>
+        </Association>
+        <Association
+            destinationClassName="org.intranet.elevator.model.FloorRequestPanel.Listener"
+            endpointName="listeners" kind="Simple"/>
+        <Communication destinationClassName="org.intranet.elevator.model.FloorRequestPanel.Listener"/>
+        <Communication destinationClassName="org.intranet.elevator.model.Location"/>
+    </Class>
+    <Class name="org.intranet.elevator.model.Car.Listener" x="164" y="473">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+    </Class>
+    <Class name="org.intranet.elevator.model.Location" x="499" y="280">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+    </Class>
+    <Class name="org.intranet.elevator.model.DoorSensor.ClearEvent"
+        x="830" y="-7">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+        <Communication destinationClassName="org.intranet.elevator.model.DoorSensor"/>
+    </Class>
+    <Class name="org.intranet.elevator.model.CarRequestPanel.Approver"
+        x="15" y="28">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+    </Class>
+    <Class name="org.intranet.elevator.model.Door" x="827" y="304">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+        <Association
+            destinationClassName="org.intranet.elevator.model.Door.Listener"
+            endpointName="priorityListeners" kind="Simple">
+            <Point x="947" y="212"/>
+        </Association>
+        <Association
+            destinationClassName="org.intranet.elevator.model.Door.Listener"
+            endpointName="listeners" kind="Simple">
+            <Point x="1026" y="241"/>
+        </Association>
+        <Association
+            destinationClassName="org.intranet.elevator.model.Location"
+            endpointName="from" kind="Simple">
+            <Point x="696" y="347"/>
+        </Association>
+        <Association
+            destinationClassName="org.intranet.elevator.model.Door.State"
+            endpointName="state" kind="Simple"/>
+        <Association
+            destinationClassName="org.intranet.elevator.model.Location"
+            endpointName="to" kind="Simple">
+            <Point x="680" y="304"/>
+        </Association>
+        <Communication destinationClassName="org.intranet.elevator.model.Door.Listener"/>
+    </Class>
+    <Class name="org.intranet.elevator.model.Door.State" x="971" y="341">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+    </Class>
+    <Class name="org.intranet.elevator.model.Door.OpenEvent" x="797" y="383">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+        <Communication destinationClassName="org.intranet.elevator.model.Door"/>
+    </Class>
+    <Class name="org.intranet.elevator.model.FloorRequestPanel.Listener"
+        x="29" y="404">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+    </Class>
+    <Class name="org.intranet.elevator.model.DoorSensor.Listener"
+        x="965" y="-18">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+    </Class>
+    <Class name="org.intranet.elevator.model.Car" x="300" y="464">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+        <Extension destinationClassName="org.intranet.elevator.model.MovableLocation"/>
+        <Association
+            destinationClassName="org.intranet.elevator.model.Car.Listener"
+            endpointName="listeners" kind="Simple"/>
+        <Association
+            destinationClassName="org.intranet.elevator.model.Floor"
+            endpointName="destination" kind="Simple">
+            <Point x="434" y="282"/>
+        </Association>
+        <Association
+            destinationClassName="org.intranet.elevator.model.Floor"
+            endpointName="location" kind="Simple">
+            <Point x="303" y="287"/>
+        </Association>
+        <Association
+            destinationClassName="org.intranet.elevator.model.FloorRequestPanel"
+            endpointName="panel" kind="Simple"/>
+        <Communication destinationClassName="org.intranet.elevator.model.FloorRequestPanel"/>
+        <Communication destinationClassName="org.intranet.elevator.model.Car.Listener"/>
+        <Communication destinationClassName="org.intranet.elevator.model.Location"/>
+        <Communication destinationClassName="org.intranet.elevator.model.MovableLocation"/>
+    </Class>
+    <Class name="org.intranet.elevator.model.Floor" x="271" y="180">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+        <Extension destinationClassName="org.intranet.elevator.model.Location"/>
+        <Association
+            destinationClassName="org.intranet.elevator.model.CarRequestPanel"
+            endpointName="callPanel" kind="Simple"/>
+        <Association
+            destinationClassName="org.intranet.elevator.model.CarEntrance.CarEntranceListener"
+            endpointName="carEntranceListener" kind="Simple"/>
+        <Association
+            destinationClassName="org.intranet.elevator.model.CarEntrance"
+            endpointName="carEntrances" kind="Simple"/>
+        <Communication destinationClassName="org.intranet.elevator.model.Door"/>
+        <Communication destinationClassName="org.intranet.elevator.model.CarEntrance"/>
+        <Communication destinationClassName="org.intranet.elevator.model.Location"/>
+        <Communication destinationClassName="org.intranet.elevator.model.CarRequestPanel"/>
+    </Class>
+    <Class
+        name="org.intranet.elevator.model.MovableLocation.ArrivalEvent"
+        x="496" y="535">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+        <Communication destinationClassName="org.intranet.elevator.model.MovableLocation"/>
+    </Class>
+    <Class name="org.intranet.elevator.model.DoorSensor" x="860" y="66">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+        <Association
+            destinationClassName="org.intranet.elevator.model.DoorSensor.Listener"
+            endpointName="listeners" kind="Simple"/>
+        <Association
+            destinationClassName="org.intranet.elevator.model.DoorSensor.State"
+            endpointName="state" kind="Simple"/>
+        <Communication destinationClassName="org.intranet.elevator.model.DoorSensor.Listener"/>
+    </Class>
+    <Class name="org.intranet.elevator.model.CarEntrance" x="573" y="33">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+        <Association
+            destinationClassName="org.intranet.elevator.model.Door"
+            endpointName="door" kind="Simple"/>
+        <Association
+            destinationClassName="org.intranet.elevator.model.CarEntrance.CarEntranceListener"
+            endpointName="entranceListener" kind="Simple"/>
+        <Association
+            destinationClassName="org.intranet.elevator.model.CarEntrance.DoorWaitListener"
+            endpointName="waiters" kind="Simple"/>
+        <Association
+            destinationClassName="org.intranet.elevator.model.DoorSensor"
+            endpointName="sensor" kind="Simple"/>
+        <Communication destinationClassName="org.intranet.elevator.model.CarEntrance.CarEntranceListener"/>
+        <Communication destinationClassName="org.intranet.elevator.model.Door"/>
+        <Communication destinationClassName="org.intranet.elevator.model.DoorSensor"/>
+        <Communication destinationClassName="org.intranet.elevator.model.CarEntrance.DoorWaitListener"/>
+    </Class>
+    <Class name="org.intranet.elevator.model.DoorSensor.State" x="1005" y="74">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+    </Class>
+    <Class name="org.intranet.elevator.model.MovableLocation" x="474" y="439">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+        <Extension destinationClassName="org.intranet.elevator.model.Location"/>
+        <Communication destinationClassName="org.intranet.elevator.model.Location"/>
+    </Class>
+    <Class name="org.intranet.elevator.model.CarRequestPanel" x="83" y="131">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+        <Association
+            destinationClassName="org.intranet.elevator.model.CarRequestPanel.Approver"
+            endpointName="approver" kind="Simple"/>
+        <Association
+            destinationClassName="org.intranet.elevator.model.CarRequestPanel.ButtonListener"
+            endpointName="buttonListeners" kind="Simple"/>
+        <Association
+            destinationClassName="org.intranet.elevator.model.CarRequestPanel.ArrivalListener"
+            endpointName="arrivalListeners" kind="Simple"/>
+        <Communication destinationClassName="org.intranet.elevator.model.CarRequestPanel.ButtonListener"/>
+        <Communication destinationClassName="org.intranet.elevator.model.CarRequestPanel.ArrivalListener"/>
+        <Communication destinationClassName="org.intranet.elevator.model.CarRequestPanel.Approver"/>
+    </Class>
+    <Class name="org.intranet.elevator.model.Door.Listener" x="996" y="162">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+    </Class>
+    <Class
+        name="org.intranet.elevator.model.CarRequestPanel.ArrivalListener"
+        x="151" y="27">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+    </Class>
+    <Class
+        name="org.intranet.elevator.model.CarEntrance.DoorWaitListener"
+        x="395" y="29">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+    </Class>
+</ClassDiagram>

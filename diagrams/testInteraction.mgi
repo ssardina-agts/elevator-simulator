@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ClassDiagram>
+    <CommunicationClass
+        name="org.intranet.elevator.model.operate.Building" x="88" y="39">
+        <Association
+            destinationClassName="org.intranet.elevator.model.operate.controller.Controller"
+            endpointName="metaController" kind="Simple"/>
+        <Communication destinationClassName="org.intranet.elevator.model.operate.controller.Controller"/>
+    </CommunicationClass>
+    <CommunicationClass name="org.intranet.sim.clock.Clock" x="165" y="554">
+        <Association
+            destinationClassName="org.intranet.sim.clock.Clock.Listener"
+            endpointName="listeners" kind="Simple"/>
+        <Association
+            destinationClassName="org.intranet.sim.clock.Clock.FeedbackListener"
+            endpointName="feedbackListener" kind="Simple"/>
+        <Communication destinationClassName="org.intranet.sim.clock.Clock.Listener"/>
+        <Communication destinationClassName="org.intranet.sim.clock.Clock.FeedbackListener"/>
+    </CommunicationClass>
+    <CommunicationClass
+        name="org.intranet.elevator.model.operate.controller.FloorContext"
+        x="425" y="264"/>
+    <CommunicationClass
+        name="org.intranet.elevator.model.operate.controller.Assignment"
+        x="910" y="143">
+        <Association
+            destinationClassName="org.intranet.elevator.model.operate.controller.Direction"
+            endpointName="direction" kind="Simple"/>
+        <Communication destinationClassName="org.intranet.elevator.model.operate.controller.Direction"/>
+    </CommunicationClass>
+    <CommunicationClass
+        name="org.intranet.sim.event.EventQueue.Listener" x="607" y="423"/>
+    <CommunicationClass
+        name="org.intranet.sim.event.TrackingUpdateEvent" x="899" y="498">
+        <Extension destinationClassName="org.intranet.sim.event.IncrementalUpdateEvent"/>
+        <Communication destinationClassName="org.intranet.sim.event.Event"/>
+    </CommunicationClass>
+    <CommunicationClass
+        name="org.intranet.elevator.model.operate.CarRequest" x="28" y="146">
+        <Association
+            destinationClassName="org.intranet.elevator.model.operate.controller.Controller"
+            endpointName="megaController" kind="Simple"/>
+        <Communication destinationClassName="org.intranet.elevator.model.operate.controller.Controller"/>
+    </CommunicationClass>
+    <CommunicationClass
+        name="org.intranet.sim.event.Event.EventTimeComparator" x="896" y="581">
+        <Communication destinationClassName="org.intranet.sim.event.Event"/>
+    </CommunicationClass>
+    <CommunicationClass
+        name="org.intranet.elevator.model.operate.controller.Controller"
+        x="209" y="118"/>
+    <CommunicationClass name="org.intranet.sim.event.Event" x="744" y="593"/>
+    <CommunicationClass
+        name="org.intranet.elevator.model.operate.controller.MetaController"
+        x="306" y="46">
+        <Extension destinationClassName="org.intranet.elevator.model.operate.controller.Controller"/>
+        <Association
+            destinationClassName="org.intranet.elevator.model.operate.controller.CarController"
+            endpointName="carControllers" kind="Simple"/>
+        <Communication destinationClassName="org.intranet.elevator.model.operate.controller.CarController"/>
+    </CommunicationClass>
+    <CommunicationClass
+        name="org.intranet.sim.event.IncrementalUpdateEvent" x="823" y="431">
+        <Extension destinationClassName="org.intranet.sim.event.Event"/>
+    </CommunicationClass>
+    <CommunicationClass
+        name="org.intranet.elevator.model.operate.controller.CarController"
+        x="479" y="155">
+        <Association
+            destinationClassName="org.intranet.elevator.model.operate.controller.CarAssignments"
+            endpointName="assignments" kind="Simple"/>
+        <Communication destinationClassName="org.intranet.elevator.model.operate.controller.Direction"/>
+        <Communication destinationClassName="org.intranet.elevator.model.operate.controller.FloorContext"/>
+        <Communication destinationClassName="org.intranet.elevator.model.operate.controller.CarAssignments"/>
+        <Communication destinationClassName="org.intranet.elevator.model.operate.controller.Assignment"/>
+    </CommunicationClass>
+    <CommunicationClass
+        name="org.intranet.elevator.model.operate.controller.CarAssignments"
+        x="656" y="293">
+        <Association
+            destinationClassName="org.intranet.elevator.model.operate.controller.Assignment"
+            endpointName="list" kind="Simple"/>
+        <Communication destinationClassName="org.intranet.elevator.model.operate.controller.Assignment"/>
+    </CommunicationClass>
+    <CommunicationClass
+        name="org.intranet.sim.clock.RealTimeClock.AnimationLoop"
+        x="209" y="440">
+        <Communication destinationClassName="org.intranet.sim.clock.Clock"/>
+    </CommunicationClass>
+    <CommunicationClass
+        name="org.intranet.sim.clock.Clock.FeedbackListener" x="304" y="628"/>
+    <CommunicationClass
+        name="org.intranet.elevator.model.operate.controller.Direction"
+        x="666" y="60"/>
+    <CommunicationClass name="org.intranet.sim.event.EventQueue" x="669" y="499">
+        <Association
+            destinationClassName="org.intranet.sim.event.EventQueue.Listener"
+            endpointName="listeners" kind="Simple"/>
+        <Communication destinationClassName="org.intranet.sim.event.Event"/>
+        <Communication destinationClassName="org.intranet.sim.event.EventQueue.Listener"/>
+        <Communication destinationClassName="org.intranet.sim.event.IncrementalUpdateEvent"/>
+    </CommunicationClass>
+    <CommunicationClass name="org.intranet.sim.clock.Clock.Listener"
+        x="99" y="654"/>
+    <CommunicationClass name="org.intranet.sim.clock.RealTimeClock"
+        x="15" y="485">
+        <Extension destinationClassName="org.intranet.sim.clock.Clock"/>
+        <Association
+            destinationClassName="org.intranet.sim.clock.RealTimeClock.AnimationLoop"
+            endpointName="animationLoop" kind="Simple"/>
+        <Communication destinationClassName="org.intranet.sim.clock.Clock"/>
+        <Communication destinationClassName="org.intranet.sim.clock.RealTimeClock.AnimationLoop"/>
+    </CommunicationClass>
+</ClassDiagram>

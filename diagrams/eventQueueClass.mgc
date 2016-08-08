@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ClassDiagram>
+    <Class name="org.intranet.sim.event.TrackingUpdateEvent" x="481" y="416">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+        <Extension destinationClassName="org.intranet.sim.event.IncrementalUpdateEvent"/>
+        <Communication destinationClassName="org.intranet.sim.event.Event"/>
+    </Class>
+    <Class name="org.intranet.elevator.model.DoorSensor.ClearEvent"
+        x="727" y="54">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+        <Extension destinationClassName="org.intranet.sim.event.Event"/>
+        <Communication destinationClassName="org.intranet.elevator.model.DoorSensor"/>
+    </Class>
+    <Class name="org.intranet.elevator.model.Door" x="779" y="253">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+        <Association destinationClassName="org.intranet.sim.event.Event"
+            endpointName="event" kind="Simple"/>
+        <Communication destinationClassName="org.intranet.sim.event.EventQueue"/>
+        <Communication destinationClassName="org.intranet.sim.event.TrackingUpdateEvent"/>
+    </Class>
+    <Class
+        name="org.intranet.elevator.model.MovableLocation.ArrivalEvent"
+        x="304" y="269">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+        <Extension destinationClassName="org.intranet.sim.event.TrackingUpdateEvent"/>
+        <Communication destinationClassName="org.intranet.elevator.model.MovableLocation"/>
+    </Class>
+    <Class name="org.intranet.sim.event.Event" x="505" y="109">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+    </Class>
+    <Class name="org.intranet.elevator.model.MovableLocation" x="305" y="183">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+        <Association destinationClassName="org.intranet.sim.event.Event"
+            endpointName="arrivalEvent" kind="Simple"/>
+        <Communication destinationClassName="org.intranet.sim.event.EventQueue"/>
+    </Class>
+    <Class name="org.intranet.sim.event.IncrementalUpdateEvent" x="499" y="295">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+        <Extension destinationClassName="org.intranet.sim.event.Event"/>
+    </Class>
+    <Class name="org.intranet.elevator.model.Door.CloseEvent" x="794" y="371">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+        <Extension destinationClassName="org.intranet.sim.event.TrackingUpdateEvent"/>
+        <Communication destinationClassName="org.intranet.elevator.model.Door"/>
+        <Communication destinationClassName="org.intranet.sim.event.EventQueue"/>
+        <Communication destinationClassName="org.intranet.sim.event.TrackingUpdateEvent"/>
+    </Class>
+    <Class
+        name="org.intranet.elevator.model.operate.Person.EnteringCarEvent"
+        x="365" y="559">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+        <Extension destinationClassName="org.intranet.sim.event.TrackingUpdateEvent"/>
+        <Communication destinationClassName="org.intranet.elevator.model.DoorSensor"/>
+        <Communication destinationClassName="org.intranet.sim.event.TrackingUpdateEvent"/>
+    </Class>
+    <Class name="org.intranet.elevator.model.Door.OpenEvent" x="798" y="444">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+        <Extension destinationClassName="org.intranet.sim.event.TrackingUpdateEvent"/>
+        <Communication destinationClassName="org.intranet.elevator.model.Door"/>
+        <Communication destinationClassName="org.intranet.sim.event.EventQueue"/>
+        <Communication destinationClassName="org.intranet.sim.event.TrackingUpdateEvent"/>
+    </Class>
+    <Class name="org.intranet.sim.event.EventQueue" x="143" y="27">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+        <Communication destinationClassName="org.intranet.sim.event.Event"/>
+        <Communication destinationClassName="org.intranet.sim.event.IncrementalUpdateEvent"/>
+    </Class>
+    <Class name="org.intranet.elevator.model.DoorSensor" x="612" y="1">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+        <Association destinationClassName="org.intranet.sim.event.Event"
+            endpointName="clearEvent" kind="Simple"/>
+        <Communication destinationClassName="org.intranet.sim.event.EventQueue"/>
+    </Class>
+    <Class
+        name="org.intranet.elevator.model.operate.Person.LeavingCarEvent"
+        x="623" y="573">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+        <Extension destinationClassName="org.intranet.sim.event.TrackingUpdateEvent"/>
+        <Communication destinationClassName="org.intranet.elevator.model.DoorSensor"/>
+        <Communication destinationClassName="org.intranet.sim.event.TrackingUpdateEvent"/>
+    </Class>
+</ClassDiagram>

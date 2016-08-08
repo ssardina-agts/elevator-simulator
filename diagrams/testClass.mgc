@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ClassDiagram>
+    <Class name="org.intranet.elevator.model.operate.Building" x="545" y="482">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+        <Association
+            destinationClassName="org.intranet.elevator.model.Car"
+            endpointName="cars" kind="Simple"/>
+        <Association
+            destinationClassName="org.intranet.elevator.model.Floor"
+            endpointName="floors" kind="Simple"/>
+        <Association
+            destinationClassName="org.intranet.elevator.model.operate.Person"
+            endpointName="people" kind="Simple"/>
+        <Communication destinationClassName="org.intranet.elevator.model.Car"/>
+        <Communication destinationClassName="org.intranet.elevator.model.Floor"/>
+        <Communication destinationClassName="org.intranet.elevator.model.operate.Person"/>
+    </Class>
+    <Class name="org.intranet.elevator.model.Car" x="861" y="218">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+        <Association
+            destinationClassName="org.intranet.elevator.model.Floor"
+            endpointName="destination" kind="Simple"/>
+        <Association
+            destinationClassName="org.intranet.elevator.model.Floor"
+            endpointName="location" kind="Simple"/>
+        <Communication destinationClassName="org.intranet.elevator.model.Location"/>
+    </Class>
+    <Class name="org.intranet.elevator.model.Floor" x="384" y="51">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+        <Extension destinationClassName="org.intranet.elevator.model.Location"/>
+        <Association
+            destinationClassName="org.intranet.elevator.model.CarEntrance"
+            endpointName="carEntrances" kind="Simple"/>
+        <Communication destinationClassName="org.intranet.elevator.model.CarEntrance"/>
+        <Communication destinationClassName="org.intranet.elevator.model.Location"/>
+    </Class>
+    <Class name="org.intranet.elevator.model.CarEntrance" x="21" y="65">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+    </Class>
+    <Class name="org.intranet.elevator.model.Location" x="365" y="338">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+        <Association
+            destinationClassName="org.intranet.elevator.model.operate.Person"
+            endpointName="occupants" kind="Simple"/>
+    </Class>
+    <Class name="org.intranet.elevator.model.operate.Person" x="22" y="386">
+        <AttributesDisplayFilter public-accepted="true"
+            private-accepted="true" protected-accepted="true"
+            default-accepted="true" static-accepted="false"/>
+        <MethodDisplayFilter public-accepted="true"
+            private-accepted="false" protected-accepted="false"
+            default-accepted="false" static-accepted="false"
+            accessors-accepted="false" constructors-accepted="false"/>
+        <Association
+            destinationClassName="org.intranet.elevator.model.Floor"
+            endpointName="destination" kind="Simple"/>
+        <Association
+            destinationClassName="org.intranet.elevator.model.CarEntrance"
+            endpointName="payAttentionEntrances" kind="Simple"/>
+        <Association
+            destinationClassName="org.intranet.elevator.model.Location"
+            endpointName="currentLocation" kind="Simple"/>
+        <Communication destinationClassName="org.intranet.elevator.model.Car"/>
+        <Communication destinationClassName="org.intranet.elevator.model.Floor"/>
+        <Communication destinationClassName="org.intranet.elevator.model.CarEntrance"/>
+        <Communication destinationClassName="org.intranet.elevator.model.Location"/>
+    </Class>
+</ClassDiagram>

@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ClassDiagram>
+    <CommunicationClass
+        name="org.intranet.sim.event.EventQueue.Listener" x="404" y="590"/>
+    <CommunicationClass name="org.intranet.elevator.model.Door" x="238" y="40">
+        <Association destinationClassName="org.intranet.sim.event.Event"
+            endpointName="event" kind="Simple"/>
+        <Communication destinationClassName="org.intranet.sim.event.EventQueue"/>
+    </CommunicationClass>
+    <CommunicationClass
+        name="org.intranet.elevator.model.operate.Person" x="882" y="378">
+        <Association
+            destinationClassName="org.intranet.elevator.model.DoorSensor"
+            endpointName="sensorListenerMap" kind="Simple"/>
+        <Association
+            destinationClassName="org.intranet.elevator.model.Door"
+            endpointName="doorListenerMap" kind="Simple"/>
+        <Communication destinationClassName="org.intranet.elevator.model.Door"/>
+        <Communication destinationClassName="org.intranet.sim.event.EventQueue"/>
+        <Communication destinationClassName="org.intranet.elevator.model.DoorSensor"/>
+    </CommunicationClass>
+    <CommunicationClass name="org.intranet.sim.event.Event" x="507" y="588"/>
+    <CommunicationClass
+        name="org.intranet.elevator.model.MovableLocation" x="715" y="595">
+        <Association destinationClassName="org.intranet.sim.event.Event"
+            endpointName="arrivalEvent" kind="Simple"/>
+        <Communication destinationClassName="org.intranet.sim.event.EventQueue"/>
+    </CommunicationClass>
+    <CommunicationClass
+        name="org.intranet.sim.event.IncrementalUpdateEvent" x="523" y="639">
+        <Extension destinationClassName="org.intranet.sim.event.Event"/>
+    </CommunicationClass>
+    <CommunicationClass
+        name="org.intranet.elevator.model.operate.Person.PayAttentionToDoorListener"
+        x="936" y="136">
+        <Association
+            destinationClassName="org.intranet.elevator.model.Door"
+            endpointName="door" kind="Simple"/>
+        <Association
+            destinationClassName="org.intranet.elevator.model.DoorSensor"
+            endpointName="sensor" kind="Simple"/>
+        <Communication destinationClassName="org.intranet.elevator.model.Door"/>
+        <Communication destinationClassName="org.intranet.elevator.model.DoorSensor"/>
+        <Communication destinationClassName="org.intranet.elevator.model.operate.Person"/>
+    </CommunicationClass>
+    <CommunicationClass
+        name="org.intranet.elevator.model.Door.CloseEvent" x="455" y="35">
+        <Communication destinationClassName="org.intranet.elevator.model.Door"/>
+        <Communication destinationClassName="org.intranet.sim.event.EventQueue"/>
+    </CommunicationClass>
+    <CommunicationClass
+        name="org.intranet.elevator.model.operate.Person.EnteringCarEvent"
+        x="570" y="300">
+        <Communication destinationClassName="org.intranet.elevator.model.DoorSensor"/>
+        <Communication destinationClassName="org.intranet.elevator.model.operate.Person"/>
+    </CommunicationClass>
+    <CommunicationClass
+        name="org.intranet.elevator.model.Door.OpenEvent" x="119" y="191">
+        <Communication destinationClassName="org.intranet.elevator.model.Door"/>
+        <Communication destinationClassName="org.intranet.sim.event.EventQueue"/>
+    </CommunicationClass>
+    <CommunicationClass
+        name="org.intranet.elevator.model.operate.Person.WaitForDoorAvailableLeavingListener"
+        x="825" y="28">
+        <Communication destinationClassName="org.intranet.sim.event.EventQueue"/>
+        <Communication destinationClassName="org.intranet.elevator.model.DoorSensor"/>
+        <Communication destinationClassName="org.intranet.elevator.model.operate.Person"/>
+    </CommunicationClass>
+    <CommunicationClass name="org.intranet.sim.event.EventQueue" x="556" y="437">
+        <Association
+            destinationClassName="org.intranet.sim.event.EventQueue.Listener"
+            endpointName="listeners" kind="Simple"/>
+        <Communication destinationClassName="org.intranet.sim.event.EventQueue.Listener"/>
+        <Communication destinationClassName="org.intranet.sim.event.Event"/>
+        <Communication destinationClassName="org.intranet.sim.event.IncrementalUpdateEvent"/>
+    </CommunicationClass>
+    <CommunicationClass name="org.intranet.elevator.model.DoorSensor"
+        x="148" y="397">
+        <Association destinationClassName="org.intranet.sim.event.Event"
+            endpointName="clearEvent" kind="Simple"/>
+        <Communication destinationClassName="org.intranet.sim.event.EventQueue"/>
+    </CommunicationClass>
+    <CommunicationClass
+        name="org.intranet.elevator.model.operate.Person.LeavingCarEvent"
+        x="687" y="17">
+        <Communication destinationClassName="org.intranet.elevator.model.DoorSensor"/>
+        <Communication destinationClassName="org.intranet.elevator.model.operate.Person"/>
+    </CommunicationClass>
+</ClassDiagram>
