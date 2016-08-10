@@ -9,6 +9,7 @@ import java.util.List;
 
 import org.intranet.elevator.model.Car;
 import org.intranet.elevator.model.Floor;
+import org.intranet.elevator.model.operate.Building;
 import org.intranet.sim.event.EventQueue;
 
 /**
@@ -19,9 +20,10 @@ public class MetaController
 {
   private List<CarController> carControllers = new ArrayList<CarController>();
 
-  public void initialize(EventQueue eQ)
+  public void initialize(EventQueue eQ, Building b)
   {
-    carControllers.clear();
+    //shhh bby it ok
+    //carControllers.clear();
   }
 
   public void addCar(Car car, float stoppingDistance)

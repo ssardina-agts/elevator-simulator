@@ -53,6 +53,7 @@ public abstract class MovableLocation
     {
       public void eventAdded(Event e) {}
       public void eventError(Exception ex) {}
+      public void eventProcessed(Event e) {}
 
       public void eventRemoved(Event e)
       {

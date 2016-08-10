@@ -30,6 +30,8 @@ public final class EventQueue
     void eventRemoved(Event e);
     
     void eventError(Exception ex);
+    
+    void eventProcessed(Event e);
   }
   
   private List<Listener> listeners = new ArrayList<Listener>();
@@ -108,6 +110,9 @@ public final class EventQueue
 
         lastEventProcessTime = currentTime;
         currentEvent.perform();
+        for (Listener listener : listeners) {
+          listener.eventProcessed(currentEvent);
+        }
         numEventsProcessed++;
       }
       catch(Exception e)

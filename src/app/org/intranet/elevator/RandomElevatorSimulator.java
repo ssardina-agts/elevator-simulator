@@ -21,6 +21,8 @@ import org.intranet.ui.ChoiceParameter;
 import org.intranet.ui.IntegerParameter;
 import org.intranet.ui.LongParameter;
 
+import io.sarl.wrapper.WrapperDummy;
+
 /**
  * @author Neil McKellar and Chris Dailey
  *
@@ -59,6 +61,7 @@ public class RandomElevatorSimulator
     Controller controller2 = new SimpleController();
     controllers.add(controller1);
     controllers.add(controller2);
+    controllers.add(new WrapperDummy());
     controllerParameter = new ChoiceParameter<Controller>("Controller", controllers,
         controller1);
     parameters.add(controllerParameter);

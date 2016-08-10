@@ -119,5 +119,6 @@ public class EventQueueDisplay
     }
 
     public void eventError(Exception ex) {}
+    public void eventProcessed(Event e) {}
   }
 }

@@ -45,7 +45,6 @@ public class Building
   {
     super(eQ);
     metaController = controller;
-    controller.initialize(eQ);
   }
 
   public Building(EventQueue eQ, int numFloors, int numCars, int carCapacity,
@@ -54,12 +53,18 @@ public class Building
     this(eQ, controller);
     createFloors(numFloors);
     createCars(numCars, carCapacity);
+    initialize();
   }
 
   public Building(EventQueue eQ, int numFloors, int numCars,
       Controller controller)
   {
     this(eQ, numFloors, numCars, 8, controller);
+  }
+  
+  private void initialize()
+  {
+	  metaController.initialize(eventQueue, this);
   }
 
   public void createFloors(int x)

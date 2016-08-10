@@ -1,3 +1,4 @@
+#
 # .gitignore 
 # Sebastian Sardina 2011
 
@@ -132,3 +133,7 @@ jackagt.jar
 
 .dropbox
 *.backup
+
+*.jar
+.classpath
+.settings

@@ -10,6 +10,7 @@ import java.util.List;
 import org.intranet.elevator.model.Car;
 import org.intranet.elevator.model.CarRequestPanel;
 import org.intranet.elevator.model.Floor;
+import org.intranet.elevator.model.operate.Building;
 import org.intranet.sim.event.EventQueue;
 
 /**
@@ -34,7 +35,7 @@ public class SimpleController
     super();
   }
 
-  public void initialize(EventQueue eQ)
+  public void initialize(EventQueue eQ, Building b)
   {
     cars.clear();
     carsMoving = false;
