@@ -96,13 +96,7 @@ public class RandomElevatorSimulator
       // time to insert
       long insertTime = rand.nextInt((int)duration);
       // insertion event for destination at time
-      Event event = new Event(insertTime)
-      {
-        public void perform()
-        {
-          person.setDestination(destFloor);
-        }
-      };
+      Event event = new CarRequestEvent(insertTime, person, startingFloor, destFloor);
       getEventQueue().addEvent(event);
     }
   }

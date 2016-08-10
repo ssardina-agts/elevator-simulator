@@ -70,15 +70,20 @@ public class WrapperDummy implements Controller
 
 			public void eventProcessed(Event e)
 			{
-				JSONObject toTransmit = new JSONObject();
-				toTransmit.put("message", e.toString());
-				try
+				if (e instanceof Transmittable)
 				{
-					transmit(toTransmit.toString());
-				}
-				catch (IOException e1)
-				{
-					throw new RuntimeException(e1);
+					Transmittable t = (Transmittable) e;
+					JSONObject toTransmit = new JSONObject();
+					toTransmit.put("type", t.getName());
+					toTransmit.put("description", t.getDescription());
+					try
+					{
+						transmit(toTransmit.toString());
+					}
+					catch (IOException e1)
+					{
+						throw new RuntimeException(e1);
+					}
 				}
 			}
 		});
