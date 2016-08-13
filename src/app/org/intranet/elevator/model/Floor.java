@@ -82,10 +82,9 @@ public final class Floor
     return callPanel;
   }
 
-  public void createCarEntrance(Location destination)
+  public void createCarEntrance(Car car)
   {
-    carEntrances.add(new CarEntrance(eventQueue, this, destination,
-      carEntranceListener));
+    carEntrances.add(new CarEntrance(eventQueue, this, car, carEntranceListener));
   }
 
   public List<CarEntrance> getCarEntrances()

@@ -85,7 +85,7 @@ public class Building
   {
     for (int i = 0; i < x; i++)
     {
-      final Car car = new Car(eventQueue, Integer.toString(i), 0.0f, capacity);
+      final Car car = new Car(eventQueue, Integer.toString(i), 0.0f, capacity, i);
       cars.add(car);
       metaController.addCar(car, 3.0f);
 

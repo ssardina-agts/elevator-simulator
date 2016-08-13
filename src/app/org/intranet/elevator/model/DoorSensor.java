@@ -10,6 +10,7 @@ import java.util.List;
 import org.intranet.sim.ModelElement;
 import org.intranet.sim.event.Event;
 import org.intranet.sim.event.EventQueue;
+import org.json.JSONObject;
 
 /**
 * Deals with obstructions.  The state transitions look like this: 
@@ -55,6 +56,7 @@ public class DoorSensor
   private State state = State.CLEAR;
   private Event clearEvent = null;
   private List<Listener> listeners = new ArrayList<Listener>();
+  private Door door;
 
   private final class ClearEvent
       extends Event
@@ -68,6 +70,21 @@ public class DoorSensor
     {
       clear();
       clearEvent = null;
+    }
+
+    @Override
+    public String getName()
+    {
+      return "doorSensorClear";
+    }
+
+    @Override
+    public JSONObject getDescription()
+    {
+      JSONObject ret = new JSONObject();
+      ret.put("floor", door.getFrom().getFloorNumber());
+      ret.put("car", door.getTo().id);
+      return ret;
     }
   }
   public static interface Listener
@@ -104,9 +121,10 @@ public class DoorSensor
     public String toString() { return name; }
   }
 
-  public DoorSensor(EventQueue eQ)
+  public DoorSensor(EventQueue eQ, Door door)
   {
     super(eQ);
+    this.door = door;
   }
 
   public State getState()

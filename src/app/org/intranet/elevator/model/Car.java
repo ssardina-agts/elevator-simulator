@@ -8,6 +8,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.intranet.sim.event.EventQueue;
+import org.json.JSONObject;
+
+import io.sarl.wrapper.Transmittable;
 
 
 /**
@@ -69,16 +72,39 @@ public final class Car
   private Floor destination;
   private FloorRequestPanel panel = new FloorRequestPanel();
   private List<Listener> listeners = new ArrayList<Listener>(); 
+  public final int id;
   
   public interface Listener
   {
     void docked();
   }
+  
+  private class ArrivalMessage implements Transmittable
+  {
+	private int dest;
 
-  public Car(EventQueue eQ, String name, float height, int capacity)
+	public ArrivalMessage()
+	{
+	  dest = destination.getFloorNumber();
+	}
+    public String getName()
+    {
+      return "carArrived";
+    }
+    public JSONObject getDescription()
+    {
+      JSONObject ret = new JSONObject();
+      ret.put("floor", dest);
+      ret.put("car", id);
+      return ret;
+    }
+  }
+
+  public Car(EventQueue eQ, String name, float height, int capacity, int id)
   {
     super(eQ, height, capacity);
     this.name = name;
+    this.id = id;
   }
 
   public void setDestination(Floor destination)
@@ -159,5 +185,10 @@ public final class Car
   {
     for (Listener l : new ArrayList<Listener>(listeners))
       l.docked();
+  }
+  
+  public Transmittable getArrivalMessage()
+  {
+    return new ArrivalMessage();
   }
 }

@@ -42,13 +42,7 @@ public class UpToFourThenDownSimulator
         new MetaController());
 
     final Person a = building.createPerson(building.getFloor(3), 3);
-    Event event = new Event(0)
-    {
-      public void perform()
-      {
-        a.setDestination(building.getFloor(1));
-      }
-    };
+    Event event = new CarRequestEvent(0, a, building.getFloor(3), building.getFloor(3));
     getEventQueue().addEvent(event);
   }
 

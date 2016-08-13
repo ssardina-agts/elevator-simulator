@@ -7,6 +7,9 @@ package org.intranet.elevator.model;
 import org.intranet.sim.event.Event;
 import org.intranet.sim.event.EventQueue;
 import org.intranet.sim.event.TrackingUpdateEvent;
+import org.json.JSONObject;
+
+import io.sarl.wrapper.Transmittable;
 
 /**
 * A location that can move.  The state of movement is kept between
@@ -112,10 +115,12 @@ public abstract class MovableLocation
   private class ArrivalEvent
     extends TrackingUpdateEvent
   {
+	private Transmittable arrivalMessage;
     public ArrivalEvent(float departureHeight, long departureTime,
                         long arrivalTime)
     {
       super(departureTime, departureHeight, arrivalTime, destinationHeight);
+      arrivalMessage = getArrivalMessage();
     }
     
     public void perform()
@@ -129,7 +134,21 @@ public abstract class MovableLocation
     {
       setHeight(currentValue(eventQueue.getCurrentTime()));
     }
+
+    @Override
+    public String getName()
+    {
+      return arrivalMessage.getName();
+    }
+
+    @Override
+    public JSONObject getDescription()
+    {
+      return arrivalMessage.getDescription();
+    }
   }
+  
+  public abstract Transmittable getArrivalMessage();
 
   private void checkDirectionChange(float h)
   {

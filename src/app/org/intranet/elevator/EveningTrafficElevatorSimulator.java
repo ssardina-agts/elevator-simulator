@@ -81,13 +81,7 @@ public class EveningTrafficElevatorSimulator
         long insertTime = (long)(gaussian * duration * 3600 * 1000);
         
         // insertion event for destination at time
-        Event event = new Event(insertTime)
-        {
-          public void perform()
-          {
-            person.setDestination(destFloor);
-          }
-        };
+        Event event = new CarRequestEvent(insertTime, person, startingFloor, destFloor);
         getEventQueue().addEvent(event);
       }
     }

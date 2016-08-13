@@ -25,7 +25,7 @@ import org.intranet.elevator.model.operate.*;
 public class WrapperDummy implements Controller
 {
 	Map<Integer, Floor> floors;
-	private List<Car> cars;
+	private Map<Integer, Car> cars;
 	//whether each car is going up after it reaches its next destination
 	private Map<Car, Boolean> carDirections = new HashMap<>();
 	private Controller wrapped = new MetaController();
@@ -42,9 +42,11 @@ public class WrapperDummy implements Controller
 		{
 			floors.put(floor.getFloorNumber(), floor);
 		}
-		cars = building.getCars();
-		
-		System.out.println(cars.size());
+		cars = new HashMap<>();
+		for (Car car : building.getCars())
+		{
+			cars.put(car.id, car);
+		}
 		
 		wrapped.initialize(eQ, building);
 		
@@ -90,11 +92,11 @@ public class WrapperDummy implements Controller
 		
 		JSONObject modelRepresentation = new JSONObject();
 		JSONArray carsJson = new JSONArray();
-		for (int i = 0; i < cars.size(); i++)
+		for (Map.Entry<Integer, Car> entry : cars.entrySet())
 		{
-			Car car = cars.get(i);
+			Car car = entry.getValue();
 			JSONObject carJson = new JSONObject();
-			carJson.put("id", i);
+			carJson.put("id", entry.getKey());
 			JSONArray servicedFloors = new JSONArray();
 			for (Floor floor : car.getFloorRequestPanel().getServicedFloors())
 			{
@@ -143,7 +145,6 @@ public class WrapperDummy implements Controller
 	@Override
 	public void addCar(Car car, float stoppingDistance)
 	{
-		System.out.println("asldfkj");
 		wrapped.addCar(car, stoppingDistance);
 	}
 

@@ -68,7 +68,7 @@ public abstract class Simulator
     void modelUpdate(long time);
   }
   
-  public class CarRequestEvent extends Event implements Transmittable
+  public class CarRequestEvent extends Event
   {
     private Person person;
     private Floor destination;

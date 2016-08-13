@@ -31,12 +31,12 @@ public final class CarEntrance
   private DoorSensor sensor;
   private CarEntranceListener entranceListener;
 
-  CarEntrance(final EventQueue eQ, Location fromLocation, Location toLocation,
+  CarEntrance(final EventQueue eQ, Floor fromLocation, Car toLocation,
               CarEntranceListener listener)
   {
     super();
     door = new Door(eQ, fromLocation, toLocation);
-    sensor = new DoorSensor(eQ);
+    sensor = new DoorSensor(eQ, door);
     entranceListener = listener;
     Door.Listener doorListener = new Door.Listener()
     {

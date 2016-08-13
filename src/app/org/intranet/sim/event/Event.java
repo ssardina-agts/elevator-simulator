@@ -6,11 +6,13 @@ package org.intranet.sim.event;
 
 import java.util.Comparator;
 
+import io.sarl.wrapper.Transmittable;
+
 /**
  * @author Neil McKellar and Chris Dailey
  *
  */
-public abstract class Event
+public abstract class Event implements Transmittable
 {
   private static long maxId;
   private long id;
