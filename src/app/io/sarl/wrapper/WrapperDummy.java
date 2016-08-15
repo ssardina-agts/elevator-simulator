@@ -19,7 +19,9 @@ import org.intranet.elevator.model.operate.controller.SimpleController;
 import org.intranet.sim.event.Event;
 import org.intranet.sim.event.EventQueue;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
+
 import org.intranet.elevator.model.operate.*;
 
 public class WrapperDummy implements Controller
@@ -89,6 +91,8 @@ public class WrapperDummy implements Controller
 		});
 		
 		eQ.addEvent(new InitEvent());
+		
+		new ListenThread(in).start();
 	}
 
 	private synchronized void transmit(String message) throws IOException
@@ -98,25 +102,40 @@ public class WrapperDummy implements Controller
 	@Override
 	public void requestCar(Floor newFloor, Direction d)
 	{
-		wrapped.requestCar(newFloor, d);
+		//wrapped.requestCar(newFloor, d);
 	}
 
 	@Override
 	public void addCar(Car car, float stoppingDistance)
 	{
-		wrapped.addCar(car, stoppingDistance);
+		//wrapped.addCar(car, stoppingDistance);
 	}
 
 	@Override
 	public boolean arrive(Car car)
 	{
-		return wrapped.arrive(car);
+		//return wrapped.arrive(car);
+		return carDirections.remove(car);
 	}
 
 	@Override
 	public void setNextDestination(Car car)
 	{
-		wrapped.setNextDestination(car);
+		//wrapped.setNextDestination(car);
+	}
+	
+	private void sendCar(JSONObject params)
+	{
+		int car = params.getInt("car");
+		int floor = params.getInt("floor");
+		String nextDirection = params.getString("nextDirection");
+		
+		if (carDirections.containsKey(cars.get(car)))
+		{
+			return;
+		}
+		cars.get(car).setDestination(floors.get(floor));
+		carDirections.put(cars.get(car), (nextDirection.equals("up")));
 	}
 
 	private class InitEvent extends Event
@@ -174,4 +193,38 @@ public class WrapperDummy implements Controller
 		@Override
 		public void perform() {}
 	}
+
+	public class ListenThread extends Thread
+	{
+		private DataInputStream in;
+
+		public ListenThread(DataInputStream in)
+		{
+			this.in = in;
+		}
+
+		@Override
+		public void run()
+		{
+			while (true)
+			{
+				try
+				{
+					JSONObject actionJson = new JSONObject(in.readUTF());
+					String name = actionJson.getString("type");
+					switch (name)
+					{
+						case "sendCar":
+							sendCar(actionJson.getJSONObject("params"));
+							break;
+					}
+				}
+				catch (IOException e)
+				{
+					throw new RuntimeException(e);
+				}
+			}
+		}
+	}
+
 }

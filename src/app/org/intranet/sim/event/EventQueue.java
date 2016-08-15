@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * @author Neil McKellar and Chris Dailey
@@ -35,9 +36,24 @@ public final class EventQueue
   }
   
   private List<Listener> listeners = new ArrayList<Listener>();
+  private ReentrantLock lock = new ReentrantLock();
+  
+  private void acquireLock()
+  {
+	  lock.lock();
+  }
+  
+  private void releaseLock()
+  {
+    while (lock.isHeldByCurrentThread())
+	{
+      lock.unlock();
+	}
+  }
   
   public void addEvent(Event event)
   {
+    acquireLock();
 //System.out.println("EventQueue event at currentTime=" + currentTime +
 // " for time="+event.getTime()+ ", class="+event.getClass().getName());
     if (event.getTime() < lastTime)
@@ -58,19 +74,24 @@ public final class EventQueue
 
     for (Listener listener : listeners)
       listener.eventAdded(event);
+    releaseLock();
   }
   
   public void removeEvent(Event event)
   {
+	acquireLock();
     if (!eventSet.contains(event))
       throw new IllegalArgumentException("Cannot remove an Event that is not in the queue!");
     eventSet.remove(event);
     for (Listener listener : listeners)
       listener.eventRemoved(event);
+    releaseLock();
   }
   
   public List<Event> getEventList()
   {
+	acquireLock();
+	releaseLock();
     return new ArrayList<Event>(eventSet);
   }
   
@@ -85,6 +106,7 @@ public final class EventQueue
    */
   public boolean processEventsUpTo(long time)
   {
+	acquireLock();
     if (time < lastTime)
       throw new RuntimeException("Requested time is earlier than last time.");
 
@@ -124,8 +146,10 @@ public final class EventQueue
     } while (true);
     currentTime = time;
     numEventsProcessed += updateEventProgress();
-    currentTime = -1;
+    //currentTime = -1;
     lastTime = eventSet.size() == 0 ? lastEventProcessTime : time;
+    
+    releaseLock();
     return (numEventsProcessed != 0);
   }
 
@@ -154,24 +178,32 @@ public final class EventQueue
   
   public void addListener(Listener listener)
   {
+	acquireLock();
     listeners.add(listener);
+    releaseLock();
   }
   
   public void removeListener(Listener listener)
   {
+	acquireLock();
     listeners.remove(listener);
+    releaseLock();
   }
 
   public long getCurrentTime()
   {
+	acquireLock();
     if (currentTime == -1)
       throw new
         IllegalStateException("Current time is invalid when not processing events");
+    releaseLock();
     return currentTime;
   }
 
   public long getLastEventProcessTime()
   {
+    acquireLock();
+    releaseLock();
     return lastEventProcessTime;
   }
 }
