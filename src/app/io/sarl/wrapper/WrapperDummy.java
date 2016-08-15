@@ -39,17 +39,6 @@ public class WrapperDummy implements Controller
 	@Override
 	public void initialize(EventQueue eQ, Building building)
 	{
-		floors = new HashMap<>();
-		for (Floor floor : building.getFloors())
-		{
-			floors.put(floor.getFloorNumber(), floor);
-		}
-		cars = new HashMap<>();
-		for (Car car : building.getCars())
-		{
-			cars.put(car.id, car);
-		}
-		
 		wrapped.initialize(eQ, building);
 		
 		try
@@ -90,7 +79,8 @@ public class WrapperDummy implements Controller
 			}
 		});
 		
-		eQ.addEvent(new InitEvent());
+		WorldModel model = new WorldModel(building);
+		eQ.addEvent(model.generateChangePercept());
 		
 		new ListenThread(in).start();
 	}
@@ -136,62 +126,6 @@ public class WrapperDummy implements Controller
 		}
 		cars.get(car).setDestination(floors.get(floor));
 		carDirections.put(cars.get(car), (nextDirection.equals("up")));
-	}
-
-	private class InitEvent extends Event
-	{
-		public InitEvent()
-		{
-			super(-1);
-		}
-
-		@Override
-		public String getName()
-		{
-			return "init";
-		}
-
-		@Override
-		public JSONObject getDescription()
-		{
-			JSONObject modelRepresentation = new JSONObject();
-			JSONArray carsJson = new JSONArray();
-
-			for (Map.Entry<Integer, Car> entry : cars.entrySet())
-			{
-				Car car = entry.getValue();
-				JSONObject carJson = new JSONObject();
-				carJson.put("id", entry.getKey());
-				JSONArray servicedFloors = new JSONArray();
-				for (Floor floor : car.getFloorRequestPanel().getServicedFloors())
-				{
-					servicedFloors.put(floor.getFloorNumber());
-				}
-				carJson.put("servicedFloors", servicedFloors);
-				carJson.put("capacity", car.getCapacity());
-				
-				carsJson.put(carJson);
-			}
-			modelRepresentation.put("cars", carsJson);
-			
-			JSONArray floorsJson = new JSONArray();
-			for (Map.Entry<Integer, Floor> entry : floors.entrySet())
-			{
-				JSONObject floorJson = new JSONObject();
-				Floor floor = entry.getValue();
-				
-				floorJson.put("id", entry.getKey());
-				floorJson.put("height", floor.getHeight());
-				
-				floorsJson.put(floorJson);
-			}
-			modelRepresentation.put("floors", floorsJson);
-
-			return modelRepresentation;
-		}
-
-		@Override
-		public void perform() {}
 	}
 
 	public class ListenThread extends Thread
