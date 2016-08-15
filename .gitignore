@@ -134,6 +134,4 @@ jackagt.jar
 .dropbox
 *.backup
 
-*.jar
-.classpath
 .settings

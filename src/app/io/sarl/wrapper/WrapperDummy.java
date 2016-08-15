@@ -72,64 +72,23 @@ public class WrapperDummy implements Controller
 
 			public void eventProcessed(Event e)
 			{
-				if (e instanceof Transmittable)
+				JSONObject toTransmit = new JSONObject();
+				toTransmit.put("type", e.getName());
+				toTransmit.put("description", e.getDescription());
+				toTransmit.put("time", e.getTime());
+				toTransmit.put("id", e.getId());
+				try
 				{
-					Transmittable t = (Transmittable) e;
-					JSONObject toTransmit = new JSONObject();
-					toTransmit.put("type", t.getName());
-					toTransmit.put("description", t.getDescription());
-					try
-					{
-						transmit(toTransmit.toString());
-					}
-					catch (IOException e1)
-					{
-						throw new RuntimeException(e1);
-					}
+					transmit(toTransmit.toString());
+				}
+				catch (IOException e1)
+				{
+					throw new RuntimeException(e1);
 				}
 			}
 		});
 		
-		JSONObject modelRepresentation = new JSONObject();
-		JSONArray carsJson = new JSONArray();
-		for (Map.Entry<Integer, Car> entry : cars.entrySet())
-		{
-			Car car = entry.getValue();
-			JSONObject carJson = new JSONObject();
-			carJson.put("id", entry.getKey());
-			JSONArray servicedFloors = new JSONArray();
-			for (Floor floor : car.getFloorRequestPanel().getServicedFloors())
-			{
-				servicedFloors.put(floor.getFloorNumber());
-			}
-			carJson.put("servicedFloors", servicedFloors);
-			carJson.put("capacity", car.getCapacity());
-			
-			carsJson.put(carJson);
-		}
-		modelRepresentation.put("cars", carsJson);
-		
-		JSONArray floorsJson = new JSONArray();
-		for (Map.Entry<Integer, Floor> entry : floors.entrySet())
-		{
-			JSONObject floorJson = new JSONObject();
-			Floor floor = entry.getValue();
-			
-			floorJson.put("id", entry.getKey());
-			floorJson.put("height", floor.getHeight());
-			
-			floorsJson.put(floorJson);
-		}
-		modelRepresentation.put("floors", floorsJson);
-		
-		try
-		{
-			transmit(modelRepresentation.toString());
-		}
-		catch (IOException e1)
-		{
-			throw new RuntimeException(e1);
-		}
+		eQ.addEvent(new InitEvent());
 	}
 
 	private synchronized void transmit(String message) throws IOException
@@ -160,4 +119,59 @@ public class WrapperDummy implements Controller
 		wrapped.setNextDestination(car);
 	}
 
+	private class InitEvent extends Event
+	{
+		public InitEvent()
+		{
+			super(-1);
+		}
+
+		@Override
+		public String getName()
+		{
+			return "init";
+		}
+
+		@Override
+		public JSONObject getDescription()
+		{
+			JSONObject modelRepresentation = new JSONObject();
+			JSONArray carsJson = new JSONArray();
+
+			for (Map.Entry<Integer, Car> entry : cars.entrySet())
+			{
+				Car car = entry.getValue();
+				JSONObject carJson = new JSONObject();
+				carJson.put("id", entry.getKey());
+				JSONArray servicedFloors = new JSONArray();
+				for (Floor floor : car.getFloorRequestPanel().getServicedFloors())
+				{
+					servicedFloors.put(floor.getFloorNumber());
+				}
+				carJson.put("servicedFloors", servicedFloors);
+				carJson.put("capacity", car.getCapacity());
+				
+				carsJson.put(carJson);
+			}
+			modelRepresentation.put("cars", carsJson);
+			
+			JSONArray floorsJson = new JSONArray();
+			for (Map.Entry<Integer, Floor> entry : floors.entrySet())
+			{
+				JSONObject floorJson = new JSONObject();
+				Floor floor = entry.getValue();
+				
+				floorJson.put("id", entry.getKey());
+				floorJson.put("height", floor.getHeight());
+				
+				floorsJson.put(floorJson);
+			}
+			modelRepresentation.put("floors", floorsJson);
+
+			return modelRepresentation;
+		}
+
+		@Override
+		public void perform() {}
+	}
 }

@@ -17,7 +17,7 @@ public final class EventQueue
 {
   private long currentTime = -1; // Invalid time value initially
 
-  private long lastTime;
+  private long lastTime = -1;
   private long lastEventProcessTime;
 
   private SortedSet<Event> eventSet =
