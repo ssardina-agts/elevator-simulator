@@ -1,26 +1,28 @@
 package io.sarl.wrapper;
 
 import java.util.List;
-import java.util.Map;
 
 import org.intranet.elevator.model.Car;
 import org.intranet.elevator.model.Floor;
 import org.intranet.elevator.model.operate.Building;
+import org.intranet.sim.event.EventQueue;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-public class WorldModel 
+public class WorldModelSensor extends Sensor
 {
 	private Building baseModel;
 	
-	public WorldModel(Building model) 
+	public WorldModelSensor(EventQueue eventQueue, Building model) 
 	{
+		super(eventQueue);
 		baseModel = model;
 	}
 	
-	public ModelChangePercept generateChangePercept() 
+	@Override
+	public void perceive() 
 	{
-		return new ModelChangePercept();
+		enqueuePercept(new ModelChangePercept());
 	}
 	
 	private class ModelChangePercept extends Percept 

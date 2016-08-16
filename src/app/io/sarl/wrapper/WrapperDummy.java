@@ -79,8 +79,8 @@ public class WrapperDummy implements Controller
 			}
 		});
 		
-		WorldModel model = new WorldModel(building);
-		eQ.addEvent(model.generateChangePercept());
+		WorldModelSensor modelSensor = new WorldModelSensor(eQ, building);
+		modelSensor.perceive();
 		
 		new ListenThread(in).start();
 	}
