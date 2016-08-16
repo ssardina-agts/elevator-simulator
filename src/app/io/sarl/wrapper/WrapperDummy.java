@@ -40,7 +40,16 @@ public class WrapperDummy implements Controller
 	public void initialize(EventQueue eQ, Building building)
 	{
 		wrapped.initialize(eQ, building);
-		
+		cars = new HashMap<>();
+		for (Car car : building.getCars())
+		{
+			cars.put(car.id, car);
+		}
+		floors = new HashMap<>();
+		for (Floor floor : building.getFloors())
+		{
+			floors.put(floor.getFloorNumber(), floor);
+		}
 		try
 		{
 			ServerSocket ss = new ServerSocket(8081);
@@ -120,7 +129,8 @@ public class WrapperDummy implements Controller
 		int floor = params.getInt("floor");
 		String nextDirection = params.getString("nextDirection");
 		
-		if (carDirections.containsKey(cars.get(car)))
+		if (carDirections.containsKey(
+				cars.get(car)))
 		{
 			return;
 		}

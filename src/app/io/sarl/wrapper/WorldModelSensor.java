@@ -37,15 +37,17 @@ public class WorldModelSensor extends Sensor
 		@Override
 		public JSONObject getDescription()
 		{
-			JSONObject jsonWorldModel = new JSONObject();
-			
-			JSONArray carsJsonArray = new JSONArray();
-			List<Car> cars = baseModel.getCars();
-			
-			for (Car car : cars)
+			try
 			{
-				JSONObject carJson = new JSONObject();
-				carJson.put("id", car.id);
+				JSONObject jsonWorldModel = new JSONObject();
+			
+				JSONArray carsJsonArray = new JSONArray();
+				List<Car> cars = baseModel.getCars();
+			
+				for (Car car : cars)
+				{
+					JSONObject carJson = new JSONObject();
+					carJson.put("id", car.id);
 				
 				JSONArray servicedFloorsJsonArray = new JSONArray();
 				List<Floor> servicedFloors = car.getFloorRequestPanel()
@@ -55,11 +57,12 @@ public class WorldModelSensor extends Sensor
 					servicedFloorsJsonArray.put(floor.getFloorNumber());
 				}
 				
-				carJson.put("servicedFloors", servicedFloors);
+				carJson.put("servicedFloors", servicedFloorsJsonArray);
 				carJson.put("capacity", car.getCapacity());
 				
 				carsJsonArray.put(carJson);
 			}
+			
 			
 			jsonWorldModel.put("cars", carsJsonArray);
 			
@@ -76,8 +79,13 @@ public class WorldModelSensor extends Sensor
 			}
 			
 			jsonWorldModel.put("floors", floorsJsonArray);
-
 			return jsonWorldModel;
+			}
+			catch (Exception e) {
+				throw new RuntimeException(e);
+			}
+			
+			
 		}
 	}
 }
