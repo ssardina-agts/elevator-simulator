@@ -20,7 +20,7 @@ public class WorldModelSensor extends Sensor
 	}
 	
 	@Override
-	public void perceive() 
+	public void startPerceiving() 
 	{
 		enqueuePercept(new ModelChangePercept());
 	}

@@ -2,7 +2,7 @@
 <classpath>
 	<classpathentry kind="src" path="src/app"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="json-20160212.jar">
+	<classpathentry kind="lib" path="json-20160212.jar" sourcepath="json-20160212-sources.jar">
 		<attributes>
 			<attribute name="javadoc_location" value="jar:platform:/resource/elevator-sim/json-20160212-javadoc.jar!/"/>
 		</attributes>
