@@ -16,5 +16,5 @@ public abstract class Sensor {
 		perceptSequence.addEvent(percept);
 	}
 	
-	public abstract void perceive();
+	public abstract void startPerceiving();
 }
