@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.intranet.elevator.model.Car;
@@ -14,12 +13,8 @@ import org.intranet.elevator.model.Car;
 import org.intranet.elevator.model.Floor;
 import org.intranet.elevator.model.operate.controller.Controller;
 import org.intranet.elevator.model.operate.controller.Direction;
-import org.intranet.elevator.model.operate.controller.MetaController;
-import org.intranet.elevator.model.operate.controller.SimpleController;
 import org.intranet.sim.event.Event;
 import org.intranet.sim.event.EventQueue;
-import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import org.intranet.elevator.model.operate.*;
@@ -29,21 +24,25 @@ public class WrapperDummy implements Controller
 	Map<Integer, Floor> floors;
 	private Map<Integer, Car> cars;
 	//whether each car is going up after it reaches its next destination
+	//a mapping only exists if a car has been sent a floor and has not
+	//yet arrived
 	private Map<Car, Boolean> carDirections = new HashMap<>();
-	private Controller wrapped = new MetaController();
 	
 	private DataOutputStream out;
 	private DataInputStream in;
 	private Socket s;
+	private EventQueue eventQueue;
 
 	@Override
 	public void initialize(EventQueue eQ, Building building)
 	{
-		wrapped.initialize(eQ, building);
+		this.eventQueue = eQ;
 		cars = new HashMap<>();
 		for (Car car : building.getCars())
 		{
 			cars.put(car.id, car);
+			FloorRequestSensor sensor = new FloorRequestSensor(car, eQ);
+			sensor.startPerceiving();
 		}
 		floors = new HashMap<>();
 		for (Floor floor : building.getFloors())
@@ -101,41 +100,52 @@ public class WrapperDummy implements Controller
 	@Override
 	public void requestCar(Floor newFloor, Direction d)
 	{
-		//wrapped.requestCar(newFloor, d);
 	}
 
 	@Override
 	public void addCar(Car car, float stoppingDistance)
 	{
-		//wrapped.addCar(car, stoppingDistance);
 	}
 
 	@Override
 	public boolean arrive(Car car)
 	{
-		//return wrapped.arrive(car);
 		return carDirections.remove(car);
 	}
 
 	@Override
 	public void setNextDestination(Car car)
 	{
-		//wrapped.setNextDestination(car);
 	}
 	
-	private void sendCar(JSONObject params)
+	private boolean sendCar(JSONObject params)
 	{
 		int car = params.getInt("car");
 		int floor = params.getInt("floor");
 		String nextDirection = params.getString("nextDirection");
 		
-		if (carDirections.containsKey(
-				cars.get(car)))
+		if (carDirections.containsKey(cars.get(car)))
 		{
-			return;
+			return false;
 		}
+
 		cars.get(car).setDestination(floors.get(floor));
 		carDirections.put(cars.get(car), (nextDirection.equals("up")));
+		System.out.println("sent car " + car + " to floor " + floor);
+		return true;
+	}
+	
+	private boolean changeNextDirection(JSONObject params)
+	{
+		Car car = cars.get(params.getInt("car"));
+
+		if (!carDirections.containsKey(car))
+		{
+			return false;
+		}
+
+		carDirections.put(car, params.getString("direction").equals("up"));
+		return true;
 	}
 
 	public class ListenThread extends Thread
@@ -156,12 +166,22 @@ public class WrapperDummy implements Controller
 				{
 					JSONObject actionJson = new JSONObject(in.readUTF());
 					String name = actionJson.getString("type");
+					boolean success = false;
 					switch (name)
 					{
 						case "sendCar":
-							sendCar(actionJson.getJSONObject("params"));
+							success = sendCar(actionJson.getJSONObject("params"));
+							break;
+						case "changeNextDirection":
+							success = changeNextDirection(actionJson.getJSONObject("params"));
+							break;
+						default:
+							success = false;
 							break;
 					}
+					
+					System.out.println("actionId: " + actionJson.getInt("id") + " success: " + success);
+					eventQueue.addEvent(new ActionResponse(eventQueue, actionJson.getInt("id"), success));
 				}
 				catch (IOException e)
 				{

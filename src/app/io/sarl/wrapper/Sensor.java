@@ -4,7 +4,7 @@ import org.intranet.sim.event.EventQueue;
 
 public abstract class Sensor {
 	
-	private EventQueue perceptSequence;
+	protected EventQueue perceptSequence;
 	
 	public Sensor(EventQueue eventQueue)
 	{

@@ -193,9 +193,6 @@ public final class EventQueue
   public long getCurrentTime()
   {
 	acquireLock();
-    if (currentTime == -1)
-      throw new
-        IllegalStateException("Current time is invalid when not processing events");
     releaseLock();
     return currentTime;
   }

@@ -10,6 +10,7 @@ import org.json.JSONObject;
 public class DummyClient
 {
 	private static DataOutputStream out;
+	private static int id = 0;
 
 	public static void main(String[] args) throws IOException
 	{
@@ -42,6 +43,7 @@ public class DummyClient
 		JSONObject toTransmit = new JSONObject();
 		toTransmit.put("params", params);
 		toTransmit.put("type", "sendCar");
+		toTransmit.put("id", id++);
 		
 		out.writeUTF(toTransmit.toString());
 	}

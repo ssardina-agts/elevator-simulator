@@ -28,6 +28,10 @@ public class WorldModelSensor extends Sensor
 	private class ModelChangePercept extends Percept 
 	{
 		
+		public ModelChangePercept()
+		{
+			super(perceptSequence);
+		}
 		@Override
 		public String getName() 
 		{

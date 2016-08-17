@@ -39,6 +39,7 @@ public class FloorRequestSensor extends Sensor
 		
 		public FloorRequestPercept(Floor requestedFloor)
 		{
+			super(perceptSequence);
 			this.requestedFloor = requestedFloor;
 		}
 		
@@ -53,7 +54,7 @@ public class FloorRequestSensor extends Sensor
 		{
 			JSONObject floorRequestJson = new JSONObject();
 			floorRequestJson.put("carId", car.id);
-			floorRequestJson.put("requestedFloor", requestedFloor);
+			floorRequestJson.put("requestedFloor", requestedFloor.getFloorNumber());
 			
 			return floorRequestJson;
 		}
