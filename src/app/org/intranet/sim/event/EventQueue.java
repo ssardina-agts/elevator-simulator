@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
-import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * @author Neil McKellar and Chris Dailey
@@ -36,24 +35,9 @@ public final class EventQueue
   }
   
   private List<Listener> listeners = new ArrayList<Listener>();
-  private ReentrantLock lock = new ReentrantLock();
   
-  private void acquireLock()
+  public synchronized void addEvent(Event event)
   {
-	  lock.lock();
-  }
-  
-  private void releaseLock()
-  {
-    while (lock.isHeldByCurrentThread())
-	{
-      lock.unlock();
-	}
-  }
-  
-  public void addEvent(Event event)
-  {
-    acquireLock();
 //System.out.println("EventQueue event at currentTime=" + currentTime +
 // " for time="+event.getTime()+ ", class="+event.getClass().getName());
     if (event.getTime() < lastTime)
@@ -74,24 +58,19 @@ public final class EventQueue
 
     for (Listener listener : listeners)
       listener.eventAdded(event);
-    releaseLock();
   }
   
-  public void removeEvent(Event event)
+  public synchronized void removeEvent(Event event)
   {
-	acquireLock();
     if (!eventSet.contains(event))
       throw new IllegalArgumentException("Cannot remove an Event that is not in the queue!");
     eventSet.remove(event);
     for (Listener listener : listeners)
       listener.eventRemoved(event);
-    releaseLock();
   }
   
-  public List<Event> getEventList()
+  public synchronized List<Event> getEventList()
   {
-	acquireLock();
-	releaseLock();
     return new ArrayList<Event>(eventSet);
   }
   
@@ -104,9 +83,8 @@ public final class EventQueue
    * @throws RuntimeException When the requested time is before the last time.
    * @return true if events were processed
    */
-  public boolean processEventsUpTo(long time)
+  public synchronized boolean processEventsUpTo(long time)
   {
-	acquireLock();
     if (time < lastTime)
       throw new RuntimeException("Requested time is earlier than last time.");
 
@@ -149,11 +127,10 @@ public final class EventQueue
     //currentTime = -1;
     lastTime = eventSet.size() == 0 ? lastEventProcessTime : time;
     
-    releaseLock();
     return (numEventsProcessed != 0);
   }
 
-  private int updateEventProgress()
+  private synchronized int updateEventProgress()
   {
     int numEventsProcessed = 0;
     // Update any events that have incremental progress between states
@@ -176,31 +153,23 @@ public final class EventQueue
     return numEventsProcessed;
   }
   
-  public void addListener(Listener listener)
+  public synchronized void addListener(Listener listener)
   {
-	acquireLock();
     listeners.add(listener);
-    releaseLock();
   }
   
-  public void removeListener(Listener listener)
+  public synchronized void removeListener(Listener listener)
   {
-	acquireLock();
     listeners.remove(listener);
-    releaseLock();
   }
 
-  public long getCurrentTime()
+  public synchronized long getCurrentTime()
   {
-	acquireLock();
-    releaseLock();
     return currentTime;
   }
 
-  public long getLastEventProcessTime()
+  public synchronized long getLastEventProcessTime()
   {
-    acquireLock();
-    releaseLock();
     return lastEventProcessTime;
   }
 }
