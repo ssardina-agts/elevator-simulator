@@ -25,13 +25,21 @@ public class WorldModelSensor extends Sensor
 		enqueuePercept(new ModelChangePercept());
 	}
 	
+	/**
+	 * Represents the current state of the entire model
+	 * Should be transmitted at the beginning of the simulation
+	 * May also be transmitted periodically over the course of the simulation
+	 * @author Joshua Richards
+	 * @author Matthew McNally
+	 *
+	 */
 	private class ModelChangePercept extends Percept 
 	{
-		
 		public ModelChangePercept()
 		{
 			super(perceptSequence);
 		}
+
 		@Override
 		public String getName() 
 		{
@@ -41,17 +49,15 @@ public class WorldModelSensor extends Sensor
 		@Override
 		public JSONObject getDescription()
 		{
-			try
+			JSONObject jsonWorldModel = new JSONObject();
+		
+			JSONArray carsJsonArray = new JSONArray();
+			List<Car> cars = baseModel.getCars();
+			
+			for (Car car : cars)
 			{
-				JSONObject jsonWorldModel = new JSONObject();
-			
-				JSONArray carsJsonArray = new JSONArray();
-				List<Car> cars = baseModel.getCars();
-			
-				for (Car car : cars)
-				{
-					JSONObject carJson = new JSONObject();
-					carJson.put("id", car.getId());
+				JSONObject carJson = new JSONObject();
+				carJson.put("id", car.getId());
 				
 				JSONArray servicedFloorsJsonArray = new JSONArray();
 				List<Floor> servicedFloors = car.getFloorRequestPanel()
@@ -63,10 +69,12 @@ public class WorldModelSensor extends Sensor
 				
 				carJson.put("servicedFloors", servicedFloorsJsonArray);
 				carJson.put("capacity", car.getCapacity());
+				// can be inferred in the initial state
+				carJson.put("occupants", car.getOccupants().size());
+				carJson.put("currentHeight", car.getHeight());
 				
 				carsJsonArray.put(carJson);
 			}
-			
 			
 			jsonWorldModel.put("cars", carsJsonArray);
 			
@@ -84,12 +92,6 @@ public class WorldModelSensor extends Sensor
 			
 			jsonWorldModel.put("floors", floorsJsonArray);
 			return jsonWorldModel;
-			}
-			catch (Exception e) {
-				throw new RuntimeException(e);
-			}
-			
-			
 		}
 	}
 }

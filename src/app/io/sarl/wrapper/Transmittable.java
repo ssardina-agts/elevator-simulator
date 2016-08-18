@@ -9,6 +9,13 @@ import org.json.JSONObject;
  */
 public interface Transmittable
 {
+	/**
+	 * @return A name that a client can use to identify the type of event
+	 */
 	public String getName();
+	/**
+	 * @return A JSONObject containing necessary details of the event
+	 * specific to its type
+	 */
 	public JSONObject getDescription();
 }

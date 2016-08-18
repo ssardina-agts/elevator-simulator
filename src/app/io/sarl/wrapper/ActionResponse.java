@@ -4,6 +4,7 @@ package io.sarl.wrapper;
 import org.intranet.sim.event.EventQueue;
 import org.json.JSONObject;
 
+@Deprecated
 public class ActionResponse extends Percept
 {
 	private int actionId;

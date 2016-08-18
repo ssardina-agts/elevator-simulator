@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.intranet.elevator.model.Car;
@@ -19,13 +20,19 @@ import org.json.JSONObject;
 
 import org.intranet.elevator.model.operate.*;
 
-public class WrapperDummy implements Controller
+/**
+ * Entry point for controlling the simulation over a network.
+ * Opens a connection to a client, transmits events,
+ * and listens for actions before performing them.
+ * 
+ * @author Joshua Richards
+ */
+public class WrapperController implements Controller
 {
 	Map<Integer, Floor> floors;
 	private Map<Integer, Car> cars;
-	//whether each car is going up after it reaches its next destination
-	//a mapping only exists if a car has been sent a floor and has not
-	//yet arrived
+	// whether each car is going up after it reaches its next destination
+	// a mapping only exists if a car has been sent a floor and has not yet arrived
 	private Map<Car, Boolean> carDirections = new HashMap<>();
 	
 	private DataOutputStream out;
@@ -37,20 +44,11 @@ public class WrapperDummy implements Controller
 	public void initialize(EventQueue eQ, Building building)
 	{
 		this.eventQueue = eQ;
-		cars = new HashMap<>();
-		for (Car car : building.getCars())
-		{
-			cars.put(car.getId(), car);
-			FloorRequestSensor sensor = new FloorRequestSensor(car, eQ);
-			sensor.startPerceiving();
-		}
-		floors = new HashMap<>();
-		for (Floor floor : building.getFloors())
-		{
-			floors.put(floor.getFloorNumber(), floor);
-		}
+		initCars(building.getCars());
+		initFloors(building.getFloors());
 		try
 		{
+			// create connection
 			ServerSocket ss = new ServerSocket(8081);
 			s = ss.accept();
 			ss.close();
@@ -71,6 +69,7 @@ public class WrapperDummy implements Controller
 
 			public void eventProcessed(Event e)
 			{
+				// transmit every event as it's processed
 				JSONObject toTransmit = new JSONObject();
 				toTransmit.put("type", e.getName());
 				toTransmit.put("description", e.getDescription());
@@ -87,15 +86,54 @@ public class WrapperDummy implements Controller
 			}
 		});
 		
+		// transmit initial model representation to client
 		WorldModelSensor modelSensor = new WorldModelSensor(eQ, building);
 		modelSensor.startPerceiving();
 		
 		new ListenThread(in).start();
 	}
-
-	private synchronized void transmit(String message) throws IOException
+	
+	/**
+	 * set up cars map
+	 * @param carList cars list from building
+	 */
+	private void initCars(List<Car> carList)
 	{
-		out.writeUTF(message);
+		cars = new HashMap<>();
+		for (Car car : carList)
+		{
+			cars.put(car.getId(), car);
+			FloorRequestSensor sensor = new FloorRequestSensor(car, eventQueue);
+			sensor.startPerceiving();
+		}
+		
+	}
+	
+	/**
+	 * set up floors map
+	 * @param floorList floor list from building
+	 */
+	private void initFloors(List<Floor> floorList)
+	{
+		floors = new HashMap<>();
+		for (Floor floor : floorList)
+		{
+			floors.put(floor.getFloorNumber(), floor);
+		}
+	}
+
+	/**
+	 * Transmit a message to the client
+	 * All transmission to the client should be through this method
+	 * @param message the message to send
+	 * @throws IOException if there is a connection problem
+	 */
+	private void transmit(String message) throws IOException
+	{
+		synchronized(out)
+		{
+			out.writeUTF(message);
+		}
 	}
 	@Override
 	public void requestCar(Floor newFloor, Direction d)
@@ -113,6 +151,13 @@ public class WrapperDummy implements Controller
 	{
 	}
 	
+	@Override
+	public String toString()
+	{
+		return getClass().getSimpleName();
+	}
+	
+	@Deprecated // replace with Action subclass
 	private boolean sendCar(JSONObject params)
 	{
 		int car = params.getInt("car");
@@ -126,10 +171,10 @@ public class WrapperDummy implements Controller
 
 		cars.get(car).setDestination(floors.get(floor));
 		carDirections.put(cars.get(car), (nextDirection.equals("up")));
-		System.out.println("sent car " + car + " to floor " + floor);
 		return true;
 	}
 	
+	@Deprecated // replace with Action subclass
 	private boolean changeNextDirection(JSONObject params)
 	{
 		Car car = cars.get(params.getInt("car"));
@@ -143,6 +188,11 @@ public class WrapperDummy implements Controller
 		return true;
 	}
 
+	/**
+	 * Listens for actions from client, performs them and sends responses
+	 * 
+	 * @author Joshua Richards
+	 */
 	public class ListenThread extends Thread
 	{
 		private DataInputStream in;
@@ -175,7 +225,6 @@ public class WrapperDummy implements Controller
 							break;
 					}
 					
-					System.out.println("actionId: " + actionJson.getInt("id") + " success: " + success);
 					eventQueue.addEvent(new ActionResponse(eventQueue, actionJson.getInt("id"), success));
 				}
 				catch (IOException e)
