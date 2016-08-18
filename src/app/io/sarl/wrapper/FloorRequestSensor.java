@@ -53,7 +53,7 @@ public class FloorRequestSensor extends Sensor
 		public JSONObject getDescription()
 		{
 			JSONObject floorRequestJson = new JSONObject();
-			floorRequestJson.put("carId", car.id);
+			floorRequestJson.put("carId", car.getId());
 			floorRequestJson.put("requestedFloor", requestedFloor.getFloorNumber());
 			
 			return floorRequestJson;

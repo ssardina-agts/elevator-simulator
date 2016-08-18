@@ -83,7 +83,7 @@ public class DoorSensor
     {
       JSONObject ret = new JSONObject();
       ret.put("floor", door.getFrom().getFloorNumber());
-      ret.put("car", door.getTo().id);
+      ret.put("car", door.getTo().getId());
       return ret;
     }
   }

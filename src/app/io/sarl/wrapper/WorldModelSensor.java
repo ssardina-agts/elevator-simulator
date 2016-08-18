@@ -51,7 +51,7 @@ public class WorldModelSensor extends Sensor
 				for (Car car : cars)
 				{
 					JSONObject carJson = new JSONObject();
-					carJson.put("id", car.id);
+					carJson.put("id", car.getId());
 				
 				JSONArray servicedFloorsJsonArray = new JSONArray();
 				List<Floor> servicedFloors = car.getFloorRequestPanel()

@@ -85,9 +85,9 @@ public class Building
   {
     for (int i = 0; i < x; i++)
     {
-      final Car car = new Car(eventQueue, Integer.toString(i), 0.0f, capacity, i);
+      //default stopping distance is 3.0
+      final Car car = new Car(eventQueue, Integer.toString(i), 0.0f, capacity, i, 3.0f);
       cars.add(car);
-      metaController.addCar(car, 3.0f);
 
       // SOON: Move this to Floor or maybe CarEntrance or elsewhere
       car.addListener(new Car.Listener()

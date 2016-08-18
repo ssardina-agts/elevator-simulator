@@ -35,13 +35,19 @@ public class SimpleController
     super();
   }
 
-  public void initialize(EventQueue eQ, Building b)
+  @Override
+  public void initialize(EventQueue eQ, Building building)
   {
     cars.clear();
+    for (Car car : building.getCars())
+    {
+      cars.add(car);
+    }
     carsMoving = false;
     up = true;
   }
 
+  @Override
   public void requestCar(Floor newFloor, Direction d)
   {
     moveCars();
@@ -55,12 +61,8 @@ public class SimpleController
     carsMoving = true;
   }
 
-  public void addCar(final Car car, float stoppingDistance)
-  {
-    cars.add(car);
-  }
-
   // TODO: Reduce code duplication between isUp(), getCurrentIndex(), and sendToNextFloor()
+  @Override
   public boolean arrive(Car car)
   {
     List floors = car.getFloorRequestPanel().getServicedFloors();
@@ -88,6 +90,7 @@ public class SimpleController
     car.setDestination(nextFloor);
   }
 
+  @Override
   public String toString()
   {
     return "SimpleController";
@@ -109,6 +112,7 @@ public class SimpleController
       carsMoving = true;
   }
 
+  @Override
   public void setNextDestination(Car car)
   {
     evaluateCarsMoving(car);

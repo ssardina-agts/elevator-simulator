@@ -133,7 +133,7 @@ public class Door
 	public JSONObject getDescription()
 	{
 		JSONObject ret = new JSONObject();
-		ret.put("car", to.id);
+		ret.put("car", to.getId());
 		ret.put("floor", from.getFloorNumber());
 		return ret;
 	}
@@ -167,7 +167,7 @@ public class Door
     public JSONObject getDescription()
     {
       JSONObject ret = new JSONObject();
-      ret.put("car", to.id);
+      ret.put("car", to.getId());
       ret.put("floor", from.getFloorNumber());
       return ret;
     }

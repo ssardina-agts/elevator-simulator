@@ -259,7 +259,7 @@ public final class Person
     public JSONObject getDescription()
     {
       JSONObject ret = new JSONObject();
-      ret.put("car", entrance.getDoor().getTo().id);
+      ret.put("car", entrance.getDoor().getTo().getId());
       return ret;
     }
   }
@@ -294,7 +294,7 @@ public final class Person
     public JSONObject getDescription()
     {
       JSONObject ret = new JSONObject();
-      ret.put("car", entrance.getDoor().getTo().id);
+      ret.put("car", entrance.getDoor().getTo().getId());
       return ret;
     }
   }

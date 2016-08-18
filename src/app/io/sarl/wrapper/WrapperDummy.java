@@ -40,7 +40,7 @@ public class WrapperDummy implements Controller
 		cars = new HashMap<>();
 		for (Car car : building.getCars())
 		{
-			cars.put(car.id, car);
+			cars.put(car.getId(), car);
 			FloorRequestSensor sensor = new FloorRequestSensor(car, eQ);
 			sensor.startPerceiving();
 		}
@@ -99,11 +99,6 @@ public class WrapperDummy implements Controller
 	}
 	@Override
 	public void requestCar(Floor newFloor, Direction d)
-	{
-	}
-
-	@Override
-	public void addCar(Car car, float stoppingDistance)
 	{
 	}
 

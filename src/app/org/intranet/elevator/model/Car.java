@@ -72,7 +72,8 @@ public final class Car extends MovableLocation
 	private Floor destination;
 	private FloorRequestPanel panel = new FloorRequestPanel();
 	private List<Listener> listeners = new ArrayList<Listener>();
-	public final int id;
+	private float stoppingDistance;
+	private int id;
 
 	public interface Listener
 	{
@@ -102,11 +103,12 @@ public final class Car extends MovableLocation
 		}
 	}
 
-	public Car(EventQueue eQ, String name, float height, int capacity, int id)
+	public Car(EventQueue eQ, String name, float height, int capacity, int id, float stoppingDistance)
 	{
 		super(eQ, height, capacity);
 		this.name = name;
 		this.id = id;
+		this.stoppingDistance = stoppingDistance;
 	}
 
 	/**
@@ -183,6 +185,16 @@ public final class Car extends MovableLocation
 	public String getName()
 	{
 		return name;
+	}
+	
+	public int getId()
+	{
+		return id;
+	}
+	
+	public float getStoppingDistance()
+	{
+		return stoppingDistance;
 	}
 
 	/**
