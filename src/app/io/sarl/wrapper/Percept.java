@@ -9,8 +9,9 @@ public abstract class Percept extends Event
 	public Percept(EventQueue eq) 
 	{
 		// Percepts added to event queue should be
-		// processed immediately - We want to minimise
-		// delay transmitting to the client
+		// processed immediately (current time) - 
+		// We want to minimise delay transmitting 
+		// to the client
 		super(eq.getCurrentTime());
 	}
 	
