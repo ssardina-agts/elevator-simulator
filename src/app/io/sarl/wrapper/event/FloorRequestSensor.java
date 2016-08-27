@@ -1,4 +1,4 @@
-package io.sarl.wrapper;
+package io.sarl.wrapper.event;
 
 import org.intranet.elevator.model.Car;
 import org.intranet.elevator.model.Floor;

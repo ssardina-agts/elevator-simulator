@@ -1,4 +1,4 @@
-package io.sarl.wrapper;
+package io.sarl.wrapper.event;
 
 import java.util.List;
 

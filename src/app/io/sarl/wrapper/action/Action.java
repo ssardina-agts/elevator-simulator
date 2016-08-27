@@ -1,4 +1,4 @@
-package io.sarl.wrapper;
+package io.sarl.wrapper.action;
 
 import org.intranet.sim.event.Event;
 import org.intranet.sim.event.EventQueue;
@@ -8,16 +8,33 @@ public abstract class Action extends Event
 {
 	// ID of action that was generated
 	// by client
-	private long actionId;
+	private final long actionId;
 	
-	// TODO: Error reasons?
 	// Conveys whether the action was able
 	// to be completed by the simulator
 	public enum ProcessingStatus
 	{
-		SUCCESS, FAILURE
+		COMPLETED, IN_PROGRESS, FAILED;
+		
+		public String toString()
+		{
+			// so the status values in messages are consistent
+			// with the rest of the api
+			switch (this)
+			{
+				case COMPLETED:
+					return "completed";
+				case IN_PROGRESS:
+					return "inProgress";
+				case FAILED:
+					return "failed";
+				default:
+					return super.toString();
+			}
+		}
 	}
 	private ProcessingStatus status;
+	protected String failureReason;
 	
 	public Action(long actionId, EventQueue eq) 
 	{
@@ -30,8 +47,7 @@ public abstract class Action extends Event
 	@Override
 	public final void perform()
 	{
-		ProcessingStatus status = performAction();
-		setStatus(status);
+		status = performAction();
 	}
 	
 	/**
@@ -45,7 +61,7 @@ public abstract class Action extends Event
 	@Override
 	public String getName()
 	{
-		return "action";
+		return "actionProcessed";
 	}
 	
 	@Override
@@ -57,6 +73,10 @@ public abstract class Action extends Event
 		JSONObject actionJson = new JSONObject();
 		actionJson.put("actionId", actionId);
 		actionJson.put("status", status);
+		if (failureReason != null)
+		{
+			actionJson.put("failureReason", failureReason);
+		}
 		
 		return actionJson;
 	}
@@ -69,10 +89,5 @@ public abstract class Action extends Event
 	public ProcessingStatus getStatus()
 	{
 		return status;
-	}
-	
-	protected void setStatus(ProcessingStatus status)
-	{
-		this.status = status;
 	}
 }
