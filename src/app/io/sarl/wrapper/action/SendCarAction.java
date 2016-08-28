@@ -7,6 +7,10 @@ import org.json.JSONObject;
 import io.sarl.wrapper.WrapperModel;
 import io.sarl.wrapper.Direction;
 
+/**
+ * Performs the 'sendCar' action
+ * @author Joshua Richards
+ */
 public class SendCarAction extends Action
 {
 	private WrapperModel model;
@@ -32,6 +36,7 @@ public class SendCarAction extends Action
 				this.nextDirection = Direction.DOWN;
 				break;
 			default:
+				// this causes performAction to return FAILED
 				this.nextDirection = Direction.NONE;
 				break;
 		}
@@ -45,6 +50,13 @@ public class SendCarAction extends Action
 		if (car == null)
 		{
 			failureReason = "No car with id: " + carId;
+			return ProcessingStatus.FAILED;
+		}
+		
+		if (floor == null)
+		{
+			failureReason = "No floor with id: " + floorId;
+			return ProcessingStatus.FAILED;
 		}
 
 		if (nextDirection == Direction.NONE)
@@ -60,6 +72,7 @@ public class SendCarAction extends Action
 			return ProcessingStatus.FAILED;
 		}
 		
+		// do the action
 		model.setNextDirection(carId, nextDirection);
 		car.setDestination(floor);
 		

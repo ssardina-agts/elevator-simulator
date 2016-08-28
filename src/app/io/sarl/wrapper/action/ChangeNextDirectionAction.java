@@ -1,7 +1,5 @@
 package io.sarl.wrapper.action;
 
-import org.intranet.elevator.model.Car;
-import org.intranet.sim.event.EventQueue;
 import org.json.JSONObject;
 
 import io.sarl.wrapper.Direction;
@@ -36,6 +34,7 @@ public class ChangeNextDirectionAction extends Action
 	@Override
 	protected ProcessingStatus performAction()
 	{
+		// check params
 		if (model.getCar(carId) == null)
 		{
 			failureReason = "No car with id: " + carId;
@@ -54,6 +53,7 @@ public class ChangeNextDirectionAction extends Action
 			return ProcessingStatus.FAILED;
 		}
 		
+		// do action
 		model.setNextDirection(carId, direction);
 		return ProcessingStatus.COMPLETED;
 	}

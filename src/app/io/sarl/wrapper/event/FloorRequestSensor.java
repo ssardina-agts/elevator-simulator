@@ -46,15 +46,15 @@ public class FloorRequestSensor extends Sensor
 		@Override
 		public String getName() 
 		{
-			return "floorRequest";
+			return "floorRequested";
 		}
 		
 		@Override
 		public JSONObject getDescription()
 		{
 			JSONObject floorRequestJson = new JSONObject();
-			floorRequestJson.put("carId", car.getId());
-			floorRequestJson.put("requestedFloor", requestedFloor.getFloorNumber());
+			floorRequestJson.put("car", car.getId());
+			floorRequestJson.put("floor", requestedFloor.getFloorNumber());
 			
 			return floorRequestJson;
 		}

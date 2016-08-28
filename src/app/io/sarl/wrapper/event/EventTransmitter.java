@@ -4,12 +4,16 @@ import java.io.IOException;
 
 import org.intranet.sim.event.Event;
 import org.intranet.sim.event.EventQueue;
-import org.intranet.sim.event.EventQueue.Listener;
 import org.json.JSONObject;
 
 import io.sarl.wrapper.NetworkHelper;
 
-public class EventTransmitter implements Listener
+/**
+ * EventQueue listener that transmits json representations of Events
+ * as they are processed
+ * @author Joshua Richards
+ */
+public class EventTransmitter implements EventQueue.Listener
 {
 	NetworkHelper connection;
 
@@ -21,6 +25,7 @@ public class EventTransmitter implements Listener
 	@Override
 	public void eventProcessed(Event e)
 	{
+		// create the message
 		JSONObject toTransmit = new JSONObject();
 		toTransmit.put("type", e.getName());
 		toTransmit.put("description", e.getDescription());
@@ -29,6 +34,7 @@ public class EventTransmitter implements Listener
 
 		try
 		{
+			// send message
 			connection.transmit(toTransmit);
 		}
 		catch (IOException e1)

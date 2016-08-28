@@ -18,17 +18,29 @@ import io.sarl.wrapper.event.EventTransmitter;
 import io.sarl.wrapper.event.FloorRequestSensor;
 import io.sarl.wrapper.event.WorldModelSensor;
 
+/**
+ * Holds all model information that needs to be accessed by wrapper components.
+ * Manages sensors
+ * @author Joshua Richards
+ */
 public class WrapperModel
 {
+	// using Maps in case ids aren't sequential
 	private Map<Integer, Floor> floors;
 	private Map<Integer, Car> cars;
+	// the next direction each car will travel after it arrives
+	// at its current destination.
+	// Direction.NONE value indicates the car is not moving
 	private Map<Integer, Direction> nextDirections;
 	
 	private EventQueue eventQueue;
 
-	private NetworkHelper connection;
-
-	public WrapperModel(EventQueue eQ, Building building, NetworkHelper connection)
+	/**
+	 * Initializes internal model representation, creates sensors
+	 * @param eQ The simulation's EventQueue
+	 * @param building The Building that was passed to WrapperController
+	 */
+	public WrapperModel(EventQueue eQ, Building building)
 	{
 		floors = new HashMap<>();
 		for (Floor floor : building.getFloors())
@@ -41,18 +53,17 @@ public class WrapperModel
 		for (Car car : building.getCars())
 		{
 			cars.put(car.getId(), car);
+			// listens for floor requests and adds percepts to the EventQueue
 			FloorRequestSensor sensor = new FloorRequestSensor(car, eQ);
 			sensor.startPerceiving();
 			nextDirections.put(car.getId(), Direction.NONE);
 		}
 		
-		this.connection = connection;
 		eventQueue = eQ;
 		
+		// transmits the initial state of the model
 		WorldModelSensor sensor = new WorldModelSensor(eQ, building);
 		sensor.startPerceiving();
-
-		eQ.addListener(new EventTransmitter(connection));
 	}
 	
 	public Floor getFloor(int floorId)

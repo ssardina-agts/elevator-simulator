@@ -18,6 +18,7 @@ import org.intranet.sim.event.EventQueue;
 import org.json.JSONObject;
 
 import io.sarl.wrapper.action.ListenerThread;
+import io.sarl.wrapper.event.EventTransmitter;
 
 import org.intranet.elevator.model.operate.*;
 
@@ -47,8 +48,11 @@ public class WrapperController implements Controller
 			// TODO: show error message on time out
 			throw new RuntimeException(e);
 		}
-		model = new WrapperModel(eQ, building, connection);
+		model = new WrapperModel(eQ, building);
 		
+		// listen for events and transmit them to client
+		eQ.addListener(new EventTransmitter(connection));
+		// listen for actions from client and perform them
 		new ListenerThread(connection, model).start();
 	}
 	
@@ -64,6 +68,7 @@ public class WrapperController implements Controller
 		
 		if (d != Direction.NONE)
 		{
+			// register the car as not moving
 			model.setNextDirection(car.getId(), Direction.NONE);
 			return d == Direction.UP;
 		}
@@ -83,5 +88,4 @@ public class WrapperController implements Controller
 	{
 		return getClass().getSimpleName();
 	}
-	
 }
