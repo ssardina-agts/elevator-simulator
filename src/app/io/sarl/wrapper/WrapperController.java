@@ -32,11 +32,12 @@ import org.intranet.elevator.model.operate.*;
 public class WrapperController implements Controller
 {
 	private WrapperModel model;
+	private NetworkHelper connection;
+	private ListenerThread listenerThread;
 
 	@Override
 	public void initialize(EventQueue eQ, Building building)
 	{
-		NetworkHelper connection;
 		try
 		{
 			// TODO: add option to change port
@@ -51,9 +52,19 @@ public class WrapperController implements Controller
 		model = new WrapperModel(eQ, building);
 		
 		// listen for events and transmit them to client
-		eQ.addListener(new EventTransmitter(connection));
+		eQ.addListener(new EventTransmitter(connection, () ->
+		{
+			simulationEnded();
+		}));
 		// listen for actions from client and perform them
-		new ListenerThread(connection, model).start();
+		listenerThread = new ListenerThread(connection, model);
+		listenerThread.start();
+	}
+	
+	private void simulationEnded()
+	{
+		listenerThread.close();
+		connection.close();
 	}
 	
 	@Override

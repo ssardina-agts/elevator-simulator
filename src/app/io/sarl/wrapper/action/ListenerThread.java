@@ -12,6 +12,8 @@ public class ListenerThread extends Thread
 {
 	private NetworkHelper connection;
 	private WrapperModel model;
+	
+	private boolean closed = false;
 
 	public ListenerThread(NetworkHelper connection, WrapperModel model)
 	{
@@ -31,7 +33,10 @@ public class ListenerThread extends Thread
 			}
 			catch (IOException e)
 			{
-				throw new RuntimeException(e);
+				if (!closed)
+				{
+					throw new RuntimeException(e);
+				}
 			}
 
 		}
@@ -64,5 +69,10 @@ public class ListenerThread extends Thread
 		}
 		
 		model.getEventQueue().addEvent(action);
+	}
+	
+	public void close()
+	{
+		closed = true;
 	}
 }

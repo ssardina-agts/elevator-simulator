@@ -16,6 +16,7 @@ import org.json.JSONObject;
 
 import io.sarl.wrapper.event.EventTransmitter;
 import io.sarl.wrapper.event.FloorRequestSensor;
+import io.sarl.wrapper.event.SimulationEndSensor;
 import io.sarl.wrapper.event.WorldModelSensor;
 
 /**
@@ -64,6 +65,8 @@ public class WrapperModel
 		// transmits the initial state of the model
 		WorldModelSensor sensor = new WorldModelSensor(eQ, building);
 		sensor.startPerceiving();
+		
+		new SimulationEndSensor(eQ).startPerceiving();
 	}
 	
 	public Floor getFloor(int floorId)

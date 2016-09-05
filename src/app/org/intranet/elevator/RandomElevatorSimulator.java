@@ -51,9 +51,9 @@ public class RandomElevatorSimulator
     parameters.add(capacityParameter);
     ridersParameter = new IntegerParameter("Number of People", 20);
     parameters.add(ridersParameter);
-    durationParameter = new LongParameter("Rider insertion time (ms)",50000);
+    durationParameter = new LongParameter("Simulation Duration (ms)", 50000);
     parameters.add(durationParameter);
-    seedParameter = new LongParameter("Random seed", 635359);
+    seedParameter = new LongParameter("Random seed", System.currentTimeMillis());
     parameters.add(seedParameter);
 
     List<Controller> controllers = new ArrayList<Controller>();
@@ -77,8 +77,7 @@ public class RandomElevatorSimulator
     long seed = seedParameter.getLongValue();
     Controller controller = (Controller)controllerParameter.getChoiceValue();
 
-    building = new Building(getEventQueue(), numFloors, numCars, carCapacity,
-        controller);
+    building = new Building(getEventQueue(), numFloors, numCars, carCapacity, controller);
     
     Random rand = new Random(seed);
 

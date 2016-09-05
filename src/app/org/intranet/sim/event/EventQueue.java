@@ -124,7 +124,6 @@ public final class EventQueue
     } while (true);
     currentTime = time;
     numEventsProcessed += updateEventProgress();
-    //currentTime = -1;
     lastTime = eventSet.size() == 0 ? lastEventProcessTime : time;
     
     return (numEventsProcessed != 0);

@@ -1,6 +1,7 @@
 package io.sarl.wrapper.event;
 
 import java.io.IOException;
+import java.net.SocketException;
 
 import org.intranet.sim.event.Event;
 import org.intranet.sim.event.EventQueue;
@@ -15,11 +16,13 @@ import io.sarl.wrapper.NetworkHelper;
  */
 public class EventTransmitter implements EventQueue.Listener
 {
-	NetworkHelper connection;
+	private NetworkHelper connection;
+	private Runnable onEnd;
 
-	public EventTransmitter(NetworkHelper connection)
+	public EventTransmitter(NetworkHelper connection, Runnable onEnd)
 	{
 		this.connection = connection;
+		this.onEnd = onEnd;
 	}
 
 	@Override
@@ -37,10 +40,20 @@ public class EventTransmitter implements EventQueue.Listener
 			// send message
 			connection.transmit(toTransmit);
 		}
+		catch (SocketException e1)
+		{
+			System.err.println("event processed after simulation end: " + toTransmit.toString(4));
+			throw new RuntimeException(e1);
+		}
 		catch (IOException e1)
 		{
 			// TODO: handle this gracefully
 			throw new RuntimeException(e1);
+		}
+		
+		if (e.getName().equals("simulationEnded"))
+		{
+			onEnd.run();
 		}
 	}
 

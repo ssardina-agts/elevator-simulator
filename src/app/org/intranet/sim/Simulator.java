@@ -65,7 +65,7 @@ public abstract class Simulator
 
   public interface SimulatorListener
   {
-    void modelUpdate(long time);
+    public void modelUpdate(long time);
   }
   
   public class CarRequestEvent extends Event

@@ -18,7 +18,9 @@ public class NetworkHelper
 	private Socket socket;
 	private DataInputStream in;
 	private DataOutputStream out;
-
+	
+	private boolean closed = false;
+	
 	/**
 	 * Starts a ServerSocket, accepts one client and retrieves input and
 	 * output streams to the client. This constructor will block until a
@@ -66,5 +68,17 @@ public class NetworkHelper
 		{
 			out.writeUTF(message.toString());
 		}
+	}
+	
+	public void close()
+	{
+		try
+		{
+			socket.close();
+			in.close();
+			out.close();
+			closed = true;
+		}
+		catch (IOException e) {}
 	}
 }
