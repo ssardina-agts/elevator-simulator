@@ -194,6 +194,7 @@ public class MultipleSimulationArea extends JComponent
       public void eventAdded(Event e) {}
       public void eventRemoved(Event e) {}
       public void eventProcessed(Event e) {}
+      public void simulationEnded() {}
 
       public void eventError(Exception ex)
       {

@@ -19,6 +19,8 @@ public final class EventQueue
 
   private long lastTime = -1;
   private long lastEventProcessTime;
+  
+  private boolean waitingForEvents = false;
 
   private SortedSet<Event> eventSet =
     new TreeSet<Event>(new Event.EventTimeComparator());
@@ -32,6 +34,8 @@ public final class EventQueue
     void eventError(Exception ex);
     
     void eventProcessed(Event e);
+    
+    void simulationEnded();
   }
   
   private List<Listener> listeners = new ArrayList<Listener>();
@@ -170,5 +174,28 @@ public final class EventQueue
   public synchronized long getLastEventProcessTime()
   {
     return lastEventProcessTime;
+  }
+  
+  public synchronized void end()
+  {
+	  for (Listener l : listeners)
+	  {
+		  l.simulationEnded();
+	  }
+  }
+  
+  public synchronized void stopWaitingForEvents()
+  {
+	  this.waitingForEvents = false;
+  }
+  
+  public synchronized void waitForEvents()
+  {
+	  this.waitingForEvents = true;
+  }
+  
+  public synchronized boolean isWaitingForEvents()
+  {
+	  return this.waitingForEvents;
   }
 }

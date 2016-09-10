@@ -34,10 +34,13 @@ public class WrapperController implements Controller
 	private WrapperModel model;
 	private NetworkHelper connection;
 	private ListenerThread listenerThread;
+	
+	private EventTransmitter eventTransmitter;
 
 	@Override
 	public void initialize(EventQueue eQ, Building building)
 	{
+		eQ.waitForEvents();
 		try
 		{
 			// TODO: add option to change port
@@ -52,12 +55,18 @@ public class WrapperController implements Controller
 		model = new WrapperModel(eQ, building);
 		
 		// listen for events and transmit them to client
-		eQ.addListener(new EventTransmitter(connection, () ->
+		eventTransmitter = new EventTransmitter(connection, () ->
 		{
 			simulationEnded();
-		}));
+		}, eQ);
+		eQ.addListener(eventTransmitter);
 		// listen for actions from client and perform them
 		listenerThread = new ListenerThread(connection, model);
+		listenerThread.setMessageHandler("eventProcessed",
+				(JSONObject message) ->
+				{
+					eventTransmitter.onEventProcessed(message.getLong("id"));
+				});
 		listenerThread.start();
 	}
 	

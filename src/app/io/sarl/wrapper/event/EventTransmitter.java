@@ -2,6 +2,8 @@ package io.sarl.wrapper.event;
 
 import java.io.IOException;
 import java.net.SocketException;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.intranet.sim.event.Event;
 import org.intranet.sim.event.EventQueue;
@@ -18,11 +20,15 @@ public class EventTransmitter implements EventQueue.Listener
 {
 	private NetworkHelper connection;
 	private Runnable onEnd;
+	private EventQueue eventQueue;
+	
+	private Map<Long, Event> unprocessedEvents = new HashMap<>();
 
-	public EventTransmitter(NetworkHelper connection, Runnable onEnd)
+	public EventTransmitter(NetworkHelper connection, Runnable onEnd, EventQueue eventQueue)
 	{
 		this.connection = connection;
 		this.onEnd = onEnd;
+		this.eventQueue = eventQueue;
 	}
 
 	@Override
@@ -51,7 +57,38 @@ public class EventTransmitter implements EventQueue.Listener
 			throw new RuntimeException(e1);
 		}
 		
-		if (e.getName().equals("simulationEnded"))
+		unprocessedEvents.put(e.getId(), e);
+		eventQueue.waitForEvents();
+	}
+	
+	@Override
+	public void simulationEnded()
+	{
+		eventProcessed(new Percept(eventQueue)
+		{
+			@Override
+			public String getName()
+			{
+				return "simulationEnded";
+			}
+
+			@Override
+			public JSONObject getDescription()
+			{
+				return new JSONObject();
+			}
+	
+		});
+	}
+	
+	public void onEventProcessed(long id)
+	{
+		Event e = unprocessedEvents.remove(id);
+		if (unprocessedEvents.size() == 0)
+		{
+			eventQueue.stopWaitingForEvents();
+		}
+		if (e != null && e.getName().equals("simulationEnded"))
 		{
 			onEnd.run();
 		}
