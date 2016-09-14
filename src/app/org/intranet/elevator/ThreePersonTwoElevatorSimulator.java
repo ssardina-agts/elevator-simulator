@@ -45,33 +45,15 @@ public class ThreePersonTwoElevatorSimulator
         new MetaController());
 
     final Person c = building.createPerson(building.getFloor(3), 3);
-    Event eventC = new Event(0)
-    {
-      public void perform()
-      {
-        c.setDestination(building.getFloor(1));
-      }
-    };
+    Event eventC = new CarRequestEvent(0, c, building.getFloor(3), building.getFloor(1));
     eQ.addEvent(eventC);
 
     final Person a = building.createPerson(building.getFloor(1), 1);
-    Event eventA = new Event(0)
-    {
-      public void perform()
-      {
-        a.setDestination(building.getFloor(3));
-      }
-    };
+    Event eventA = new CarRequestEvent(0, a, building.getFloor(1), building.getFloor(3));
     eQ.addEvent(eventA);
 
     final Person b = building.createPerson(building.getFloor(2), 2);
-    Event eventB = new Event(0)
-    {
-      public void perform()
-      {
-        b.setDestination(building.getFloor(4));
-      }
-    };
+    Event eventB = new CarRequestEvent(0, b, building.getFloor(2), building.getFloor(4));
     eQ.addEvent(eventB);
   }
 

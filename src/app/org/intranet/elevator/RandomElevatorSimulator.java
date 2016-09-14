@@ -21,6 +21,8 @@ import org.intranet.ui.ChoiceParameter;
 import org.intranet.ui.IntegerParameter;
 import org.intranet.ui.LongParameter;
 
+import io.sarl.wrapper.NetworkWrapperController;
+
 /**
  * @author Neil McKellar and Chris Dailey
  *
@@ -59,6 +61,7 @@ public class RandomElevatorSimulator
     Controller controller2 = new SimpleController();
     controllers.add(controller1);
     controllers.add(controller2);
+    controllers.add(new NetworkWrapperController());
     controllerParameter = new ChoiceParameter<Controller>("Controller", controllers,
         controller1);
     parameters.add(controllerParameter);
@@ -93,13 +96,7 @@ public class RandomElevatorSimulator
       // time to insert
       long insertTime = rand.nextInt((int)duration);
       // insertion event for destination at time
-      Event event = new Event(insertTime)
-      {
-        public void perform()
-        {
-          person.setDestination(destFloor);
-        }
-      };
+      Event event = new CarRequestEvent(insertTime, person, startingFloor, destFloor);
       getEventQueue().addEvent(event);
     }
   }

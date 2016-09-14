@@ -7,10 +7,16 @@ package org.intranet.sim;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.intranet.elevator.model.Floor;
+import org.intranet.elevator.model.operate.Person;
 import org.intranet.sim.clock.Clock;
 import org.intranet.sim.clock.ClockFactory;
+import org.intranet.sim.event.Event;
 import org.intranet.sim.event.EventQueue;
 import org.intranet.ui.SingleValueParameter;
+import org.json.JSONObject;
+
+import io.sarl.wrapper.Transmittable;
 
 /**
  * @author Neil McKellar and Chris Dailey
@@ -60,6 +66,46 @@ public abstract class Simulator
   public interface SimulatorListener
   {
     void modelUpdate(long time);
+  }
+  
+  public class CarRequestEvent extends Event
+  {
+    private Person person;
+    private Floor destination;
+    private Floor origin;
+
+    public CarRequestEvent(long time, Person person, Floor origin, Floor destination)
+    {
+      super(time);
+      this.person = person;
+      this.destination = destination;
+      this.origin = origin;
+    }
+
+    @Override
+    public String getName()
+    {
+      return "carRequested";
+    }
+
+    @Override
+    public JSONObject getDescription()
+    {
+      JSONObject ret = new JSONObject();
+      ret.put("floor", origin.getFloorNumber());
+      ret.put(
+        "direction",
+        (origin.getFloorNumber() < destination.getFloorNumber()) ?
+          "up" : "down"
+        );
+      return ret;
+    }
+
+    @Override
+    public void perform()
+    {
+      person.setDestination(destination);
+    }
   }
   public final void addListener(SimulatorListener sl)
   {

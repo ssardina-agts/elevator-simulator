@@ -17,7 +17,7 @@ public final class EventQueue
 {
   private long currentTime = -1; // Invalid time value initially
 
-  private long lastTime;
+  private long lastTime = -1;
   private long lastEventProcessTime;
 
   private SortedSet<Event> eventSet =
@@ -30,11 +30,13 @@ public final class EventQueue
     void eventRemoved(Event e);
     
     void eventError(Exception ex);
+    
+    void eventProcessed(Event e);
   }
   
   private List<Listener> listeners = new ArrayList<Listener>();
   
-  public void addEvent(Event event)
+  public synchronized void addEvent(Event event)
   {
 //System.out.println("EventQueue event at currentTime=" + currentTime +
 // " for time="+event.getTime()+ ", class="+event.getClass().getName());
@@ -58,7 +60,7 @@ public final class EventQueue
       listener.eventAdded(event);
   }
   
-  public void removeEvent(Event event)
+  public synchronized void removeEvent(Event event)
   {
     if (!eventSet.contains(event))
       throw new IllegalArgumentException("Cannot remove an Event that is not in the queue!");
@@ -67,7 +69,7 @@ public final class EventQueue
       listener.eventRemoved(event);
   }
   
-  public List<Event> getEventList()
+  public synchronized List<Event> getEventList()
   {
     return new ArrayList<Event>(eventSet);
   }
@@ -81,7 +83,7 @@ public final class EventQueue
    * @throws RuntimeException When the requested time is before the last time.
    * @return true if events were processed
    */
-  public boolean processEventsUpTo(long time)
+  public synchronized boolean processEventsUpTo(long time)
   {
     if (time < lastTime)
       throw new RuntimeException("Requested time is earlier than last time.");
@@ -108,6 +110,9 @@ public final class EventQueue
 
         lastEventProcessTime = currentTime;
         currentEvent.perform();
+        for (Listener listener : listeners) {
+          listener.eventProcessed(currentEvent);
+        }
         numEventsProcessed++;
       }
       catch(Exception e)
@@ -119,12 +124,13 @@ public final class EventQueue
     } while (true);
     currentTime = time;
     numEventsProcessed += updateEventProgress();
-    currentTime = -1;
+    //currentTime = -1;
     lastTime = eventSet.size() == 0 ? lastEventProcessTime : time;
+    
     return (numEventsProcessed != 0);
   }
 
-  private int updateEventProgress()
+  private synchronized int updateEventProgress()
   {
     int numEventsProcessed = 0;
     // Update any events that have incremental progress between states
@@ -147,25 +153,22 @@ public final class EventQueue
     return numEventsProcessed;
   }
   
-  public void addListener(Listener listener)
+  public synchronized void addListener(Listener listener)
   {
     listeners.add(listener);
   }
   
-  public void removeListener(Listener listener)
+  public synchronized void removeListener(Listener listener)
   {
     listeners.remove(listener);
   }
 
-  public long getCurrentTime()
+  public synchronized long getCurrentTime()
   {
-    if (currentTime == -1)
-      throw new
-        IllegalStateException("Current time is invalid when not processing events");
     return currentTime;
   }
 
-  public long getLastEventProcessTime()
+  public synchronized long getLastEventProcessTime()
   {
     return lastEventProcessTime;
   }

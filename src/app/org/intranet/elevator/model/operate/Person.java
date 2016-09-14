@@ -20,6 +20,7 @@ import org.intranet.sim.ModelElement;
 import org.intranet.sim.event.Event;
 import org.intranet.sim.event.EventQueue;
 import org.intranet.sim.event.TrackingUpdateEvent;
+import org.json.JSONObject;
 
 /**
 * A Person moves around the building, calling elevators, entering elevators,
@@ -249,6 +250,18 @@ public final class Person
       entrance.getDoorSensor().unobstruct();
       destination = null;
     }
+    
+    public String getName()
+    {
+      return "personLeftCar";
+    }
+    
+    public JSONObject getDescription()
+    {
+      JSONObject ret = new JSONObject();
+      ret.put("car", entrance.getDoor().getTo().getId());
+      return ret;
+    }
   }
   private final class EnteringCarEvent
       extends TrackingUpdateEvent
@@ -271,6 +284,18 @@ public final class Person
       percentMoved = -1;
       enterCar(entrance);
       entrance.getDoorSensor().unobstruct();
+    }
+    
+    public String getName()
+    {
+      return "personEnteredCar";
+    }
+    
+    public JSONObject getDescription()
+    {
+      JSONObject ret = new JSONObject();
+      ret.put("car", entrance.getDoor().getTo().getId());
+      return ret;
     }
   }
 

@@ -11,6 +11,7 @@ import org.intranet.sim.ModelElement;
 import org.intranet.sim.event.Event;
 import org.intranet.sim.event.EventQueue;
 import org.intranet.sim.event.TrackingUpdateEvent;
+import org.json.JSONObject;
 
 /**
 * A door that opens and closes.
@@ -71,8 +72,8 @@ public class Door
    * Varies from 0 to 100.  The door starts closed.
    */
   private int percentClosed = 100;
-  private Location from;
-  private Location to;
+  private Floor from;
+  private Car to;
   private List<Listener> listeners = new ArrayList<Listener>();
   private List<Listener> priorityListeners = new ArrayList<Listener>();
   private Event event;
@@ -121,6 +122,21 @@ public class Door
       percentClosed = 0;
       opened();
     }
+
+	@Override
+	public String getName()
+	{
+		return "doorOpened";
+	}
+
+	@Override
+	public JSONObject getDescription()
+	{
+		JSONObject ret = new JSONObject();
+		ret.put("car", to.getId());
+		ret.put("floor", from.getFloorNumber());
+		return ret;
+	}
   }
   
   private class CloseEvent extends TrackingUpdateEvent
@@ -142,9 +158,22 @@ public class Door
       percentClosed = 100;
       closed();
     }
+    @Override
+    public String getName()
+    {
+      return "doorClosed";
+    }
+    @Override
+    public JSONObject getDescription()
+    {
+      JSONObject ret = new JSONObject();
+      ret.put("car", to.getId());
+      ret.put("floor", from.getFloorNumber());
+      return ret;
+    }
   }
 
-  Door(EventQueue eQ, Location fromLocation, Location toLocation)
+  Door(EventQueue eQ, Floor fromLocation, Car toLocation)
   {
     super(eQ);
     from = fromLocation;
@@ -170,12 +199,12 @@ public class Door
     return percentClosed;
   }
 
-  public Location getFrom()
+  public Floor getFrom()
   {
     return from;
   }
 
-  public Location getTo()
+  public Car getTo()
   {
     return to;
   }

@@ -6,6 +6,7 @@ package org.intranet.elevator.model.operate.controller;
 
 import org.intranet.elevator.model.Car;
 import org.intranet.elevator.model.Floor;
+import org.intranet.elevator.model.operate.Building;
 import org.intranet.sim.event.EventQueue;
 
 /**
@@ -13,9 +14,8 @@ import org.intranet.sim.event.EventQueue;
  */
 public interface Controller
 {
-  void initialize(EventQueue eQ);
+  void initialize(EventQueue eQ, Building building);
   void requestCar(Floor newFloor, Direction d);
-  void addCar(Car car, float stoppingDistance);
   /**
    * To be called only once when a car arrives at a location.  This allows the
    * controller to update any internal data structures that were keeping track

@@ -49,13 +49,7 @@ public class ThreePersonBugSimulator
   {
     final Person person = building.createPerson(building.getFloor(start), id);
     // insertion event for destination at time
-    Event event = new Event(simTime)
-    {
-      public void perform()
-      {
-        person.setDestination(building.getFloor(dest));
-      }
-    };
+    Event event = new CarRequestEvent(simTime, person, building.getFloor(start), building.getFloor(dest));
     getEventQueue().addEvent(event);
   }
 

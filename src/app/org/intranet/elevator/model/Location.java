@@ -12,65 +12,90 @@ import org.intranet.sim.ModelElement;
 import org.intranet.sim.event.EventQueue;
 
 /**
-* @author Neil McKellar and Chris Dailey
-*/
-public class Location
-  extends ModelElement
+ * ModelElement that contains people and has a height
+ * 
+ * @author Neil McKellar and Chris Dailey
+ * @author Joshua Beale
+ */
+public class Location extends ModelElement
 {
-  private float height;
-  private int capacity;
-  private List<Person> occupants = new ArrayList<Person>();
-  
-  Location(EventQueue eQ, float height, int capacity)
-  {
-    super(eQ);
-    this.height = height;
-    this.capacity = capacity;
-  }
+	private float height;
+	private int capacity;
+	private List<Person> occupants = new ArrayList<Person>();
 
-  public final float getHeight()
-  {
-    return height;
-  }
+	Location(EventQueue eQ, float height, int capacity)
+	{
+		super(eQ);
+		this.height = height;
+		this.capacity = capacity;
+	}
 
-  protected void setHeight(float newHeight)
-  {
-    height = newHeight; 
-  }
-  
-  public final void personEnters(Person person)
-  {
-    if (isAtCapacity())
-      throw new IllegalStateException("Location is at capacity: " + capacity);
-    occupants.add(person);
-  }
-  
+	/**
+	 * @return Height of Location
+	 */
+	public final float getHeight()
+	{
+		return height;
+	}
 
-  public final List<Person> getOccupants()
-  {
-    return occupants;
-  }
-  
-  public final void personLeaves(Person person)
-  {
-    if (!occupants.remove(person))
-    {
-      throw new IllegalStateException("Person is not in this location.");
-    }
-  }
-  
-  public final boolean isAtCapacity()
-  {
-    return (occupants.size() == capacity);
-  }
-  
-  public final int getCapacity()
-  {
-    return capacity;
-  }
+	/**
+	 * @param newHeight
+	 *            Height to set location to
+	 */
+	protected void setHeight(float newHeight)
+	{
+		height = newHeight;
+	}
 
-  public final void setCapacity(int numOccupants)
-  {
-    capacity = numOccupants;
-  }
+	/**
+	 * @param person
+	 *            Person object to add to Location
+	 */
+	public final void personEnters(Person person)
+	{
+		if (isAtCapacity()) throw new IllegalStateException("Location is at capacity: " + capacity);
+		occupants.add(person);
+	}
+
+	/**
+	 * @return List of all person objects contained in location
+	 */
+	public final List<Person> getOccupants()
+	{
+		return occupants;
+	}
+
+	/**
+	 * @param person
+	 *            Person object to remove from Location
+	 */
+	public final void personLeaves(Person person)
+	{
+		if (!occupants.remove(person)) { throw new IllegalStateException("Person is not in this location."); }
+	}
+
+	/**
+	 * @return True if number of occupants equals capacity
+	 */
+	public final boolean isAtCapacity()
+	{
+		return (occupants.size() == capacity);
+	}
+
+	/**
+	 * @return Capacity of location
+	 */
+	public final int getCapacity()
+	{
+		return capacity;
+	}
+
+	/**
+	 * @param numOccupants
+	 *            New capacity for location
+	 */
+	public final void setCapacity(int numOccupants)
+	{
+		capacity = numOccupants;
+	}
 }

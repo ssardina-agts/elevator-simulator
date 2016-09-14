@@ -10,6 +10,7 @@ import java.util.List;
 import org.intranet.elevator.model.Car;
 import org.intranet.elevator.model.CarRequestPanel;
 import org.intranet.elevator.model.Floor;
+import org.intranet.elevator.model.operate.Building;
 import org.intranet.sim.event.EventQueue;
 
 /**
@@ -34,13 +35,19 @@ public class SimpleController
     super();
   }
 
-  public void initialize(EventQueue eQ)
+  @Override
+  public void initialize(EventQueue eQ, Building building)
   {
     cars.clear();
+    for (Car car : building.getCars())
+    {
+      cars.add(car);
+    }
     carsMoving = false;
     up = true;
   }
 
+  @Override
   public void requestCar(Floor newFloor, Direction d)
   {
     moveCars();
@@ -54,12 +61,8 @@ public class SimpleController
     carsMoving = true;
   }
 
-  public void addCar(final Car car, float stoppingDistance)
-  {
-    cars.add(car);
-  }
-
   // TODO: Reduce code duplication between isUp(), getCurrentIndex(), and sendToNextFloor()
+  @Override
   public boolean arrive(Car car)
   {
     List floors = car.getFloorRequestPanel().getServicedFloors();
@@ -87,6 +90,7 @@ public class SimpleController
     car.setDestination(nextFloor);
   }
 
+  @Override
   public String toString()
   {
     return "SimpleController";
@@ -108,6 +112,7 @@ public class SimpleController
       carsMoving = true;
   }
 
+  @Override
   public void setNextDestination(Car car)
   {
     evaluateCarsMoving(car);

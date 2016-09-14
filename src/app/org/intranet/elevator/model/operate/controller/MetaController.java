@@ -9,6 +9,7 @@ import java.util.List;
 
 import org.intranet.elevator.model.Car;
 import org.intranet.elevator.model.Floor;
+import org.intranet.elevator.model.operate.Building;
 import org.intranet.sim.event.EventQueue;
 
 /**
@@ -19,17 +20,18 @@ public class MetaController
 {
   private List<CarController> carControllers = new ArrayList<CarController>();
 
-  public void initialize(EventQueue eQ)
+  @Override
+  public void initialize(EventQueue eQ, Building building)
   {
     carControllers.clear();
+    for (Car car : building.getCars())
+    {
+      CarController cc = new CarController(car);
+      carControllers.add(cc);
+    }
   }
 
-  public void addCar(Car car, float stoppingDistance)
-  {
-    CarController controller = new CarController(car, stoppingDistance);
-    carControllers.add(controller);
-  }
-
+  @Override
   public void requestCar(Floor newFloor, Direction d)
   {
     CarController controller = findBestCar(newFloor, d);
@@ -64,17 +66,20 @@ public class MetaController
     return c;
   }
 
+  @Override
   public String toString()
   {
     return "Default MetaController";
   }
 
+  @Override
   public boolean arrive(Car car)
   {
     CarController c = getController(car);
     return c.arrive();
   }
 
+  @Override
   public void setNextDestination(Car car)
   {
     CarController c = getController(car);

@@ -45,7 +45,6 @@ public class Building
   {
     super(eQ);
     metaController = controller;
-    controller.initialize(eQ);
   }
 
   public Building(EventQueue eQ, int numFloors, int numCars, int carCapacity,
@@ -54,12 +53,18 @@ public class Building
     this(eQ, controller);
     createFloors(numFloors);
     createCars(numCars, carCapacity);
+    initialize();
   }
 
   public Building(EventQueue eQ, int numFloors, int numCars,
       Controller controller)
   {
     this(eQ, numFloors, numCars, 8, controller);
+  }
+  
+  private void initialize()
+  {
+	  metaController.initialize(eventQueue, this);
   }
 
   public void createFloors(int x)
@@ -80,9 +85,9 @@ public class Building
   {
     for (int i = 0; i < x; i++)
     {
-      final Car car = new Car(eventQueue, Integer.toString(i), 0.0f, capacity);
+      //default stopping distance is 3.0
+      final Car car = new Car(eventQueue, Integer.toString(i), 0.0f, capacity, i, 3.0f);
       cars.add(car);
-      metaController.addCar(car, 3.0f);
 
       // SOON: Move this to Floor or maybe CarEntrance or elsewhere
       car.addListener(new Car.Listener()

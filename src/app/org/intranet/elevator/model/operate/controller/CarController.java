@@ -24,11 +24,11 @@ public class CarController
   private final float stoppingDistance;
   private final CarAssignments assignments;
   
-  public CarController(Car c, float stoppingDist)
+  public CarController(Car c)
   {
     super();
     car = c;
-    stoppingDistance = stoppingDist;
+    stoppingDistance = c.getStoppingDistance();
     assignments = new CarAssignments(car.getName());
 
     car.getFloorRequestPanel().addListener(new FloorRequestPanel.Listener()
