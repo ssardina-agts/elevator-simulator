@@ -23,17 +23,16 @@ under the supervision of Sebastian Sardina
 * Clone repository into Eclipse workspace
 * Import existing project, select the elevator-sim directory in the workspace
 * If there are errors:
-  * Check the m2eclipse plugin is installed
-  * Run the "Discover m2e connectors" quick fix if there is an error on the
-  plugin tag in pom.xml
-  * Check maven proxy settings
+    * Check the m2eclipse plugin is installed
+    * Run the "Discover m2e connectors" quick fix if there is an error on the
+    plugin tag in pom.xml
+    * Check maven proxy settings
 
 #### Using Maven ####
 
 * Clone repository
 * Change directory into 'elevator-sim'
 * run `mvn compile` to create class files or `mvn package` to create a jar
-* 
 
 ## Running the networked simulator ##
 
