@@ -29,7 +29,7 @@ import org.intranet.elevator.model.operate.*;
  * 
  * @author Joshua Richards
  */
-public class WrapperController implements Controller
+public class NetworkWrapperController implements Controller
 {
 	private WrapperModel model;
 

@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>elevator-sim</groupId>
   <artifactId>elevator-sim</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
+  <version>0.1</version>
   <build>
     <sourceDirectory>src/app</sourceDirectory>
     <resources>
@@ -21,6 +21,17 @@
           <source>1.8</source>
           <target>1.8</target>
         </configuration>
+      </plugin>
+      <plugin>
+      	<artifactId>maven-jar-plugin</artifactId>
+      	<version>2.4</version>
+      	<configuration>
+      	  <archive>
+      	    <manifest>
+      	      <mainClass>org.intranet.elevator.ElevatorSimulationApplication</mainClass>
+      	    </manifest>
+      	  </archive>
+      	</configuration>
       </plugin>
     </plugins>
   </build>
