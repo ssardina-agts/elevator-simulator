@@ -2,7 +2,6 @@ package io.sarl.wrapper.action;
 
 import java.io.IOException;
 
-import org.intranet.sim.event.EventQueue;
 import org.json.JSONObject;
 
 import io.sarl.wrapper.NetworkHelper;
