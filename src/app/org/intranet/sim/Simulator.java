@@ -9,6 +9,7 @@ import java.util.List;
 
 import org.intranet.elevator.model.Floor;
 import org.intranet.elevator.model.operate.Person;
+import org.intranet.elevator.model.operate.controller.Controller;
 import org.intranet.sim.clock.Clock;
 import org.intranet.sim.clock.ClockFactory;
 import org.intranet.sim.event.Event;
@@ -34,6 +35,7 @@ public abstract class Simulator
   private List<SimulatorListener> listeners =
     new ArrayList<SimulatorListener>();
   private boolean ended = false;
+  private Controller controller;
 
   Clock.FeedbackListener cc = new Clock.FeedbackListener()
   {
@@ -154,7 +156,7 @@ public abstract class Simulator
     clockFactory = cf;
     eventQueue = new EventQueue();
     clock = clockFactory.createClock(cc);
-    initializeModel();
+    controller = initializeModel();
     initialized = true;
   }
   
@@ -163,9 +165,14 @@ public abstract class Simulator
     return initialized; 
   }
   
-  protected abstract void initializeModel();
+  protected abstract Controller initializeModel();
   
   public abstract Model getModel();
+  
+  public Controller getController()
+  {
+	  return controller;
+  }
   
   public final SingleValueParameter getParameter(String description)
   {

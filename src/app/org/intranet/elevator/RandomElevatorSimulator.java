@@ -67,7 +67,8 @@ public class RandomElevatorSimulator
     parameters.add(controllerParameter);
   }
 
-  public void initializeModel()
+  @Override
+  public Controller initializeModel()
   {
     int numFloors = floorsParameter.getIntegerValue();
     int numCars = carsParameter.getIntegerValue();
@@ -98,8 +99,10 @@ public class RandomElevatorSimulator
       Event event = new CarRequestEvent(insertTime, person, startingFloor, destFloor);
       getEventQueue().addEvent(event);
     }
+    
+    return controller;
   }
-
+  
   public final Model getModel()
   {
     return building;

@@ -6,6 +6,7 @@ package org.intranet.elevator;
 
 import org.intranet.elevator.model.operate.Building;
 import org.intranet.elevator.model.operate.Person;
+import org.intranet.elevator.model.operate.controller.Controller;
 import org.intranet.elevator.model.operate.controller.MetaController;
 import org.intranet.sim.Model;
 import org.intranet.sim.Simulator;
@@ -38,15 +39,17 @@ public class NoIdleElevatorCarSimulator
     parameters.add(downDestParameter);
   }
   
-  public void initializeModel()
+  @Override
+  public Controller initializeModel()
   {
     int numFloors = floorsParameter.getIntegerValue();
     int numCars = carsParameter.getIntegerValue();
     final int upDest = upDestParameter.getIntegerValue() - 1;
     final int downDest = downDestParameter.getIntegerValue() - 1;
 
+    Controller controller = new MetaController();
     building = new Building(getEventQueue(), numFloors, numCars,
-        new MetaController());
+        controller);
     final Person a = building.createPerson(building.getFloor(1), 1);
     Event eventA = new CarRequestEvent(0, a, building.getFloor(1), building.getFloor(upDest));
     getEventQueue().addEvent(eventA);
@@ -54,6 +57,8 @@ public class NoIdleElevatorCarSimulator
     final Person c = building.createPerson(building.getFloor(3), 3);
     Event eventC = new CarRequestEvent(0, c, building.getFloor(3), building.getFloor(downDest));
     getEventQueue().addEvent(eventC);
+    
+    return controller;
   }
 
   public final Model getModel()

@@ -9,6 +9,7 @@ import java.util.Random;
 import org.intranet.elevator.model.Floor;
 import org.intranet.elevator.model.operate.Building;
 import org.intranet.elevator.model.operate.Person;
+import org.intranet.elevator.model.operate.controller.Controller;
 import org.intranet.elevator.model.operate.controller.MetaController;
 import org.intranet.sim.Model;
 import org.intranet.sim.Simulator;
@@ -50,7 +51,8 @@ public class MorningTrafficElevatorSimulator
     parameters.add(seedParameter);
   }
 
-  public void initializeModel()
+  @Override
+  public Controller initializeModel()
   {
     int numFloors = floorsParameter.getIntegerValue();
     int numCars = carsParameter.getIntegerValue();
@@ -60,8 +62,9 @@ public class MorningTrafficElevatorSimulator
     int stdDeviation = stdDeviationParameter.getIntegerValue();
     long seed = seedParameter.getLongValue();
 
+    Controller controller = new MetaController();
     building = new Building(getEventQueue(), numFloors, numCars,
-        new MetaController());
+        controller);
     // starting floor is the ground floor
     Floor startingFloor = building.getFloor(0);
     startingFloor.setCapacity(Integer.MAX_VALUE);
@@ -85,6 +88,8 @@ public class MorningTrafficElevatorSimulator
         getEventQueue().addEvent(event);
       }
     }
+    
+    return controller;
   }
 
   public final Model getModel()

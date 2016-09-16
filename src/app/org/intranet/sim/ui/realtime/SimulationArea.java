@@ -13,9 +13,11 @@ import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JProgressBar;
 import javax.swing.JSpinner;
 import javax.swing.JSplitPane;
 import javax.swing.SpinnerNumberModel;
+import javax.swing.SwingWorker;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
@@ -72,13 +74,30 @@ public class SimulationArea
   private void createLeftPane(final SimulationApplication simApp)
   {
     leftPane.setLayout(new BorderLayout());
-    SingleValueInputPanel ip = new SingleValueInputPanel(sim.getParameters(),
-        new InputPanel.Listener()
-    {
+    SingleValueInputPanel ip = new SingleValueInputPanel(sim.getParameters(), null);
+    ip.addListener(new InputPanel.Listener()
+	{
       public void parametersApplied()
       {
-        sim.initialize(new RealTimeClock.RealTimeClockFactory());
-        reconfigureSimulation(simApp);
+    	new SwingWorker<Void, Void>()
+    	{
+		  JProgressBar progressBar;
+
+		  @Override
+		  protected Void doInBackground() throws Exception
+		  {
+		    ip.showIndeterminateProgress();	
+		    sim.initialize(new RealTimeClock.RealTimeClockFactory());
+		    return null;
+		  }
+		
+		  @Override
+		  protected void done()
+		  {
+			ip.hideIndeterminateProgress();
+		    reconfigureSimulation(simApp);
+		  }
+    	}.execute();
       }
     });
     leftPane.add(ip, BorderLayout.NORTH);
