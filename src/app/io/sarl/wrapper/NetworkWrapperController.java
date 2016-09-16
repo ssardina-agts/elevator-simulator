@@ -1,21 +1,12 @@
 package io.sarl.wrapper;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.IOException;
-import java.net.ServerSocket;
-import java.net.Socket;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import org.intranet.elevator.model.Car;
 
 import org.intranet.elevator.model.Floor;
 import org.intranet.elevator.model.operate.controller.Controller;
-import org.intranet.sim.event.Event;
 import org.intranet.sim.event.EventQueue;
-import org.json.JSONObject;
 
 import io.sarl.wrapper.action.ListenerThread;
 import io.sarl.wrapper.event.EventTransmitter;
@@ -29,7 +20,7 @@ import org.intranet.elevator.model.operate.*;
  * 
  * @author Joshua Richards
  */
-public class WrapperController implements Controller
+public class NetworkWrapperController implements Controller
 {
 	private WrapperModel model;
 	private NetworkHelper connection;

@@ -135,3 +135,4 @@ jackagt.jar
 *.backup
 
 .settings
+/target/

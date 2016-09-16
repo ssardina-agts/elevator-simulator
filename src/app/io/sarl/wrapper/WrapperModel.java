@@ -1,20 +1,15 @@
 package io.sarl.wrapper;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.intranet.elevator.model.Car;
 import org.intranet.elevator.model.Floor;
 import org.intranet.elevator.model.operate.Building;
-import org.intranet.sim.event.Event;
 import org.intranet.sim.event.EventQueue;
-import org.json.JSONObject;
 
-import io.sarl.wrapper.event.EventTransmitter;
 import io.sarl.wrapper.event.FloorRequestSensor;
 import io.sarl.wrapper.event.WorldModelSensor;
 
