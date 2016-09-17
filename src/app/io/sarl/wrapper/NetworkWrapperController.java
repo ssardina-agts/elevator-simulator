@@ -52,6 +52,7 @@ public class NetworkWrapperController implements Controller
 			simulationEnded();
 		}, eQ);
 		eQ.addListener(eventTransmitter);
+		connection.setEventTransmitter(eventTransmitter);
 		// listen for actions from client and perform them
 		listenerThread = new ListenerThread(connection, model);
 		listenerThread.setMessageHandler("eventProcessed",

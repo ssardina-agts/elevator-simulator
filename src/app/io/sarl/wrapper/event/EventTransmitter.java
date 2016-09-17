@@ -7,6 +7,7 @@ import java.util.Map;
 
 import org.intranet.sim.event.Event;
 import org.intranet.sim.event.EventQueue;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import io.sarl.wrapper.NetworkHelper;
@@ -35,11 +36,7 @@ public class EventTransmitter implements EventQueue.Listener
 	public void eventProcessed(Event e)
 	{
 		// create the message
-		JSONObject toTransmit = new JSONObject();
-		toTransmit.put("type", e.getName());
-		toTransmit.put("description", e.getDescription());
-		toTransmit.put("time", e.getTime());
-		toTransmit.put("id", e.getId());
+		JSONObject toTransmit = makeEventJson(e);
 
 		try
 		{
@@ -81,6 +78,16 @@ public class EventTransmitter implements EventQueue.Listener
 		});
 	}
 	
+	private JSONObject makeEventJson(Event e)
+	{
+		JSONObject ret = new JSONObject();
+		ret.put("type", e.getName());
+		ret.put("description", e.getDescription());
+		ret.put("time", e.getTime());
+		ret.put("id", e.getId());
+		return ret;
+	}
+	
 	public void onEventProcessed(long id)
 	{
 		Event e = unprocessedEvents.remove(id);
@@ -92,6 +99,40 @@ public class EventTransmitter implements EventQueue.Listener
 		{
 			onEnd.run();
 		}
+	}
+	
+	public void retransmitUnprocessedEvents()
+	{
+		eventProcessed(new ReconnectPercept(eventQueue));
+	}
+	
+	private class ReconnectPercept extends Percept
+	{
+		public ReconnectPercept(EventQueue eq)
+		{
+			super(eq);
+		}
+
+		@Override
+		public String getName()
+		{
+			return "reconnect";
+		}
+
+		@Override
+		public JSONObject getDescription()
+		{
+			JSONObject ret = new JSONObject();
+			ret.put("time", eventQueue.getCurrentTime());
+			JSONArray unprocessedEventsJson = new JSONArray();
+			for (Event event : unprocessedEvents.values())
+			{
+				unprocessedEventsJson.put(makeEventJson(event));
+			}
+			ret.put("unprocessedEvents", unprocessedEventsJson);
+			return ret;
+		}
+		
 	}
 
 	@Override

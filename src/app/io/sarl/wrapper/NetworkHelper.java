@@ -5,8 +5,12 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.json.JSONObject;
+
+import io.sarl.wrapper.event.EventTransmitter;
 
 /**
  * Abstracts networking operations so other classes only need to work with JSON.
@@ -15,11 +19,15 @@ import org.json.JSONObject;
  */
 public class NetworkHelper
 {
+	private int port;
 	private Socket socket;
 	private DataInputStream in;
 	private DataOutputStream out;
-	
-	private boolean closed = false;
+
+	private EventTransmitter eventTransmitter;
+
+	private AtomicBoolean reconnecting = new AtomicBoolean(false);
+	private CountDownLatch releasedOnReconnect = new CountDownLatch(1);
 	
 	/**
 	 * Starts a ServerSocket, accepts one client and retrieves input and
@@ -32,12 +40,25 @@ public class NetworkHelper
 	 */
 	public NetworkHelper(int port) throws IOException
 	{
+		this.port = port;
+		initSocket();
+	}
+	
+	private void initSocket() throws IOException
+	{
 		ServerSocket ss = new ServerSocket(port);
-		socket = ss.accept();
-		ss.close();
-		
-		in = new DataInputStream(socket.getInputStream());
-		out = new DataOutputStream(socket.getOutputStream());
+		try
+		{
+			ss.setSoTimeout(30 * 1000);
+			socket = ss.accept();
+			socket.setSoTimeout(10 * 1000);
+			in = new DataInputStream(socket.getInputStream());
+			out = new DataOutputStream(socket.getOutputStream());
+		}
+		finally
+		{
+			ss.close();
+		}
 	}
 	
 	/**
@@ -52,7 +73,15 @@ public class NetworkHelper
 		String messageStr;
 		synchronized (in)
 		{
-			messageStr = in.readUTF();
+			try
+			{
+				messageStr = in.readUTF();
+			}
+			catch (IOException e)
+			{
+				reconnect();
+				messageStr = in.readUTF();
+			}
 		}
 		return new JSONObject(messageStr);
 	}
@@ -66,8 +95,67 @@ public class NetworkHelper
 	{
 		synchronized (out)
 		{
-			out.writeUTF(message.toString());
+			try
+			{
+				out.writeUTF(message.toString());
+			}
+			catch (IOException e)
+			{
+				reconnect();
+			}
 		}
+	}
+	
+	private void reconnect() throws IOException
+	{
+		System.out.print("yo what's up im a debug statement");
+		if (!reconnecting.compareAndSet(false, true))
+		{
+			try
+			{
+				releasedOnReconnect.await();
+			}
+			catch (InterruptedException e) {}
+			if (!reconnecting.get())
+			{
+				return;
+			}
+			throw new IOException("failed to reconnect");
+		}
+		
+		close();
+		int attempts = 0;
+		IOException toThrow = new IOException("Programmer error: this should never be thrown");
+		
+		do
+		{
+			System.out.println("reconnect attempt: " + (attempts + 1));
+			try
+			{
+				initSocket();
+				System.out.println("reconnected");
+				
+				reconnecting.set(false);
+				System.out.println("al;sdfkj");
+				break;
+			}
+			catch (IOException e)
+			{
+				e.printStackTrace();
+				toThrow = e;
+			}
+		} while (attempts++ < 3);
+		
+		releasedOnReconnect.countDown();
+		releasedOnReconnect = new CountDownLatch(1);
+
+		if (!reconnecting.get())
+		{
+			eventTransmitter.retransmitUnprocessedEvents();
+			return;
+		}
+		
+		throw toThrow;
 	}
 	
 	public void close()
@@ -77,8 +165,15 @@ public class NetworkHelper
 			socket.close();
 			in.close();
 			out.close();
-			closed = true;
 		}
-		catch (IOException e) {}
+		catch (IOException e)
+		{
+			e.printStackTrace();
+		}
+	}
+	
+	public void setEventTransmitter(EventTransmitter et)
+	{
+		eventTransmitter = et;
 	}
 }
