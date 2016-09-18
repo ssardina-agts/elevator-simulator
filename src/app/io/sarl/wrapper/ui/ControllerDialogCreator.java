@@ -1,8 +1,8 @@
 package io.sarl.wrapper.ui;
 
-import java.util.Map;
-
 public interface ControllerDialogCreator
 {
-	public ControllerDialog createDialog(String message, Map<String, Runnable> options);
+	public ControllerDialog createLongCancellableOperationDialog(
+			String title, String message, Runnable onCancel
+	);
 }

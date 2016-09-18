@@ -95,9 +95,9 @@ public class ApplicationUI extends JFrame
                                             boolean isMultiple)
   {
     if (isMultiple)
-      simulationArea = new MultipleSimulationArea(sim, app);
+      simulationArea = new MultipleSimulationArea(sim, app, this);
     else
-      simulationArea = new SimulationArea(sim, app);
+      simulationArea = new SimulationArea(sim, app, this);
     getContentPane().add(simulationArea, BorderLayout.CENTER);
   }
                                                      

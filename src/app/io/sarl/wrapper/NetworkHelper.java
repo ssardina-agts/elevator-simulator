@@ -11,6 +11,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import org.json.JSONObject;
 
 import io.sarl.wrapper.event.EventTransmitter;
+import io.sarl.wrapper.ui.ControllerDialog;
+import io.sarl.wrapper.ui.ControllerDialogCreator;
 
 /**
  * Abstracts networking operations so other classes only need to work with JSON.
@@ -20,11 +22,13 @@ import io.sarl.wrapper.event.EventTransmitter;
 public class NetworkHelper
 {
 	private int port;
+	private ServerSocket ss;
 	private Socket socket;
 	private DataInputStream in;
 	private DataOutputStream out;
 
 	private EventTransmitter eventTransmitter;
+	private ControllerDialogCreator cdc;
 
 	private AtomicBoolean reconnecting = new AtomicBoolean(false);
 	private CountDownLatch releasedOnReconnect = new CountDownLatch(1);
@@ -46,7 +50,7 @@ public class NetworkHelper
 	
 	private void initSocket() throws IOException
 	{
-		ServerSocket ss = new ServerSocket(port);
+		ss = new ServerSocket(port);
 		try
 		{
 			ss.setSoTimeout(30 * 1000);
@@ -123,6 +127,19 @@ public class NetworkHelper
 			throw new IOException("failed to reconnect");
 		}
 		
+		ControllerDialog dialog = cdc.createLongCancellableOperationDialog(
+				"Reconnecting", "Client disconnected. Reconnecting...", () ->
+				{
+					try
+					{
+						ss.close();
+					}
+					catch (IOException e)
+					{
+						e.printStackTrace();
+					}
+				});
+		
 		close();
 		int attempts = 0;
 		IOException toThrow = new IOException("Programmer error: this should never be thrown");
@@ -148,6 +165,8 @@ public class NetworkHelper
 		
 		releasedOnReconnect.countDown();
 		releasedOnReconnect = new CountDownLatch(1);
+		
+		dialog.close();
 
 		if (!reconnecting.get())
 		{
@@ -175,5 +194,10 @@ public class NetworkHelper
 	public void setEventTransmitter(EventTransmitter et)
 	{
 		eventTransmitter = et;
+	}
+	
+	public void setControllerDialogCreator(ControllerDialogCreator cdc)
+	{
+		this.cdc = cdc;
 	}
 }

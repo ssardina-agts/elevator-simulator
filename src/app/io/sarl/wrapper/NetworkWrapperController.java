@@ -11,6 +11,7 @@ import org.json.JSONObject;
 
 import io.sarl.wrapper.action.ListenerThread;
 import io.sarl.wrapper.event.EventTransmitter;
+import io.sarl.wrapper.ui.ControllerDialogCreator;
 
 import org.intranet.elevator.model.operate.*;
 
@@ -100,5 +101,11 @@ public class NetworkWrapperController implements Controller
 	public String toString()
 	{
 		return getClass().getSimpleName();
+	}
+
+	@Override
+	public void setControllerDialogCreator(ControllerDialogCreator cdc)
+	{
+		connection.setControllerDialogCreator(cdc);
 	}
 }
