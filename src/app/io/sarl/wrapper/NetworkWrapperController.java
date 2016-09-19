@@ -38,7 +38,7 @@ public class NetworkWrapperController implements Controller
 		{
 			// TODO: add option to change port
 			// TODO: show dialog while waiting for connection
-			connection = new NetworkHelper(8081);
+			connection = new NetworkHelper(8081, eQ);
 		}
 		catch (IOException e)
 		{
@@ -48,12 +48,17 @@ public class NetworkWrapperController implements Controller
 		model = new WrapperModel(eQ, building);
 		
 		// listen for events and transmit them to client
-		eventTransmitter = new EventTransmitter(connection, () ->
+		eventTransmitter = new EventTransmitter(connection, eQ);
+		eventTransmitter.addListener(new EventTransmitter.Listener()
 		{
-			simulationEnded();
-		}, eQ);
+			@Override
+			public void onEnd()
+			{
+				simulationEnded();
+			}
+		});
 		eQ.addListener(eventTransmitter);
-		connection.setEventTransmitter(eventTransmitter);
+		connection.addListener(eventTransmitter);
 		// listen for actions from client and perform them
 		listenerThread = new ListenerThread(connection, model);
 		listenerThread.setMessageHandler("eventProcessed",

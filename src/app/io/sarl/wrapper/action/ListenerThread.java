@@ -2,8 +2,12 @@ package io.sarl.wrapper.action;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
+import org.intranet.sim.event.EventQueue;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import io.sarl.wrapper.NetworkHelper;
@@ -15,6 +19,8 @@ public class ListenerThread extends Thread
 	private WrapperModel model;
 	
 	private boolean closed = false;
+
+	private Set<Integer> processedActions = new HashSet<>();
 	private Map<String, MessageHandler> specialTypes = new HashMap<>();
 
 	public ListenerThread(NetworkHelper connection, WrapperModel model)
@@ -67,6 +73,9 @@ public class ListenerThread extends Thread
 			case "changeNextDirection":
 				action = new ChangeNextDirectionAction(actionId, model, params);
 				break;
+			case "reconnected":
+				action = new ReconnectedAction(actionId, model, params);
+				break;
 			default:
 				action = new ErrorAction(
 						actionId,
@@ -105,5 +114,36 @@ public class ListenerThread extends Thread
 	public interface MessageHandler
 	{
 		public void handleMessage(JSONObject message);
+	}
+	
+	private class ReconnectedAction extends Action
+	{
+		private JSONObject params;
+
+		public ReconnectedAction(long actionId, WrapperModel model, JSONObject params)
+		{
+			super(actionId, model.getEventQueue());
+			this.params = params;
+		}
+
+		@Override
+		protected ProcessingStatus performAction()
+		{
+			JSONArray unprocessedActions = params.getJSONArray("unprocessedActions");
+			
+			for (int i = 0; i < unprocessedActions.length(); i++)
+			{
+				JSONObject unprocessedAction = unprocessedActions.getJSONObject(i);
+				int actionId = unprocessedAction.getInt("id");
+				
+				if (!processedActions.contains(actionId))
+				{
+					doAction(unprocessedAction);
+				}
+			}
+
+			return ProcessingStatus.COMPLETED;
+		}
+		
 	}
 }

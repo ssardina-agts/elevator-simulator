@@ -2,12 +2,18 @@ package io.sarl.wrapper;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.EOFException;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketException;
+import java.net.SocketTimeoutException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import org.intranet.sim.event.EventQueue;
 import org.json.JSONObject;
 
 import io.sarl.wrapper.event.EventTransmitter;
@@ -22,13 +28,16 @@ import io.sarl.wrapper.ui.ControllerDialogCreator;
 public class NetworkHelper
 {
 	private int port;
+	private EventQueue eventQueue;
 	private ServerSocket ss;
 	private Socket socket;
 	private DataInputStream in;
 	private DataOutputStream out;
 
-	private EventTransmitter eventTransmitter;
+	private List<Listener> listeners = new ArrayList<>();
 	private ControllerDialogCreator cdc;
+	
+	private boolean closed = true;
 
 	private AtomicBoolean reconnecting = new AtomicBoolean(false);
 	private CountDownLatch releasedOnReconnect = new CountDownLatch(1);
@@ -42,9 +51,10 @@ public class NetworkHelper
 	 * for a client to connect to it or there is a problem retrieving the
 	 * input and output streams
 	 */
-	public NetworkHelper(int port) throws IOException
+	public NetworkHelper(int port, EventQueue eventQueue) throws IOException
 	{
 		this.port = port;
+		this.eventQueue = eventQueue;
 		initSocket();
 	}
 	
@@ -55,9 +65,10 @@ public class NetworkHelper
 		{
 			ss.setSoTimeout(30 * 1000);
 			socket = ss.accept();
-			socket.setSoTimeout(10 * 1000);
+			socket.setSoTimeout(30 * 1000);
 			in = new DataInputStream(socket.getInputStream());
 			out = new DataOutputStream(socket.getOutputStream());
+			closed = false;
 		}
 		finally
 		{
@@ -81,8 +92,19 @@ public class NetworkHelper
 			{
 				messageStr = in.readUTF();
 			}
-			catch (IOException e)
+			catch (SocketException | EOFException e)
 			{
+				// connection reset
+				// probably client closed
+				if (!closed)
+				{
+					handleConnectionClose("Connection closed by client");
+				}
+				throw e;
+			}
+			catch (SocketTimeoutException e)
+			{
+				// disconnected from network probably
 				reconnect();
 				messageStr = in.readUTF();
 			}
@@ -105,14 +127,22 @@ public class NetworkHelper
 			}
 			catch (IOException e)
 			{
-				reconnect();
+				if (!reconnecting.get())
+				{
+					e.printStackTrace();
+					return;
+				}
+				try
+				{
+					releasedOnReconnect.await();
+				}
+				catch (InterruptedException e1) {}
 			}
 		}
 	}
 	
 	private void reconnect() throws IOException
 	{
-		System.out.print("yo what's up im a debug statement");
 		if (!reconnecting.compareAndSet(false, true))
 		{
 			try
@@ -133,47 +163,63 @@ public class NetworkHelper
 					try
 					{
 						ss.close();
+						handleConnectionClose("Cancelled reconnect");
 					}
 					catch (IOException e)
 					{
+						System.out.println("sadf;lkjasdf");
 						e.printStackTrace();
 					}
 				});
 		
+		IOException toThrow = new IOException("Programmer error: this should never be thrown");
+		// prevent simulation progressing any further until connection reestablished
+		synchronized (eventQueue)
+		{
 		close();
 		int attempts = 0;
-		IOException toThrow = new IOException("Programmer error: this should never be thrown");
-		
-		do
-		{
-			System.out.println("reconnect attempt: " + (attempts + 1));
-			try
+			
+			do
 			{
-				initSocket();
-				System.out.println("reconnected");
-				
-				reconnecting.set(false);
-				System.out.println("al;sdfkj");
-				break;
-			}
-			catch (IOException e)
-			{
-				e.printStackTrace();
-				toThrow = e;
-			}
-		} while (attempts++ < 3);
-		
-		releasedOnReconnect.countDown();
-		releasedOnReconnect = new CountDownLatch(1);
-		
-		dialog.close();
+				System.out.println("reconnect attempt: " + (attempts + 1));
+				try
+				{
+					initSocket();
+					
+					reconnecting.set(false);
+					break;
+				}
+				catch (SocketException e)
+				{
+					// serversocket closed
+					reconnecting.set(false);
+					releasedOnReconnect.countDown();
+					releasedOnReconnect = new CountDownLatch(1);
+					return;
+				}
+				catch (IOException e)
+				{
+					e.printStackTrace();
+					toThrow = e;
+				}
+			} while (attempts++ < 3);
+			
+			releasedOnReconnect.countDown();
+			releasedOnReconnect = new CountDownLatch(1);
+			
+			dialog.close();
 
-		if (!reconnecting.get())
-		{
-			eventTransmitter.retransmitUnprocessedEvents();
-			return;
+			if (!reconnecting.get())
+			{
+				for (Listener l : listeners)
+				{
+					l.onReconnect();
+				}
+				return;
+			}
 		}
 		
+		handleConnectionClose("Failed to reconnect");
 		throw toThrow;
 	}
 	
@@ -184,6 +230,7 @@ public class NetworkHelper
 			socket.close();
 			in.close();
 			out.close();
+			closed = true;
 		}
 		catch (IOException e)
 		{
@@ -191,13 +238,34 @@ public class NetworkHelper
 		}
 	}
 	
-	public void setEventTransmitter(EventTransmitter et)
+	private void handleConnectionClose(String message)
 	{
-		eventTransmitter = et;
+		cdc.showErrorDialog(message);
+		close();
+		for (Listener l : listeners)
+		{
+			l.onConnectionClosed();
+		}
 	}
 	
 	public void setControllerDialogCreator(ControllerDialogCreator cdc)
 	{
 		this.cdc = cdc;
+	}
+	
+	public void addListener(Listener l)
+	{
+		listeners.add(l);
+	}
+	
+	public void removeListener(Listener l)
+	{
+		listeners.remove(l);
+	}
+	
+	public interface Listener
+	{
+		public void onReconnect();
+		public void onConnectionClosed();
 	}
 }
