@@ -1,55 +1,37 @@
-# Elevator Simulator #
+# README #
 
 ### What is this repository for? ###
 
-* Fork of [elevatorsim](http://sourceforge.net/projects/elevatorsim)
-* Adapted original simulator to allow control over a network
-* Forked from r162 (0.4+)
-* Developed by final year RMIT CSIT students as part of their capstone project
-under the supervision of Sebastian Sardina
+* Elevator Simulator Server
+* 0.1
+* [Original Project](http://sourceforge.net/projects/elevatorsim)
+* Licensed under the LGPL (Lesser GNU Public License)
+
+### How do I get the Sarl Client set up? ###
+
+	Step 1. Clone Elevator-Sim from bitbucket: bitbucket.org/Sarlrmit/elevator-sim
+	Step 2. Import Master branch from repository
+	Step 3.	Go to Run -> Run Configurations and under Java Application select New_configuration
+	Step 4. In the Project field Browse for the project
+	Step 5.	In the Main class field Search for org.intranet.elevator.ElevatorSimulationApplication
+	Step 6. Click Run and Enjoy!
 
 ### Contribution guidelines ###
 
-* TBD
+* Writing tests
+* Code review
+* Other guidelines
 
 ### Who do I talk to? ###
 
-* Sebastian Sardina (project supervisor and sarlrmit admin)
-
-## Building from Source ##
-
-#### Using Eclipse ####
-
-* Clone repository into Eclipse workspace
-* Import existing project, select the elevator-sim directory in the workspace
-* If there are errors:
-    * Check the m2eclipse plugin is installed
-    * Run the "Discover m2e connectors" quick fix if there is an error on the
-    plugin tag in pom.xml
-    * Check maven proxy settings
-
-#### Using Maven ####
-
-* Clone repository
-* Change directory into 'elevator-sim'
-* run `mvn compile` to create class files or `mvn package` to create a jar
-
-## Running the networked simulator ##
-
-* Execute jar or ElevatorSimualationApplication
-* Select file > new
-* Select 'Random Rider Insertion' and click 'Real time'
-* Configure simulation settings to your liking or leave them at their defaults
-* Select 'NetworkWrapperController' under the 'Controller' option
-* Click apply
-* Run a client (see sarlrmit/java-elsim-client or sarlrmit/SARL-CONTROLLER)
-* Click 'Go, Dude!' once the client is connected and the bottom left panel
-is showing statistics
-* Adjust the time factor in the bottom right to speed up / slow down the simulation
-* It is up to the client to control the elevator cars
+* Repo owner or admin
+* Other community or team contact
 
 
-# Previous Readme #
+
+
+
+### Previous Readme ###
 
 Elevator Simulator 0.4
 Copyright 2004-2005 Neil McKellar and Chris Dailey
