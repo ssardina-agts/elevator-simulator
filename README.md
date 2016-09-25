@@ -8,7 +8,7 @@ This README is written to hep you obtain and run a copy of our Elevator Simulati
 2. Java Runtime Environment (JRE)
 
 
-### How do I get the Sarl Client set up? ###
+### How do I get the Elevator Simulator Server set up? ###
 
 1. Clone Elevator-Sim from bitbucket: bitbucket.org/Sarlrmit/elevator-sim
 2. Import Master branch from repository
