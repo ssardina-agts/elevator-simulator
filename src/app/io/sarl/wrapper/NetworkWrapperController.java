@@ -64,7 +64,7 @@ public class NetworkWrapperController implements Controller
 		listenerThread.setMessageHandler("eventProcessed",
 				(JSONObject message) ->
 				{
-					eventTransmitter.onEventProcessed(message.getLong("id"));
+					eventTransmitter.onEventProcessedByClient(message.getLong("id"));
 				});
 		listenerThread.start();
 	}

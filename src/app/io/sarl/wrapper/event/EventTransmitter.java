@@ -3,9 +3,9 @@ package io.sarl.wrapper.event;
 import java.io.IOException;
 import java.net.SocketException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.intranet.sim.event.Event;
 import org.intranet.sim.event.EventQueue;
@@ -26,7 +26,7 @@ public class EventTransmitter implements EventQueue.Listener, NetworkHelper.List
 	
 	private List<Listener> listeners = new ArrayList<>();
 	
-	private Map<Long, Event> unprocessedEvents = new HashMap<>();
+	private Map<Long, Event> unprocessedEvents = new ConcurrentHashMap<>();
 
 	public EventTransmitter(NetworkHelper connection, EventQueue eventQueue)
 	{
@@ -76,7 +76,6 @@ public class EventTransmitter implements EventQueue.Listener, NetworkHelper.List
 			{
 				return new JSONObject();
 			}
-	
 		});
 	}
 	
@@ -90,15 +89,22 @@ public class EventTransmitter implements EventQueue.Listener, NetworkHelper.List
 		return ret;
 	}
 	
-	public void onEventProcessed(long id)
+	public void onEventProcessedByClient(long id)
 	{
 		Event e = unprocessedEvents.remove(id);
+		if (e == null)
+		{
+			System.err.println("Clients reports event " + id +
+					" processed but server has no record");
+			return;
+		}
 		if (unprocessedEvents.size() == 0)
 		{
 			eventQueue.stopWaitingForEvents();
 		}
-		if (e != null && e.getName().equals("simulationEnded"))
+		if (e.getName().equals("simulationEnded"))
 		{
+			eventQueue.stopWaitingForEvents();
 			for (Listener l : listeners)
 			{
 				l.onEnd();
