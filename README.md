@@ -21,9 +21,10 @@ This README is written to hep you obtain and run a copy of our Elevator Simulati
 
 ### Who do I talk to? ###
 
-Matthew McNally (Project Manager & Sarl agent developer)  
-Joshua Richards (Java Elevator Sim Server developer) 
-Joshua Beale (Sarl agent developer) 
+Matthew McNally (Project Manager & Sarl agent developer) -
+Joshua Richards (Java Elevator Sim Server developer) -
+Joshua Beale (Sarl agent developer) -
+Dylan Rock (Documentation) -
 
 ###License###
 
