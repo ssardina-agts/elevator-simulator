@@ -10,12 +10,12 @@ This README is written to hep you obtain and run a copy of our Elevator Simulati
 
 ### How do I get the Elevator Simulator Server set up? ###
 
-1. Clone Elevator-Sim from bitbucket: bitbucket.org/Sarlrmit/elevator-sim
-2. Import Master branch from repository
-3. Go to Run -> Run Configurations and under Java Application select New_configuration
-4. In the Project field Browse for the project
-5. In the Main class field Search for org.intranet.elevator.ElevatorSimulationApplication
-6. Click Run and Enjoy!
+* Clone Elevator-Sim from bitbucket: bitbucket.org/Sarlrmit/elevator-sim
+* Import Master branch from repository
+* Go to Run -> Run Configurations and under Java Application select New_configuration
+* In the Project field Browse for the project
+* In the Main class field Search for org.intranet.elevator.ElevatorSimulationApplication
+* Click Run and Enjoy!
 
 
 
