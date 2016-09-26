@@ -42,7 +42,7 @@ public class NetworkWrapperController implements Controller
 		model = new WrapperModel(eQ, building);
 		
 		// listen for events and transmit them to client
-		eQ.addListener(new EventTransmitter(connection));
+		eQ.addListener(new EventTransmitter(connection, model));
 		// listen for actions from client and perform them
 		new ListenerThread(connection, model).start();
 	}

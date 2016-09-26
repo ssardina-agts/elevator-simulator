@@ -7,6 +7,7 @@ import org.intranet.sim.event.EventQueue;
 import org.json.JSONObject;
 
 import io.sarl.wrapper.NetworkHelper;
+import io.sarl.wrapper.WrapperModel;
 
 /**
  * EventQueue listener that transmits json representations of Events
@@ -15,11 +16,13 @@ import io.sarl.wrapper.NetworkHelper;
  */
 public class EventTransmitter implements EventQueue.Listener
 {
+	WrapperModel model;
 	NetworkHelper connection;
 
-	public EventTransmitter(NetworkHelper connection)
+	public EventTransmitter(NetworkHelper connection, WrapperModel model)
 	{
 		this.connection = connection;
+		this.model = model;
 	}
 
 	@Override
