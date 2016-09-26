@@ -21,7 +21,7 @@ import org.intranet.ui.ChoiceParameter;
 import org.intranet.ui.IntegerParameter;
 import org.intranet.ui.LongParameter;
 
-import io.sarl.wrapper.NetworkWrapperController;
+import au.edu.rmit.elevatorsim.NetworkWrapperController;
 
 /**
  * @author Neil McKellar and Chris Dailey

@@ -1,4 +1,4 @@
-package io.sarl.wrapper;
+package au.edu.rmit.elevatorsim;
 
 import java.io.IOException;
 
@@ -8,8 +8,8 @@ import org.intranet.elevator.model.Floor;
 import org.intranet.elevator.model.operate.controller.Controller;
 import org.intranet.sim.event.EventQueue;
 
-import io.sarl.wrapper.action.ListenerThread;
-import io.sarl.wrapper.event.EventTransmitter;
+import au.edu.rmit.elevatorsim.action.ListenerThread;
+import au.edu.rmit.elevatorsim.event.EventTransmitter;
 
 import org.intranet.elevator.model.operate.*;
 

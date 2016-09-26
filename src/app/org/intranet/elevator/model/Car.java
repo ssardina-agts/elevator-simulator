@@ -10,7 +10,7 @@ import java.util.List;
 import org.intranet.sim.event.EventQueue;
 import org.json.JSONObject;
 
-import io.sarl.wrapper.Transmittable;
+import au.edu.rmit.elevatorsim.Transmittable;
 
 /**
  * The states of Car are substates of MovableLocation:IDLE. Valid states:

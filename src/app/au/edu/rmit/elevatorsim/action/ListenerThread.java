@@ -1,11 +1,11 @@
-package io.sarl.wrapper.action;
+package au.edu.rmit.elevatorsim.action;
 
 import java.io.IOException;
 
 import org.json.JSONObject;
 
-import io.sarl.wrapper.NetworkHelper;
-import io.sarl.wrapper.WrapperModel;
+import au.edu.rmit.elevatorsim.NetworkHelper;
+import au.edu.rmit.elevatorsim.WrapperModel;
 
 public class ListenerThread extends Thread
 {

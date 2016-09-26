@@ -1,4 +1,4 @@
-package io.sarl.wrapper.event;
+package au.edu.rmit.elevatorsim.event;
 
 import java.io.IOException;
 
@@ -6,7 +6,7 @@ import org.intranet.sim.event.Event;
 import org.intranet.sim.event.EventQueue;
 import org.json.JSONObject;
 
-import io.sarl.wrapper.NetworkHelper;
+import au.edu.rmit.elevatorsim.NetworkHelper;
 
 /**
  * EventQueue listener that transmits json representations of Events

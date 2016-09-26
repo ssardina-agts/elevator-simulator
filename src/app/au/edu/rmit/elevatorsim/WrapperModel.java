@@ -1,4 +1,4 @@
-package io.sarl.wrapper;
+package au.edu.rmit.elevatorsim;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -10,8 +10,8 @@ import org.intranet.elevator.model.Floor;
 import org.intranet.elevator.model.operate.Building;
 import org.intranet.sim.event.EventQueue;
 
-import io.sarl.wrapper.event.FloorRequestSensor;
-import io.sarl.wrapper.event.WorldModelSensor;
+import au.edu.rmit.elevatorsim.event.FloorRequestSensor;
+import au.edu.rmit.elevatorsim.event.WorldModelSensor;
 
 /**
  * Holds all model information that needs to be accessed by wrapper components.

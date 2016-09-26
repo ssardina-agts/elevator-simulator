@@ -16,7 +16,7 @@ import org.intranet.sim.event.EventQueue;
 import org.intranet.ui.SingleValueParameter;
 import org.json.JSONObject;
 
-import io.sarl.wrapper.Transmittable;
+import au.edu.rmit.elevatorsim.Transmittable;
 
 /**
  * @author Neil McKellar and Chris Dailey

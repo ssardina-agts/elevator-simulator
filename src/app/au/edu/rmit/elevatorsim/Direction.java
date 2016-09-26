@@ -1,4 +1,4 @@
-package io.sarl.wrapper;
+package au.edu.rmit.elevatorsim;
 
 public enum Direction
 {

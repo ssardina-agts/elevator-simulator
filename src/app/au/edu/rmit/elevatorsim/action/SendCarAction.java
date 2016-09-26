@@ -1,11 +1,11 @@
-package io.sarl.wrapper.action;
+package au.edu.rmit.elevatorsim.action;
 
 import org.intranet.elevator.model.Car;
 import org.intranet.elevator.model.Floor;
 import org.json.JSONObject;
 
-import io.sarl.wrapper.WrapperModel;
-import io.sarl.wrapper.Direction;
+import au.edu.rmit.elevatorsim.Direction;
+import au.edu.rmit.elevatorsim.WrapperModel;
 
 /**
  * Performs the 'sendCar' action
