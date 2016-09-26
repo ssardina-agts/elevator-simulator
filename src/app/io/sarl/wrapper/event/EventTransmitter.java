@@ -9,6 +9,8 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.intranet.sim.event.Event;
 import org.intranet.sim.event.EventQueue;
+import org.intranet.statistics.Column;
+import org.intranet.statistics.Table;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -64,20 +66,7 @@ public class EventTransmitter implements EventQueue.Listener, NetworkHelper.List
 	@Override
 	public void simulationEnded()
 	{
-		eventProcessed(new Percept(model.getEventQueue())
-		{
-			@Override
-			public String getName()
-			{
-				return "simulationEnded";
-			}
-
-			@Override
-			public JSONObject getDescription()
-			{
-				return new JSONObject();
-			}
-		});
+		eventProcessed(new SimulationEndedPercept());
 	}
 	
 	private JSONObject makeEventJson(Event e)
@@ -160,6 +149,48 @@ public class EventTransmitter implements EventQueue.Listener, NetworkHelper.List
 			ret.put("unprocessedEvents", unprocessedEventsJson);
 			return ret;
 		}
+	}
+	
+	private class SimulationEndedPercept extends Percept
+	{
+
+		public SimulationEndedPercept()
+		{
+			super(model.getEventQueue());
+		}
+
+		@Override
+		public String getName()
+		{
+			return "simulationEnded";
+		}
+
+		@Override
+		public JSONObject getDescription()
+		{
+			List<Table> statistics = model.getStatistics();
+			JSONObject ret = new JSONObject();
+			
+			for (Table table : statistics)
+			{
+				JSONObject tableJson = new JSONObject();
+				for (int i = 0; i < table.getColumnCount(); i++)
+				{
+					Column column = table.getColumn(i);
+					JSONArray columnJson = new JSONArray();
+					
+					for (int j = 0; j < column.getValueCount(); j++)
+					{
+						columnJson.put(column.getValue(j));
+					}
+					tableJson.put(column.getHeading(), columnJson);
+				}
+				ret.put(table.getName(), tableJson);
+			}
+
+			return ret;
+		}
+		
 	}
 
 	public void addListener(Listener l)
