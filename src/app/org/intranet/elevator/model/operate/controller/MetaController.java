@@ -12,6 +12,8 @@ import org.intranet.elevator.model.Floor;
 import org.intranet.elevator.model.operate.Building;
 import org.intranet.sim.event.EventQueue;
 
+import io.sarl.wrapper.ui.ControllerDialogCreator;
+
 /**
  * @author Neil McKellar and Chris Dailey
  */
@@ -94,4 +96,7 @@ public class MetaController
         c = controller;
     return c;
   }
+
+  @Override
+  public void setControllerDialogCreator(ControllerDialogCreator cdc) {}
 }

@@ -11,11 +11,14 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JComponent;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JProgressBar;
 import javax.swing.JSpinner;
 import javax.swing.JSplitPane;
 import javax.swing.SpinnerNumberModel;
+import javax.swing.SwingWorker;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
@@ -27,6 +30,8 @@ import org.intranet.sim.clock.Clock;
 import org.intranet.sim.clock.RealTimeClock;
 import org.intranet.ui.InputPanel;
 import org.intranet.ui.SingleValueInputPanel;
+
+import io.sarl.wrapper.ui.ControllerDialogCreatorImpl;
 
 /**
  * @author Neil McKellar and Chris Dailey
@@ -42,11 +47,12 @@ public class SimulationArea
   private JComponent leftPane = new JPanel();
   private JSplitPane rightSplitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
   private JPanel bottomPanel = new JPanel(new BorderLayout());
+  private JFrame parent;
   ClockDisplay clockDisplay = new ClockDisplay();
 
   private EventQueueDisplay eventQueueDisplay;
 
-  public SimulationArea(Simulator simulator, SimulationApplication simApp)
+  public SimulationArea(Simulator simulator, SimulationApplication simApp, JFrame parent)
   {
     super();
     sim = simulator;
@@ -67,18 +73,36 @@ public class SimulationArea
         bView.repaint();
       }
     });
+    
+    this.parent = parent;
   }
 
   private void createLeftPane(final SimulationApplication simApp)
   {
     leftPane.setLayout(new BorderLayout());
-    SingleValueInputPanel ip = new SingleValueInputPanel(sim.getParameters(),
-        new InputPanel.Listener()
-    {
+    SingleValueInputPanel ip = new SingleValueInputPanel(sim.getParameters(), null);
+    ip.addListener(new InputPanel.Listener()
+	{
       public void parametersApplied()
       {
-        sim.initialize(new RealTimeClock.RealTimeClockFactory());
-        reconfigureSimulation(simApp);
+    	new SwingWorker<Void, Void>()
+    	{
+		  @Override
+		  protected Void doInBackground() throws Exception
+		  {
+		    ip.showIndeterminateProgress();	
+		    sim.initialize(new RealTimeClock.RealTimeClockFactory());
+		    sim.getController().setControllerDialogCreator(new ControllerDialogCreatorImpl(parent));
+		    return null;
+		  }
+		
+		  @Override
+		  protected void done()
+		  {
+			ip.hideIndeterminateProgress();
+		    reconfigureSimulation(simApp);
+		  }
+    	}.execute();
       }
     });
     leftPane.add(ip, BorderLayout.NORTH);

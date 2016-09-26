@@ -57,8 +57,9 @@ public class MultipleSimulationArea extends JComponent
   private List<MultipleValueParameter<?>> multiValueParams;
   private Map<List<SingleValueParameter<?>>, List<Table>> results;
   private Box topBox = new Box(BoxLayout.Y_AXIS); 
+  private JFrame parent;
 
-  public MultipleSimulationArea(Simulator simulator, SimulationApplication app)
+  public MultipleSimulationArea(Simulator simulator, SimulationApplication app, JFrame parent)
   {
     super();
     sim = simulator;
@@ -68,6 +69,7 @@ public class MultipleSimulationArea extends JComponent
 
     add(topBox, BorderLayout.NORTH);
     createTopPanel();
+    this.parent = parent;
   }
 
   private void createTopPanel()
@@ -194,6 +196,7 @@ public class MultipleSimulationArea extends JComponent
       public void eventAdded(Event e) {}
       public void eventRemoved(Event e) {}
       public void eventProcessed(Event e) {}
+      public void simulationEnded() {}
 
       public void eventError(Exception ex)
       {
@@ -370,7 +373,7 @@ public class MultipleSimulationArea extends JComponent
     JFrame simFrame = new JFrame("Real Time Simulation Run");
     simFrame.setIconImage(simApp.getImageIcon());
     simFrame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
-    SimulationArea simulationArea = new SimulationArea(newSim, simApp);
+    SimulationArea simulationArea = new SimulationArea(newSim, simApp, parent);
     simFrame.getContentPane().add(simulationArea, BorderLayout.CENTER);
     simFrame.setSize(800, 600);
     simFrame.setVisible(true);
