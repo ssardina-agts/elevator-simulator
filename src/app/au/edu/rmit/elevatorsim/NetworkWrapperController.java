@@ -7,9 +7,11 @@ import org.intranet.elevator.model.Car;
 import org.intranet.elevator.model.Floor;
 import org.intranet.elevator.model.operate.controller.Controller;
 import org.intranet.sim.event.EventQueue;
+import org.json.JSONObject;
 
 import au.edu.rmit.elevatorsim.action.ListenerThread;
 import au.edu.rmit.elevatorsim.event.EventTransmitter;
+import au.edu.rmit.elevatorsim.ui.ControllerDialogCreator;
 
 import org.intranet.elevator.model.operate.*;
 
@@ -23,16 +25,20 @@ import org.intranet.elevator.model.operate.*;
 public class NetworkWrapperController implements Controller
 {
 	private WrapperModel model;
+	private NetworkHelper connection;
+	private ListenerThread listenerThread;
+	
+	private EventTransmitter eventTransmitter;
 
 	@Override
 	public void initialize(EventQueue eQ, Building building)
 	{
-		NetworkHelper connection;
+		eQ.waitForEvents();
 		try
 		{
 			// TODO: add option to change port
 			// TODO: show dialog while waiting for connection
-			connection = new NetworkHelper(8081);
+			connection = new NetworkHelper(8081, eQ);
 		}
 		catch (IOException e)
 		{
@@ -42,9 +48,31 @@ public class NetworkWrapperController implements Controller
 		model = new WrapperModel(eQ, building);
 		
 		// listen for events and transmit them to client
-		eQ.addListener(new EventTransmitter(connection));
+		eventTransmitter = new EventTransmitter(connection, model);
+		eventTransmitter.addListener(new EventTransmitter.Listener()
+		{
+			@Override
+			public void onEnd()
+			{
+				simulationEnded();
+			}
+		});
+		eQ.addListener(eventTransmitter);
+		connection.addListener(eventTransmitter);
 		// listen for actions from client and perform them
-		new ListenerThread(connection, model).start();
+		listenerThread = new ListenerThread(connection, model);
+		listenerThread.setMessageHandler("eventProcessed",
+				(JSONObject message) ->
+				{
+					eventTransmitter.onEventProcessedByClient(message.getLong("id"));
+				});
+		listenerThread.start();
+	}
+	
+	private void simulationEnded()
+	{
+		listenerThread.close();
+		connection.close();
 	}
 	
 	@Override
@@ -78,5 +106,11 @@ public class NetworkWrapperController implements Controller
 	public String toString()
 	{
 		return getClass().getSimpleName();
+	}
+
+	@Override
+	public void setControllerDialogCreator(ControllerDialogCreator cdc)
+	{
+		connection.setControllerDialogCreator(cdc);
 	}
 }

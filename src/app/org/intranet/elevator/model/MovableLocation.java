@@ -55,21 +55,30 @@ public abstract class MovableLocation extends Location
 		destinationHeight = height;
 		eQ.addListener(new EventQueue.Listener()
 		{
+			@Override
 			public void eventAdded(Event e)
 			{
 			}
 
+			@Override
 			public void eventError(Exception ex)
 			{
 			}
 
+			@Override
 			public void eventProcessed(Event e)
 			{
 			}
 
+			@Override
 			public void eventRemoved(Event e)
 			{
 				if (e == arrivalEvent) arrivalEvent = null;
+			}
+			
+			@Override
+			public void simulationEnded()
+			{
 			}
 		});
 	}

@@ -13,6 +13,8 @@ import org.intranet.elevator.model.Floor;
 import org.intranet.elevator.model.operate.Building;
 import org.intranet.sim.event.EventQueue;
 
+import au.edu.rmit.elevatorsim.ui.ControllerDialogCreator;
+
 /**
  * Goal 1: (Complete)
  * Elevators should stop when there are no car requests and no floor requests.
@@ -125,4 +127,7 @@ public class SimpleController
     if (carsMoving)
       sendToNextFloor(car);
   }
+
+  @Override
+  public void setControllerDialogCreator(ControllerDialogCreator cdc) {}
 }

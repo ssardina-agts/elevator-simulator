@@ -17,6 +17,7 @@ import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
+import javax.swing.JProgressBar;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 
@@ -30,6 +31,8 @@ public abstract class InputPanel
   protected JPanel center = new JPanel(new GridBagLayout());
   protected int centerRow = 1; // skip the header row
   protected MemberArrays members = new MemberArrays();
+  
+  private JProgressBar progressBar;
 
   protected class MemberArrays
   {
@@ -85,10 +88,17 @@ public abstract class InputPanel
   {
     void parametersApplied();
   }
-  private void addListener(Listener l)
-  { listeners.add(l); }
+
+  public void addListener(Listener l)
+  {
+	if (l != null)
+      listeners.add(l);
+  }
+
   public void removeListener(Listener l)
-  { listeners.remove(l); }
+  {
+    listeners.remove(l);
+  }
   
   private InputPanel()
   {
@@ -97,6 +107,10 @@ public abstract class InputPanel
     JPanel centered = new JPanel(new FlowLayout(FlowLayout.CENTER));
     JButton apply = new JButton("Apply");
     centered.add(apply);
+    progressBar = new JProgressBar();
+    progressBar.setIndeterminate(true);
+    progressBar.setVisible(false);
+    centered.add(progressBar);
     add(centered, BorderLayout.SOUTH);
     apply.addActionListener(new ActionListener()
     {
@@ -116,6 +130,16 @@ public abstract class InputPanel
     });
     
     add(center, BorderLayout.CENTER);
+  }
+  
+  public void showIndeterminateProgress()
+  {
+	  progressBar.setVisible(true);
+  }
+
+  public void hideIndeterminateProgress()
+  {
+	  progressBar.setVisible(false);
   }
   
   protected InputPanel(List<? extends Parameter> parameters, Listener l)

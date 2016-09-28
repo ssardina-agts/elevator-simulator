@@ -3,12 +3,14 @@ package au.edu.rmit.elevatorsim;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.intranet.elevator.model.Car;
 import org.intranet.elevator.model.Floor;
 import org.intranet.elevator.model.operate.Building;
 import org.intranet.sim.event.EventQueue;
+import org.intranet.statistics.Table;
 
 import au.edu.rmit.elevatorsim.event.FloorRequestSensor;
 import au.edu.rmit.elevatorsim.event.WorldModelSensor;
@@ -20,6 +22,7 @@ import au.edu.rmit.elevatorsim.event.WorldModelSensor;
  */
 public class WrapperModel
 {
+	private Building building;
 	// using Maps in case ids aren't sequential
 	private Map<Integer, Floor> floors;
 	private Map<Integer, Car> cars;
@@ -37,6 +40,7 @@ public class WrapperModel
 	 */
 	public WrapperModel(EventQueue eQ, Building building)
 	{
+		this.building = building;
 		floors = new HashMap<>();
 		for (Floor floor : building.getFloors())
 		{
@@ -94,5 +98,10 @@ public class WrapperModel
 	public EventQueue getEventQueue()
 	{
 		return eventQueue;
+	}
+	
+	public List<Table> getStatistics()
+	{
+		return building.getStatistics();
 	}
 }
