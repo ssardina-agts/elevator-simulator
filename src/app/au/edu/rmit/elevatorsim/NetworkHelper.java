@@ -18,7 +18,6 @@ import org.json.JSONObject;
 
 import au.edu.rmit.elevatorsim.ui.ControllerDialog;
 import au.edu.rmit.elevatorsim.ui.ControllerDialogCreator;
-import io.sarl.wrapper.event.EventTransmitter;
 
 /**
  * Abstracts networking operations so other classes only need to work with JSON.
