@@ -81,7 +81,11 @@ public class EventTransmitter implements EventQueue.Listener, NetworkHelper.List
 	
 	public void onEventProcessedByClient(long id)
 	{
-		Event e = unprocessedEvents.remove(id);
+		Event e;
+		synchronized (unprocessedEvents)
+		{
+			e = unprocessedEvents.remove(id);
+		}
 		if (e == null)
 		{
 			System.err.println("Clients reports event " + id +
