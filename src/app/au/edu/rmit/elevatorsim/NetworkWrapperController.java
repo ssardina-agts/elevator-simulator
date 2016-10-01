@@ -37,7 +37,6 @@ public class NetworkWrapperController implements Controller
 		try
 		{
 			// TODO: add option to change port
-			// TODO: show dialog while waiting for connection
 			connection = new NetworkHelper(8081, eQ);
 		}
 		catch (IOException e)

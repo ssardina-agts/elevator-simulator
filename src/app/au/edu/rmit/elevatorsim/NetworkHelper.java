@@ -54,15 +54,15 @@ public class NetworkHelper
 	{
 		this.port = port;
 		this.eventQueue = eventQueue;
-		initSocket();
+		initSocket(0);
 	}
 	
-	private void initSocket() throws IOException
+	private void initSocket(int serverTimeoutSeconds) throws IOException
 	{
 		ss = new ServerSocket(port);
 		try
 		{
-			ss.setSoTimeout(30 * 1000);
+			ss.setSoTimeout(serverTimeoutSeconds * 1000);
 			socket = ss.accept();
 			socket.setSoTimeout(30 * 1000);
 			in = new DataInputStream(socket.getInputStream());
@@ -183,7 +183,7 @@ public class NetworkHelper
 				System.out.println("reconnect attempt: " + (attempts + 1));
 				try
 				{
-					initSocket();
+					initSocket(30);
 					
 					reconnecting.set(false);
 					break;

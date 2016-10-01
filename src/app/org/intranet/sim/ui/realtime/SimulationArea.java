@@ -31,6 +31,7 @@ import org.intranet.sim.clock.RealTimeClock;
 import org.intranet.ui.InputPanel;
 import org.intranet.ui.SingleValueInputPanel;
 
+import au.edu.rmit.elevatorsim.ui.ControllerDialogCreator;
 import au.edu.rmit.elevatorsim.ui.ControllerDialogCreatorImpl;
 
 /**
@@ -88,11 +89,23 @@ public class SimulationArea
     	new SwingWorker<Void, Void>()
     	{
 		  @Override
-		  protected Void doInBackground() throws Exception
+		  protected Void doInBackground()
 		  {
 		    ip.showIndeterminateProgress();	
-		    sim.initialize(new RealTimeClock.RealTimeClockFactory());
-		    sim.getController().setControllerDialogCreator(new ControllerDialogCreatorImpl(parent));
+		    ControllerDialogCreator cdc = new ControllerDialogCreatorImpl(parent);
+		    try
+		    {
+				sim.initialize(new RealTimeClock.RealTimeClockFactory());
+		    }
+		    catch (RuntimeException e)
+		    {
+		    	// Unrecoverable error while initializing sim. Show error and close application.
+		    	// TODO: Change exception type?
+		    	cdc.showErrorDialog(e.getMessage());
+		    	parent.dispose();
+		    	return null;
+		    }
+		    sim.getController().setControllerDialogCreator(cdc);
 		    return null;
 		  }
 		
