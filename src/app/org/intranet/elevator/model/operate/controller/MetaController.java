@@ -99,4 +99,10 @@ public class MetaController
 
   @Override
   public void setControllerDialogCreator(ControllerDialogCreator cdc) {}
+
+  @Override
+  public String getInitMessage()
+  {
+    return "loading...";
+  }
 }

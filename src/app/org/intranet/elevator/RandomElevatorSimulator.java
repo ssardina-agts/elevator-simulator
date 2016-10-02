@@ -21,6 +21,7 @@ import org.intranet.ui.ChoiceParameter;
 import org.intranet.ui.IntegerParameter;
 import org.intranet.ui.LongParameter;
 
+import au.edu.rmit.elevatorsim.ElsimSettings;
 import au.edu.rmit.elevatorsim.NetworkWrapperController;
 
 /**
@@ -55,20 +56,12 @@ public class RandomElevatorSimulator
     parameters.add(durationParameter);
     seedParameter = new LongParameter("Random seed", System.currentTimeMillis());
     parameters.add(seedParameter);
-
-    List<Controller> controllers = new ArrayList<Controller>();
-    Controller controller1 = new MetaController();
-    Controller controller2 = new SimpleController();
-    controllers.add(controller1);
-    controllers.add(controller2);
-    controllers.add(new NetworkWrapperController());
-    controllerParameter = new ChoiceParameter<Controller>("Controller", controllers,
-        controller1);
-    parameters.add(controllerParameter);
+    
+    addControllerParameter();
   }
 
   @Override
-  public Controller initializeModel()
+  public void initializeModel()
   {
     int numFloors = floorsParameter.getIntegerValue();
     int numCars = carsParameter.getIntegerValue();
@@ -76,7 +69,7 @@ public class RandomElevatorSimulator
     int numRiders = ridersParameter.getIntegerValue();
     long duration = durationParameter.getLongValue();
     long seed = seedParameter.getLongValue();
-    Controller controller = (Controller)controllerParameter.getChoiceValue();
+    Controller controller = getController();
 
     building = new Building(getEventQueue(), numFloors, numCars, carCapacity, controller);
     
@@ -99,8 +92,6 @@ public class RandomElevatorSimulator
       Event event = new CarRequestEvent(insertTime, person, startingFloor, destFloor);
       getEventQueue().addEvent(event);
     }
-    
-    return controller;
   }
   
   public final Model getModel()

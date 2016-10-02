@@ -6,7 +6,6 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import org.intranet.sim.event.EventQueue;
 import org.json.JSONArray;
 import org.json.JSONObject;
 

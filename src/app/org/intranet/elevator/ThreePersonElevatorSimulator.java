@@ -36,19 +36,20 @@ public class ThreePersonElevatorSimulator
     parameters.add(carsParameter);
 //    durationParameter = new LongParameter("Sim duration (ms)",5000);
 //    parameters.add(durationParameter);
+    
+    addControllerParameter();
   }
   
   @Override
-  public Controller initializeModel()
+  public void initializeModel()
   {
     int numFloors = floorsParameter.getIntegerValue();
     int numCars = carsParameter.getIntegerValue();
     
     EventQueue eQ = getEventQueue();
 
-    Controller controller = new MetaController();
-    building = new Building(getEventQueue(), numFloors, numCars,
-        new MetaController());
+    Controller controller = getController();
+    building = new Building(getEventQueue(), numFloors, numCars, controller);
 
     final Person a = building.createPerson(building.getFloor(1), 1);
     Event eventA = new CarRequestEvent(0, a, building.getFloor(1), building.getFloor(2));
@@ -61,8 +62,6 @@ public class ThreePersonElevatorSimulator
     final Person c = building.createPerson(building.getFloor(3), 3);
     Event eventC = new CarRequestEvent(0, c, building.getFloor(3), building.getFloor(1));
     eQ.addEvent(eventC);
-    
-    return controller;
   }
 
   public final Model getModel()

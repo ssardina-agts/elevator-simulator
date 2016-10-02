@@ -33,19 +33,20 @@ public class ThreePersonTwoElevatorSimulator
     parameters.add(floorsParameter);
     carsParameter = new IntegerParameter("Number of Elevators",2);
     parameters.add(carsParameter);
+    
+    addControllerParameter();
   }
   
   @Override
-  public Controller initializeModel()
+  public void initializeModel()
   {
     int numFloors = floorsParameter.getIntegerValue();
     int numCars = carsParameter.getIntegerValue();
 
     EventQueue eQ = getEventQueue();
 
-    Controller controller = new MetaController();
-    building = new Building(getEventQueue(), numFloors, numCars,
-        controller);
+    Controller controller = getController();
+    building = new Building(getEventQueue(), numFloors, numCars, controller);
 
     final Person c = building.createPerson(building.getFloor(3), 3);
     Event eventC = new CarRequestEvent(0, c, building.getFloor(3), building.getFloor(1));
@@ -58,8 +59,6 @@ public class ThreePersonTwoElevatorSimulator
     final Person b = building.createPerson(building.getFloor(2), 2);
     Event eventB = new CarRequestEvent(0, b, building.getFloor(2), building.getFloor(4));
     eQ.addEvent(eventB);
-    
-    return controller;
   }
 
   public final Model getModel()

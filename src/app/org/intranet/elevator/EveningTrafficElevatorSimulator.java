@@ -49,10 +49,12 @@ public class EveningTrafficElevatorSimulator
     parameters.add(stdDeviationParameter);
     seedParameter = new LongParameter("Random seed", 635359);
     parameters.add(seedParameter);
+    
+    addControllerParameter();
   }
 
   @Override
-  public Controller initializeModel()
+  public void initializeModel()
   {
     int numFloors = floorsParameter.getIntegerValue();
     int numCars = carsParameter.getIntegerValue();
@@ -61,10 +63,8 @@ public class EveningTrafficElevatorSimulator
     int stdDeviation = stdDeviationParameter.getIntegerValue();
     long seed = seedParameter.getLongValue();
 
-    // TODO: let user select controller
-    Controller controller = new MetaController();
-    building = new Building(getEventQueue(), numFloors, numCars,
-        controller);
+    Controller controller = getController();
+    building = new Building(getEventQueue(), numFloors, numCars, controller);
     // destination floor is the ground floor
     final Floor destFloor = building.getFloor(0);
     destFloor.setCapacity(Integer.MAX_VALUE);
@@ -89,8 +89,6 @@ public class EveningTrafficElevatorSimulator
         getEventQueue().addEvent(event);
       }
     }
-    
-    return controller;
   }
 
   public final Model getModel()

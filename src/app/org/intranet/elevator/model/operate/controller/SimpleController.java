@@ -130,4 +130,9 @@ public class SimpleController
 
   @Override
   public void setControllerDialogCreator(ControllerDialogCreator cdc) {}
+  
+  public String getInitMessage()
+  {
+    return "loading...";
+  }
 }

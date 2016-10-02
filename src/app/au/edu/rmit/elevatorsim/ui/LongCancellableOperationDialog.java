@@ -3,7 +3,6 @@ package au.edu.rmit.elevatorsim.ui;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -16,6 +15,8 @@ import javax.swing.JProgressBar;
 
 public class LongCancellableOperationDialog extends JDialog implements ControllerDialog
 {
+	private static final long serialVersionUID = -8740176294977307170L;
+
 	public LongCancellableOperationDialog(JFrame parent, String title,
 											String message, Runnable onCancel)
 	{

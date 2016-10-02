@@ -37,7 +37,7 @@ public class NetworkWrapperController implements Controller
 		try
 		{
 			// TODO: add option to change port
-			connection = new NetworkHelper(8081, eQ);
+			connection = new NetworkHelper(ElsimSettings.instance.getPort(), eQ);
 		}
 		catch (IOException e)
 		{
@@ -111,5 +111,11 @@ public class NetworkWrapperController implements Controller
 	public void setControllerDialogCreator(ControllerDialogCreator cdc)
 	{
 		connection.setControllerDialogCreator(cdc);
+	}
+	
+	@Override
+	public String getInitMessage()
+	{
+		return "Waiting for connection on port " + ElsimSettings.instance.getPort();
 	}
 }

@@ -17,6 +17,7 @@ import au.edu.rmit.elevatorsim.ui.ControllerDialogCreator;
 public interface Controller
 {
   public void initialize(EventQueue eQ, Building building);
+  public String getInitMessage();
   public void requestCar(Floor newFloor, Direction d);
   /**
    * To be called only once when a car arrives at a location.  This allows the

@@ -22,6 +22,7 @@ import javax.swing.SwingWorker;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import org.intranet.elevator.model.operate.controller.Controller;
 import org.intranet.sim.Model;
 import org.intranet.sim.SimulationApplication;
 import org.intranet.sim.Simulator;
@@ -91,7 +92,8 @@ public class SimulationArea
 		  @Override
 		  protected Void doInBackground()
 		  {
-		    ip.showIndeterminateProgress();	
+			Controller controller = sim.getController();
+		    ip.showIndeterminateProgress(controller.getInitMessage());	
 		    ControllerDialogCreator cdc = new ControllerDialogCreatorImpl(parent);
 		    try
 		    {
@@ -105,7 +107,7 @@ public class SimulationArea
 		    	parent.dispose();
 		    	return null;
 		    }
-		    sim.getController().setControllerDialogCreator(cdc);
+		    controller.setControllerDialogCreator(cdc);
 		    return null;
 		  }
 		

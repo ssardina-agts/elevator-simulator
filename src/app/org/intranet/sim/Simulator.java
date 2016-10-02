@@ -10,13 +10,18 @@ import java.util.List;
 import org.intranet.elevator.model.Floor;
 import org.intranet.elevator.model.operate.Person;
 import org.intranet.elevator.model.operate.controller.Controller;
+import org.intranet.elevator.model.operate.controller.MetaController;
+import org.intranet.elevator.model.operate.controller.SimpleController;
 import org.intranet.sim.clock.Clock;
 import org.intranet.sim.clock.ClockFactory;
 import org.intranet.sim.event.Event;
 import org.intranet.sim.event.EventQueue;
+import org.intranet.ui.ChoiceParameter;
 import org.intranet.ui.SingleValueParameter;
 import org.json.JSONObject;
 
+import au.edu.rmit.elevatorsim.ElsimSettings;
+import au.edu.rmit.elevatorsim.NetworkWrapperController;
 import au.edu.rmit.elevatorsim.Transmittable;
 
 /**
@@ -32,10 +37,10 @@ public abstract class Simulator
   private Clock clock;
   protected List<SingleValueParameter<?>> parameters =
     new ArrayList<SingleValueParameter<?>>();
+  private ChoiceParameter<Controller> controllerParameter;
   private List<SimulatorListener> listeners =
     new ArrayList<SimulatorListener>();
   private boolean ended = false;
-  private Controller controller;
 
   Clock.FeedbackListener cc = new Clock.FeedbackListener()
   {
@@ -156,7 +161,7 @@ public abstract class Simulator
     clockFactory = cf;
     eventQueue = new EventQueue();
     clock = clockFactory.createClock(cc);
-    controller = initializeModel();
+    initializeModel();
     initialized = true;
   }
   
@@ -165,13 +170,13 @@ public abstract class Simulator
     return initialized; 
   }
   
-  protected abstract Controller initializeModel();
+  protected abstract void initializeModel();
   
   public abstract Model getModel();
   
   public Controller getController()
   {
-	  return controller;
+	  return controllerParameter.getValue();
   }
   
   public final SingleValueParameter getParameter(String description)
@@ -190,4 +195,18 @@ public abstract class Simulator
   }
   
   public abstract Simulator duplicate();
+  
+  protected void addControllerParameter()
+  {
+    List<Controller> controllers = new ArrayList<Controller>();
+    controllers.add(new NetworkWrapperController());
+    if (ElsimSettings.instance.getEnableOldControllers())
+    {
+    	controllers.add(new MetaController());
+    	controllers.add(new SimpleController());
+    }
+
+    controllerParameter = new ChoiceParameter<Controller>("Controller", controllers, controllers.get(0));
+    parameters.add(controllerParameter);
+  }
 }

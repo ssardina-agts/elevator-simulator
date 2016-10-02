@@ -32,23 +32,22 @@ public class UpToFourThenDownSimulator
     parameters.add(floorsParameter);
     carsParameter = new IntegerParameter("Number of Elevators",1);
     parameters.add(carsParameter);
+    
+    addControllerParameter();
   }
   
   @Override
-  public Controller initializeModel()
+  public void initializeModel()
   {
     int numFloors = floorsParameter.getIntegerValue();
     int numCars = carsParameter.getIntegerValue();
 
-    Controller controller = new MetaController();
-    building = new Building(getEventQueue(), numFloors, numCars,
-        controller);
+    Controller controller = getController();
+    building = new Building(getEventQueue(), numFloors, numCars, controller);
 
     final Person a = building.createPerson(building.getFloor(3), 3);
     Event event = new CarRequestEvent(0, a, building.getFloor(3), building.getFloor(3));
     getEventQueue().addEvent(event);
-    
-    return controller;
   }
 
   public final Model getModel()

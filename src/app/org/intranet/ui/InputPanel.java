@@ -13,9 +13,11 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComponent;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JTextField;
@@ -33,6 +35,8 @@ public abstract class InputPanel
   protected MemberArrays members = new MemberArrays();
   
   private JProgressBar progressBar;
+  private JLabel progressMessage;
+  private JButton applyButton;
 
   protected class MemberArrays
   {
@@ -105,14 +109,20 @@ public abstract class InputPanel
     super();
     setLayout(new BorderLayout());
     JPanel centered = new JPanel(new FlowLayout(FlowLayout.CENTER));
-    JButton apply = new JButton("Apply");
-    centered.add(apply);
+    applyButton = new JButton("Apply");
+    centered.add(applyButton);
     progressBar = new JProgressBar();
     progressBar.setIndeterminate(true);
     progressBar.setVisible(false);
-    centered.add(progressBar);
+    progressMessage = new JLabel();
+    progressMessage.setVisible(false);
+    JPanel progressContainer = new JPanel();
+    progressContainer.setLayout(new BoxLayout(progressContainer, BoxLayout.Y_AXIS));
+    progressContainer.add(progressMessage);
+    progressContainer.add(progressBar);
+    centered.add(progressContainer);
     add(centered, BorderLayout.SOUTH);
-    apply.addActionListener(new ActionListener()
+    applyButton.addActionListener(new ActionListener()
     {
       public void actionPerformed(ActionEvent ae)
       {
@@ -132,14 +142,19 @@ public abstract class InputPanel
     add(center, BorderLayout.CENTER);
   }
   
-  public void showIndeterminateProgress()
+  public void showIndeterminateProgress(String message)
   {
+	  applyButton.setVisible(false);
 	  progressBar.setVisible(true);
+	  progressMessage.setText(message);
+	  progressMessage.setVisible(true);
   }
 
   public void hideIndeterminateProgress()
   {
 	  progressBar.setVisible(false);
+	  progressMessage.setVisible(false);
+	  applyButton.setVisible(true);
   }
   
   protected InputPanel(List<? extends Parameter> parameters, Listener l)
