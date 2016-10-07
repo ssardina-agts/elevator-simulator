@@ -26,7 +26,15 @@ import org.intranet.sim.ui.ApplicationUI;
 public class ElevatorSimulationApplication
   implements SimulationApplication
 {
+  public static final String COPYRIGHT =
+          "Copyright 2016 Joshua Beale, Matthew McNally, Joshua Richards, Dylan Rock, Sebastian Sardina.\n" +
+          "Forked from Elevator Simulator (https://sourceforge.net/projects/elevatorsim/)\n" +
+          "Copyright 2004-2005 Chris Dailey & Neil McKellar";
+  public static final String VERSION = "0.2-SNAPSHOT";
+  public static final String APPLICATION_NAME = "RMIT Elevator Simulator";
+
   private Image iconImage;
+
   public static void main(String[] args)
   {
     ElevatorSimulationApplication sc = new ElevatorSimulationApplication();
@@ -61,17 +69,17 @@ public class ElevatorSimulationApplication
 
   public String getApplicationName()
   {
-    return "Elevator Simulator";
+    return APPLICATION_NAME;
   }
 
   public String getCopyright()
   {
-    return "Copyright 2004-2005 Chris Dailey & Neil McKellar";
+    return COPYRIGHT;
   }
 
   public String getVersion()
   {
-    return "0.4";
+    return VERSION;
   }
 
   public Image getImageIcon()

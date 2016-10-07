@@ -32,7 +32,7 @@ public class ApplicationUI extends JFrame
 
   public ApplicationUI(final SimulationApplication sa)
   {
-    super(sa.getApplicationName());
+    super(sa.getApplicationName() + " - Version " + sa.getVersion());
     setIconImage(sa.getImageIcon());
     setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     addWindowListener(new WindowAdapter()

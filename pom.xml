@@ -1,8 +1,8 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <groupId>elevator-sim</groupId>
-  <artifactId>elevator-sim</artifactId>
-  <version>0.1</version>
+  <groupId>au.edu.rmit.elevatorsim</groupId>
+  <artifactId>rmit-elevator-sim</artifactId>
+  <version>0.2-SNAPSHOT</version>
   <build>
     <sourceDirectory>src/app</sourceDirectory>
     <resources>
@@ -29,9 +29,24 @@
       	  <archive>
       	    <manifest>
       	      <mainClass>org.intranet.elevator.ElevatorSimulationApplication</mainClass>
+      	      <addClasspath>true</addClasspath>
       	    </manifest>
       	  </archive>
       	</configuration>
+      </plugin>
+      <plugin>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <executions>
+          <execution>
+            <phase>install</phase>
+            <goals>
+              <goal>copy-dependencies</goal>
+            </goals>
+            <configuration>
+              <outputDirectory>${project.build.directory}</outputDirectory>
+            </configuration>
+          </execution>
+        </executions>
       </plugin>
     </plugins>
   </build>
