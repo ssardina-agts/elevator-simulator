@@ -6,7 +6,7 @@
 * Adapted original simulator to allow control over a network
 * Forked from r162 (0.4+)
 * Developed by final year RMIT CSIT students as part of their capstone project
-under the supervision of Sebastian Sardina
+under the supervision of A/Prof. Sebastian Sardina
 
 ### Contribution guidelines ###
 
@@ -14,7 +14,14 @@ under the supervision of Sebastian Sardina
 
 ### Who do I talk to? ###
 
-* Sebastian Sardina (project supervisor and sarlrmit admin)
+* A/Prof. Sebastian Sardina (sebastian.sardina@rmit.edu.au)
+Project supervisor and SARLRMIT admin
+
+
+The project page is located at:
+https://bitbucket.org/sarlrmit/elevator-sim
+
+Report bugs and feature requests through the project page (Issues).
 
 ## Building from Source ##
 
@@ -32,11 +39,11 @@ under the supervision of Sebastian Sardina
 
 * Clone repository
 * Change directory into 'elevator-sim'
-* run `mvn compile` to create class files or `mvn package` to create a jar
+* run `mvn compile` to create class files or `mvn package` to create a JAR file
 
 ## Running the networked simulator ##
 
-* Execute jar or ElevatorSimualationApplication
+* Execute JAR file or ElevatorSimualationApplication
 * Select file > new
 * Select 'Random Rider Insertion' and click 'Real time'
 * Configure simulation settings to your liking or leave them at their defaults
