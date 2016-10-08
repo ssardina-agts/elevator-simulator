@@ -1,11 +1,13 @@
 New Features (RMIT Elevator Simulator fork):
 ============================================
 
-
-
-
-
-
+* Added NetworkWrapperController which sends events to a networked client and
+listens for actions.
+* Created new Event subclasses (Action and Percept) to represent actions
+a client a has requested and new events of interest to clients
+* Changed simulation end condition
+* Added configuration file
+* Hide old Controllers and some simulators by default
 
 From original Elevator Simulator 0.4
 Copyright 2004-2005 Neil McKellar and Chris Dailey

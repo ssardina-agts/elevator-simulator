@@ -16,10 +16,12 @@ public class ElsimSettings
 	public static final int DEFAULT_TIMEOUT = 30;
 	public static final boolean DEFAULT_ENABLE_OLD_CONTROLLERS = false;
 	public static final int DEFAULT_PORT = 8081;
+	public static final boolean DEFAULT_ENABLE_HIDDEN_SIMULATORS = false;
 	
 	private static final String KEY_TIMEOUT = "timeout";
 	private static final String KEY_ENABLE_OLD_CONTROLLERS = "enableOldControllers";
 	private static final String KEY_PORT = "port";
+	private static final String KEY_ENABLE_HIDDEN_SIMULATORS = "enableHiddenSimulators";
 	
 	private static Logger logger = Logger.getLogger(
 			ElsimSettings.class.getSimpleName()
@@ -36,6 +38,7 @@ public class ElsimSettings
 	private int timeout = DEFAULT_TIMEOUT;
 	private boolean enableOldControllers = DEFAULT_ENABLE_OLD_CONTROLLERS;
 	private int port = DEFAULT_PORT;
+	private boolean enableHiddenSimulators = DEFAULT_ENABLE_HIDDEN_SIMULATORS;
 
 	private ElsimSettings()
 	{
@@ -73,6 +76,7 @@ public class ElsimSettings
 		toWrite.put(KEY_TIMEOUT, timeout);
 		toWrite.put(KEY_ENABLE_OLD_CONTROLLERS, enableOldControllers);
 		toWrite.put(KEY_PORT, port);
+		toWrite.put(KEY_ENABLE_HIDDEN_SIMULATORS, enableHiddenSimulators);
 		
 		try
 		{
@@ -90,7 +94,7 @@ public class ElsimSettings
 	private void parseFromJson(JSONObject settingsJson)
 	{
 		int keysFound = 0;
-		int expectedKeys = 3;
+		int expectedKeys = 4;
 
 		if (settingsJson.has(KEY_TIMEOUT))
 		{
@@ -105,6 +109,11 @@ public class ElsimSettings
 		if (settingsJson.has(KEY_PORT))
 		{
 			port = settingsJson.getInt(KEY_PORT);
+			keysFound++;
+		}
+		if (settingsJson.has(KEY_ENABLE_HIDDEN_SIMULATORS))
+		{
+			enableHiddenSimulators = settingsJson.getBoolean(KEY_ENABLE_HIDDEN_SIMULATORS);
 			keysFound++;
 		}
 		
@@ -127,5 +136,10 @@ public class ElsimSettings
 	public int getPort()
 	{
 		return port;
+	}
+	
+	public boolean getEnableHiddenSimulators()
+	{
+		return enableHiddenSimulators;
 	}
 }

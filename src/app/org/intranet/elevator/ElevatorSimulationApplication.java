@@ -19,6 +19,8 @@ import org.intranet.sim.SimulationApplication;
 import org.intranet.sim.Simulator;
 import org.intranet.sim.ui.ApplicationUI;
 
+import au.edu.rmit.elevatorsim.ElsimSettings;
+
 /**
  * @author Neil McKellar and Chris Dailey
  *
@@ -59,11 +61,14 @@ public class ElevatorSimulationApplication
     simulations.add(new RandomElevatorSimulator());
     simulations.add(new MorningTrafficElevatorSimulator());
     simulations.add(new EveningTrafficElevatorSimulator());
-    simulations.add(new ThreePersonBugSimulator());
-    simulations.add(new ThreePersonElevatorSimulator());
-    simulations.add(new UpToFourThenDownSimulator());
-    simulations.add(new NoIdleElevatorCarSimulator());
-    simulations.add(new ThreePersonTwoElevatorSimulator());
+    if (ElsimSettings.instance.getEnableHiddenSimulators())
+    {
+      simulations.add(new ThreePersonBugSimulator());
+      simulations.add(new ThreePersonElevatorSimulator());
+      simulations.add(new UpToFourThenDownSimulator());
+      simulations.add(new NoIdleElevatorCarSimulator());
+      simulations.add(new ThreePersonTwoElevatorSimulator());
+    }
     return simulations;
   }
 
