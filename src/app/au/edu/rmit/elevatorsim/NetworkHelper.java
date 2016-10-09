@@ -224,12 +224,12 @@ public class NetworkHelper
 	
 	public void close()
 	{
+		closed = true;
 		try
 		{
 			socket.close();
 			in.close();
 			out.close();
-			closed = true;
 		}
 		catch (IOException e)
 		{

@@ -163,6 +163,7 @@ public abstract class Simulator
     clock = clockFactory.createClock(cc);
     initializeModel();
     initialized = true;
+    ended = false;
   }
   
   public final boolean isInitializied()
