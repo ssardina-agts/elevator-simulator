@@ -9,6 +9,7 @@ import org.intranet.elevator.model.operate.controller.Controller;
 import org.intranet.sim.event.EventQueue;
 import org.json.JSONObject;
 
+import au.edu.rmit.elevatorsim.action.Action;
 import au.edu.rmit.elevatorsim.action.ListenerThread;
 import au.edu.rmit.elevatorsim.event.EventTransmitter;
 import au.edu.rmit.elevatorsim.ui.ControllerDialogCreator;
@@ -65,6 +66,18 @@ public class NetworkWrapperController implements Controller
 				{
 					eventTransmitter.onEventProcessedByClient(message.getLong("id"));
 				});
+		listenerThread.setMessageHandler("heartbeat", (JSONObject message) ->
+		{
+			eventTransmitter.eventProcessed(new Action(message.getLong("id"), eQ)
+					{
+						@Override
+						protected ProcessingStatus performAction()
+						{
+							return ProcessingStatus.COMPLETED;
+						}
+				
+					});
+		});
 		listenerThread.start();
 	}
 	

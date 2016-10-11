@@ -103,9 +103,23 @@ public class NetworkHelper
 			}
 			catch (SocketTimeoutException e)
 			{
-				// disconnected from network probably
-				reconnect();
-				messageStr = in.readUTF();
+				for (Listener listener : listeners)
+				{
+					// call on litener(s) to send heartbeat
+					listener.onTimeout();
+				}
+				
+				try
+				{
+					// try to retrieve reply
+					messageStr = in.readUTF();
+				}
+				catch (SocketTimeoutException e1)
+				{
+					// disconnected from network probably
+					reconnect();
+					messageStr = in.readUTF();
+				}
 			}
 		}
 		return new JSONObject(messageStr);
@@ -265,6 +279,7 @@ public class NetworkHelper
 	public interface Listener
 	{
 		public void onReconnect();
+		public void onTimeout();
 		public void onConnectionClosed();
 	}
 }

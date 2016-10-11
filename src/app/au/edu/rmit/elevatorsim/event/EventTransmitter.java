@@ -113,6 +113,24 @@ public class EventTransmitter implements EventQueue.Listener, NetworkHelper.List
 	}
 	
 	@Override
+	public void onTimeout()
+	{
+		eventProcessed(new Percept(model.getEventQueue())
+		{
+			@Override
+			public String getName()
+			{
+				return "heartbeat";
+			}
+
+			@Override
+			public JSONObject getDescription()
+			{
+				return new JSONObject();
+			}
+		});
+	}
+	@Override
 	public void onConnectionClosed()
 	{
 		// end the simulation
