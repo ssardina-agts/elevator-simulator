@@ -13,7 +13,7 @@ public class ElsimSettings
 {
 	public static final String SETTINGS_FILENAME = "elsimsettings.json";
 	
-	public static final int DEFAULT_TIMEOUT = 30;
+	public static final int DEFAULT_TIMEOUT = 15;
 	public static final boolean DEFAULT_ENABLE_OLD_CONTROLLERS = false;
 	public static final int DEFAULT_PORT = 8081;
 	public static final boolean DEFAULT_ENABLE_HIDDEN_SIMULATORS = false;
