@@ -105,4 +105,7 @@ public class MetaController
   {
     return "loading...";
   }
+  
+  @Override
+  public void close() {}
 }

@@ -248,5 +248,6 @@ public class SimulationArea
     Clock clock = sim.getClock();
     if (clock.isRunning())
       clock.pause();
+    sim.getController().close();
   }
 }

@@ -3,6 +3,7 @@ package au.edu.rmit.elevatorsim.event;
 import java.io.IOException;
 import java.net.SocketException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -29,7 +30,8 @@ public class EventTransmitter implements EventQueue.Listener, NetworkHelper.List
 	
 	private List<Listener> listeners = new ArrayList<>();
 	
-	private Map<Long, Event> unprocessedEvents = new ConcurrentHashMap<>();
+	private Map<Long, Event> unprocessedEvents =
+			Collections.synchronizedMap(new ConcurrentHashMap<>());
 
 	public EventTransmitter(NetworkHelper connection, WrapperModel model)
 	{
@@ -43,6 +45,7 @@ public class EventTransmitter implements EventQueue.Listener, NetworkHelper.List
 		// create the message
 		JSONObject toTransmit = makeEventJson(e);
 
+		unprocessedEvents.put(e.getId(), e);
 		try
 		{
 			// send message
@@ -59,7 +62,6 @@ public class EventTransmitter implements EventQueue.Listener, NetworkHelper.List
 			throw new RuntimeException(e1);
 		}
 		
-		unprocessedEvents.put(e.getId(), e);
 		model.getEventQueue().waitForEvents();
 	}
 	
@@ -82,10 +84,7 @@ public class EventTransmitter implements EventQueue.Listener, NetworkHelper.List
 	public void onEventProcessedByClient(long id)
 	{
 		Event e;
-		synchronized (unprocessedEvents)
-		{
-			e = unprocessedEvents.remove(id);
-		}
+		e = unprocessedEvents.remove(id);
 		if (e == null)
 		{
 			System.err.println("Clients reports event " + id +
@@ -104,12 +103,6 @@ public class EventTransmitter implements EventQueue.Listener, NetworkHelper.List
 				l.onEnd();
 			}
 		}
-	}
-	
-	@Override
-	public void onReconnect()
-	{
-		eventProcessed(new ReconnectPercept(model.getEventQueue()));
 	}
 	
 	@Override
@@ -142,34 +135,6 @@ public class EventTransmitter implements EventQueue.Listener, NetworkHelper.List
 		for (Listener l : listeners)
 		{
 			l.onEnd();
-		}
-	}
-	
-	private class ReconnectPercept extends Percept
-	{
-		public ReconnectPercept(EventQueue eq)
-		{
-			super(eq);
-		}
-
-		@Override
-		public String getName()
-		{
-			return "reconnected";
-		}
-
-
-		@Override
-		public JSONObject getDescription()
-		{
-			JSONObject ret = new JSONObject();
-			JSONArray unprocessedEventsJson = new JSONArray();
-			for (Event event : unprocessedEvents.values())
-			{
-				unprocessedEventsJson.put(makeEventJson(event));
-			}
-			ret.put("unprocessedEvents", unprocessedEventsJson);
-			return ret;
 		}
 	}
 	

@@ -135,4 +135,7 @@ public class SimpleController
   {
     return "loading...";
   }
+
+  @Override
+  public void close() {}
 }

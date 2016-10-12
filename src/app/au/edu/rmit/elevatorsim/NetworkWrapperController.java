@@ -23,7 +23,7 @@ import org.intranet.elevator.model.operate.*;
  * 
  * @author Joshua Richards
  */
-public class NetworkWrapperController implements Controller
+public class NetworkWrapperController implements Controller, EventTransmitter.Listener
 {
 	private WrapperModel model;
 	private NetworkHelper connection;
@@ -34,6 +34,7 @@ public class NetworkWrapperController implements Controller
 	@Override
 	public void initialize(EventQueue eQ, Building building)
 	{
+		onEnd();
 		eQ.waitForEvents();
 		try
 		{
@@ -49,42 +50,50 @@ public class NetworkWrapperController implements Controller
 		
 		// listen for events and transmit them to client
 		eventTransmitter = new EventTransmitter(connection, model);
-		eventTransmitter.addListener(new EventTransmitter.Listener()
-		{
-			@Override
-			public void onEnd()
-			{
-				simulationEnded();
-			}
-		});
+		eventTransmitter.addListener(this);
 		eQ.addListener(eventTransmitter);
 		connection.addListener(eventTransmitter);
 		// listen for actions from client and perform them
 		listenerThread = new ListenerThread(connection, model);
-		listenerThread.setMessageHandler("eventProcessed",
-				(JSONObject message) ->
-				{
-					eventTransmitter.onEventProcessedByClient(message.getLong("id"));
-				});
+		listenerThread.setMessageHandler("eventProcessed", (JSONObject message) ->
+		{
+			eventTransmitter.onEventProcessedByClient(message.getLong("id"));
+		});
 		listenerThread.setMessageHandler("heartbeat", (JSONObject message) ->
 		{
-			eventTransmitter.eventProcessed(new Action(message.getLong("id"), eQ)
-					{
-						@Override
-						protected ProcessingStatus performAction()
-						{
-							return ProcessingStatus.COMPLETED;
-						}
-				
-					});
+			Action heartbeatAction = new Action(message.getLong("id"), eQ)
+			{
+				@Override
+				protected ProcessingStatus performAction()
+				{
+					return ProcessingStatus.COMPLETED;
+				}
+		
+			};
+			// can't use eventqueue in case where simulation is paused
+			heartbeatAction.perform();
+			eventTransmitter.eventProcessed(heartbeatAction);
 		});
 		listenerThread.start();
 	}
 	
-	private void simulationEnded()
+	@Override
+	public void onEnd()
 	{
-		listenerThread.close();
-		connection.close();
+		close();
+	}
+
+	@Override
+	public void close()
+	{
+		if (listenerThread != null)
+		{
+			listenerThread.close();
+		}
+		if (connection != null)
+		{
+			connection.close();
+		}
 	}
 	
 	@Override

@@ -30,4 +30,5 @@ public interface Controller
   public boolean arrive(Car car);
   public void setNextDestination(Car car);
   public void setControllerDialogCreator(ControllerDialogCreator cdc);
+  public void close();
 }

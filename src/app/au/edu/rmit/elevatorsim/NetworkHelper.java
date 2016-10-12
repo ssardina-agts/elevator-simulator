@@ -38,9 +38,6 @@ public class NetworkHelper
 	
 	private boolean closed = true;
 
-	private AtomicBoolean reconnecting = new AtomicBoolean(false);
-	private CountDownLatch releasedOnReconnect = new CountDownLatch(1);
-	
 	/**
 	 * Starts a ServerSocket, accepts one client and retrieves input and
 	 * output streams to the client. This constructor will block until a
@@ -116,9 +113,8 @@ public class NetworkHelper
 				}
 				catch (SocketTimeoutException e1)
 				{
-					// disconnected from network probably
-					reconnect();
-					messageStr = in.readUTF();
+					handleConnectionClose("Connection lost");
+					throw e1;
 				}
 			}
 		}
@@ -134,106 +130,8 @@ public class NetworkHelper
 	{
 		synchronized (out)
 		{
-			try
-			{
-				out.writeUTF(message.toString());
-			}
-			catch (IOException e)
-			{
-				if (!reconnecting.get())
-				{
-					e.printStackTrace();
-					return;
-				}
-				try
-				{
-					releasedOnReconnect.await();
-				}
-				catch (InterruptedException e1) {}
-			}
+			out.writeUTF(message.toString());
 		}
-	}
-	
-	private void reconnect() throws IOException
-	{
-		if (!reconnecting.compareAndSet(false, true))
-		{
-			try
-			{
-				releasedOnReconnect.await();
-			}
-			catch (InterruptedException e) {}
-			if (!reconnecting.get())
-			{
-				return;
-			}
-			throw new IOException("failed to reconnect");
-		}
-		
-		ControllerDialog dialog = cdc.createLongCancellableOperationDialog(
-				"Reconnecting", "Client disconnected. Reconnecting...", () ->
-				{
-					try
-					{
-						ss.close();
-						handleConnectionClose("Cancelled reconnect");
-					}
-					catch (IOException e)
-					{
-						System.out.println("sadf;lkjasdf");
-						e.printStackTrace();
-					}
-				});
-		
-		IOException toThrow = new IOException("Programmer error: this should never be thrown");
-		// prevent simulation progressing any further until connection reestablished
-		synchronized (eventQueue)
-		{
-		close();
-		int attempts = 0;
-			
-			do
-			{
-				System.out.println("reconnect attempt: " + (attempts + 1));
-				try
-				{
-					initSocket(30);
-					
-					reconnecting.set(false);
-					break;
-				}
-				catch (SocketException e)
-				{
-					// serversocket closed
-					reconnecting.set(false);
-					releasedOnReconnect.countDown();
-					releasedOnReconnect = new CountDownLatch(1);
-					return;
-				}
-				catch (IOException e)
-				{
-					e.printStackTrace();
-					toThrow = e;
-				}
-			} while (attempts++ < 3);
-			
-			releasedOnReconnect.countDown();
-			releasedOnReconnect = new CountDownLatch(1);
-			
-			dialog.close();
-
-			if (!reconnecting.get())
-			{
-				for (Listener l : listeners)
-				{
-					l.onReconnect();
-				}
-				return;
-			}
-		}
-		
-		handleConnectionClose("Failed to reconnect");
-		throw toThrow;
 	}
 	
 	public void close()
@@ -278,7 +176,6 @@ public class NetworkHelper
 	
 	public interface Listener
 	{
-		public void onReconnect();
 		public void onTimeout();
 		public void onConnectionClosed();
 	}
