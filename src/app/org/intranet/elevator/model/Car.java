@@ -13,6 +13,7 @@ import org.json.JSONObject;
 
 import au.edu.rmit.elevatorsim.Direction;
 import au.edu.rmit.elevatorsim.Transmittable;
+import au.edu.rmit.elevatorsim.event.Percept;
 
 /**
  * The states of Car are substates of MovableLocation:IDLE. Valid states:
@@ -107,25 +108,31 @@ public final class Car extends MovableLocation
 	
 	private class MovementTracker implements MovableLocation.Listener
 	{
-		private Floor origin;
-		private Floor dest;
+		private float origin;
+		private float dest;
 		private PriorityQueue<Floor> floorsToPass;
 
-		public MovementTracker(Floor origin, Floor dest)
+		public MovementTracker(float origin, float dest)
 		{
 			this.origin = origin;
 			this.dest = dest;
-			if (origin.getFloorNumber() == dest.getFloorNumber())
+			if (origin == dest)
 			{
 				throw new IllegalArgumentException("no movement to track");
 			}
+
 			List<Floor> floorsInRange = new ArrayList<>(panel.getServicedFloors());
 			floorsInRange.removeIf(f -> !floorInRange(f));
-			
+			if (floorsInRange.size() == 0)
+			{
+				floorsToPass = new PriorityQueue();
+				return;
+			}
+
 			floorsToPass = new PriorityQueue<>(floorsInRange.size(), (floor1, floor2) ->
 			{
-				int ret = floor1.getFloorNumber() - floor2.getFloorNumber();
-				return (origin.getFloorNumber() < dest.getFloorNumber()) ? ret : 0 - ret;
+				int ret = (int) (floor1.getHeight() - floor2.getHeight());
+				return (origin < dest) ? ret : 0 - ret;
 			});
 			
 			floorsToPass.addAll(floorsInRange);
@@ -133,20 +140,22 @@ public final class Car extends MovableLocation
 		
 		private boolean floorInRange(Floor floor)
 		{
-			return Math.min(origin.getFloorNumber(), dest.getFloorNumber()) < floor.getFloorNumber() &&
-					Math.max(origin.getFloorNumber(), dest.getFloorNumber()) > floor.getFloorNumber();
+			boolean ret = Math.min(origin, dest) < floor.getHeight() &&
+					Math.max(origin, dest) > floor.getHeight();
+			return ret;
 		}
 		
 		@Override
-		public void heightChanged(int height)
+		public void heightChanged(float height)
 		{
 			Floor floorToPass = floorsToPass.peek();
 			if (floorToPass == null)
 			{
+				Car.super.removeListener(this);
 				return;
 			}
 			
-			if (origin.getFloorNumber() < dest.getFloorNumber())
+			if (origin < dest)
 			{
 				if (height >= floorToPass.getHeight())
 				{
@@ -155,7 +164,7 @@ public final class Car extends MovableLocation
 				}
 				return;
 			}
-			if (origin.getFloorNumber() > dest.getFloorNumber())
+			if (origin > dest)
 			{
 				if (height <= floorToPass.getHeight())
 				{
@@ -168,7 +177,25 @@ public final class Car extends MovableLocation
 		
 		private void fireFloorPassed(Floor passed)
 		{
-			// TODO: this method
+			eventQueue.addEvent(new Percept(eventQueue)
+			{
+				@Override
+				public String getName()
+				{
+					return "floorPassed";
+				}
+
+				@Override
+				public JSONObject getDescription()
+				{
+					JSONObject ret = new JSONObject();
+					ret.put("floor", passed.getFloorNumber());
+					ret.put("car", id);
+
+					return ret;
+				}
+				
+			});
 		}
 	}
 
@@ -189,7 +216,14 @@ public final class Car extends MovableLocation
 	public void setDestination(Floor destination)
 	{
 		this.destination = destination;
-		if (location == null) setDestinationHeight(destination.getHeight());
+		if (location == null)
+		{
+			setDestinationHeight(destination.getHeight());
+			if (destination.getHeight() != getHeight())
+			{
+				super.addListener(new MovementTracker(getHeight(), destination.getHeight()));
+			}
+		}
 	}
 
 	/**

@@ -181,6 +181,10 @@ public abstract class MovableLocation extends Location
 		public void updateTime()
 		{
 			setHeight(currentValue(eventQueue.getCurrentTime()));
+			for (Listener listener : new ArrayList<Listener>(listeners))
+			{
+				listener.heightChanged(getHeight());
+			}
 		}
 
 		@Override
@@ -260,6 +264,6 @@ public abstract class MovableLocation extends Location
 	
 	public interface Listener
 	{
-		public void heightChanged(int height);
+		public void heightChanged(float height);
 	}
 }
