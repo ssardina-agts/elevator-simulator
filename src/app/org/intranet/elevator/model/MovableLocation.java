@@ -4,6 +4,9 @@
  */
 package org.intranet.elevator.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.intranet.sim.event.Event;
 import org.intranet.sim.event.EventQueue;
 import org.intranet.sim.event.TrackingUpdateEvent;
@@ -87,6 +90,7 @@ public abstract class MovableLocation extends Location
 	private float totalDistance = 0.0F;
 	private int numTravels = 0;
 	private Event arrivalEvent;
+	private List<Listener> listeners = new ArrayList<>();
 
 	/**
 	 * @return Total distance travelled by MovableLocation
@@ -242,5 +246,20 @@ public abstract class MovableLocation extends Location
 			System.err.println("arrivalTime  =" + arrivalTime);
 			throw iae;
 		}
+	}
+	
+	public void addListener(Listener listener)
+	{
+		listeners.add(listener);
+	}
+	
+	public boolean removeListener(Listener listener)
+	{
+		return listeners.remove(listener);
+	}
+	
+	public interface Listener
+	{
+		public void heightChanged(int height);
 	}
 }

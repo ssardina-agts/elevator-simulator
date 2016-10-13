@@ -6,10 +6,12 @@ package org.intranet.elevator.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.PriorityQueue;
 
 import org.intranet.sim.event.EventQueue;
 import org.json.JSONObject;
 
+import au.edu.rmit.elevatorsim.Direction;
 import au.edu.rmit.elevatorsim.Transmittable;
 
 /**
@@ -100,6 +102,73 @@ public final class Car extends MovableLocation
 			ret.put("floor", dest);
 			ret.put("car", id);
 			return ret;
+		}
+	}
+	
+	private class MovementTracker implements MovableLocation.Listener
+	{
+		private Floor origin;
+		private Floor dest;
+		private PriorityQueue<Floor> floorsToPass;
+
+		public MovementTracker(Floor origin, Floor dest)
+		{
+			this.origin = origin;
+			this.dest = dest;
+			if (origin.getFloorNumber() == dest.getFloorNumber())
+			{
+				throw new IllegalArgumentException("no movement to track");
+			}
+			List<Floor> floorsInRange = new ArrayList<>(panel.getServicedFloors());
+			floorsInRange.removeIf(f -> !floorInRange(f));
+			
+			floorsToPass = new PriorityQueue<>(floorsInRange.size(), (floor1, floor2) ->
+			{
+				int ret = floor1.getFloorNumber() - floor2.getFloorNumber();
+				return (origin.getFloorNumber() < dest.getFloorNumber()) ? ret : 0 - ret;
+			});
+			
+			floorsToPass.addAll(floorsInRange);
+		}
+		
+		private boolean floorInRange(Floor floor)
+		{
+			return Math.min(origin.getFloorNumber(), dest.getFloorNumber()) < floor.getFloorNumber() &&
+					Math.max(origin.getFloorNumber(), dest.getFloorNumber()) > floor.getFloorNumber();
+		}
+		
+		@Override
+		public void heightChanged(int height)
+		{
+			Floor floorToPass = floorsToPass.peek();
+			if (floorToPass == null)
+			{
+				return;
+			}
+			
+			if (origin.getFloorNumber() < dest.getFloorNumber())
+			{
+				if (height >= floorToPass.getHeight())
+				{
+					floorsToPass.poll();
+					fireFloorPassed(floorToPass);
+				}
+				return;
+			}
+			if (origin.getFloorNumber() > dest.getFloorNumber())
+			{
+				if (height <= floorToPass.getHeight())
+				{
+					floorsToPass.poll();
+					fireFloorPassed(floorToPass);
+				}
+				return;
+			}
+		}
+		
+		private void fireFloorPassed(Floor passed)
+		{
+			// TODO: this method
 		}
 	}
 
