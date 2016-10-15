@@ -75,9 +75,6 @@ public class ListenerThread extends Thread
 			case "reconnected":
 				action = new ReconnectedAction(actionId, model, params);
 				break;
-			case "changeDestination":
-				action = new ChangeDestinationAction(actionId, model, params);
-				break;
 			default:
 				action = new ErrorAction(
 						actionId,
