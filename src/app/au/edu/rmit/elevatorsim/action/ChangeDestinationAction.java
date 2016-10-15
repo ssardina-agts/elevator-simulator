@@ -2,7 +2,6 @@ package au.edu.rmit.elevatorsim.action;
 
 import org.intranet.elevator.model.Car;
 import org.intranet.elevator.model.Floor;
-import org.intranet.sim.event.EventQueue;
 import org.json.JSONObject;
 
 import au.edu.rmit.elevatorsim.Direction;

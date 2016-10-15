@@ -125,7 +125,7 @@ public final class Car extends MovableLocation
 			floorsInRange.removeIf(f -> !floorInRange(f));
 			if (floorsInRange.size() == 0)
 			{
-				floorsToPass = new PriorityQueue();
+				floorsToPass = new PriorityQueue<>();
 				return;
 			}
 
