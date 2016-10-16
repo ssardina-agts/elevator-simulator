@@ -85,7 +85,7 @@ public abstract class Simulator
     public void modelUpdate(long time);
   }
   
-  public class CarRequestEvent extends Event
+  public static class CarRequestEvent extends Event
   {
     private Person person;
     private Floor destination;

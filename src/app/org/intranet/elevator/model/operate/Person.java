@@ -17,6 +17,7 @@ import org.intranet.elevator.model.DoorSensor;
 import org.intranet.elevator.model.Floor;
 import org.intranet.elevator.model.Location;
 import org.intranet.sim.ModelElement;
+import org.intranet.sim.Simulator;
 import org.intranet.sim.event.Event;
 import org.intranet.sim.event.EventQueue;
 import org.intranet.sim.event.TrackingUpdateEvent;
@@ -325,6 +326,7 @@ public final class Person
     }
   }
 
+  private static int nextId = 0;
   private Floor destination;
   private Location currentLocation;
   private int percentMoved = -1;
@@ -346,7 +348,7 @@ public final class Person
   Person(EventQueue eQ, Location startLocation, long id)
   {
     super(eQ);
-    identifier = id;
+    identifier = nextId++;
     // TODO: Deal with the start location being at capacity.
     movePerson(startLocation);
   }
@@ -431,8 +433,15 @@ public final class Person
 
   private void tryToEnterCar(boolean up)
   {
+	System.out.println("tryToEnterCar called");
+	System.out.println("up: " + up);
+	System.out.println("id: " + identifier);
+	System.out.println("location: " + currentLocation);
+	System.out.println("destination: " + destination);
+	System.out.println();
     Floor here = (Floor)currentLocation;
     final CarRequestPanel callButton = here.getCallPanel();
+    List<Door> fullCarsAt = new ArrayList<>();
 
     for (CarEntrance entrance : here.getCarEntrances())
     {
@@ -456,6 +465,35 @@ public final class Person
         stopPayingAttention();
         beginEnterCar(entrance);
         return;
+      }
+      
+      if (!isEntranceAvailable && car.isAtCapacity())
+      {
+    	stopPayingAttention();
+    	door.addListener(new Door.Listener()
+		{
+    		Floor origin = here;
+			@Override
+			public void doorOpened() {}
+			
+			@Override
+			public void doorClosed()
+			{
+			  System.out.println("yo what's up i'm a debug statement");
+              if (origin == currentLocation)
+              {
+                startPayingAttention(up);
+                eventQueue.addEvent(new Simulator.CarRequestEvent(
+    	          eventQueue.getCurrentTime(),
+    	          Person.this,
+    	          origin, 
+    	          destination
+                ));
+              }
+              door.removeListener(this);
+			}
+		}, true);
+    	System.out.println("car " +  car.getId() + " full");
       }
     }
 

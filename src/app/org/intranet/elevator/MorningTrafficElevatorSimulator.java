@@ -43,11 +43,11 @@ public class MorningTrafficElevatorSimulator
     parameters.add(carsParameter);
     ridersParameter = new IntegerParameter("Number of People per Floor", 20);
     parameters.add(ridersParameter);
-    durationParameter = new FloatParameter("Rider insertion time (hours)",1.0f);
+    durationParameter = new FloatParameter("Rider insertion time (hours)", 1.0f);
     parameters.add(durationParameter);
     stdDeviationParameter = new IntegerParameter("Standard Deviation", 1);
     parameters.add(stdDeviationParameter);
-    seedParameter = new LongParameter("Random seed", 635359);
+    seedParameter = new LongParameter("Random seed", System.currentTimeMillis());
     parameters.add(seedParameter);
     
     addControllerParameter();
