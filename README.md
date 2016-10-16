@@ -29,6 +29,7 @@ Report bugs and feature requests through the project page (Issues).
 
 * Clone repository into Eclipse workspace
 * Import existing project, select the elevator-sim directory in the workspace
+* You can now run ElevatorSimulationApplication from Eclipse
 * If there are errors:
     * Check the m2eclipse plugin is installed
     * Run the "Discover m2e connectors" quick fix if there is an error on the
@@ -62,8 +63,8 @@ is showing statistics
 does not already exist
 * 'port' is the port the server will listen for a connection on
 * 'timeout' is the time in seconds the server will wait for communication from a
-client before trying to reconnect
-* setting 'enableOldControllers' to true to enable MetaController and SimpleController
+client before trying to throwing an error
+* set 'enableOldControllers' to true to enable MetaController and SimpleController
 which do not run over the network
-* setting 'enableHiddenSimulators' to enable some old simulators from the original
+* set 'enableHiddenSimulators' to true to enable some old simulators from the original
 project that were created for development purposes
