@@ -1,4 +1,4 @@
-package io.sarl.wrapper.event;
+package au.edu.rmit.elevatorsim.event;
 
 import org.intranet.sim.event.Event;
 import org.intranet.sim.event.EventQueue;

@@ -1,9 +1,9 @@
-package io.sarl.wrapper.action;
+package au.edu.rmit.elevatorsim.action;
 
 import org.json.JSONObject;
 
-import io.sarl.wrapper.Direction;
-import io.sarl.wrapper.WrapperModel;
+import au.edu.rmit.elevatorsim.Direction;
+import au.edu.rmit.elevatorsim.WrapperModel;
 
 public class ChangeNextDirectionAction extends Action
 {

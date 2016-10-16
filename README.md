@@ -1,31 +1,70 @@
-# README #
+# RMIT Elevator Simulator #
 
-This README is written to hep you obtain and run a copy of our Elevator Simulation Server, this server is designed to have clients connect using their agents written for our partner program (https://bitbucket.org/sarlrmit/sarl-controller)
+### What is this repository for? ###
 
-###Software Prerequisites###
+* Fork of [elevatorsim](http://sourceforge.net/projects/elevatorsim)
+* Adapted original simulator to allow control over a network
+* Forked from r162 (0.4+)
+* Developed by final year RMIT CSIT students as part of their capstone project
+under the supervision of A/Prof. Sebastian Sardina
 
-1. Eclipse Platform (version xx minumum)
-2. Java Runtime Environment (JRE)
+### Contribution guidelines ###
 
-
-### How do I get the Elevator Simulator Server set up? ###
-
-* Clone Elevator-Sim from bitbucket: bitbucket.org/Sarlrmit/elevator-sim
-* Import Master branch from repository
-* Go to Run -> Run Configurations and under Java Application select New_configuration
-* In the Project field Browse for the project
-* In the Main class field Search for org.intranet.elevator.ElevatorSimulationApplication
-* Click Run and Enjoy!
-
-
+* TBD
 
 ### Who do I talk to? ###
 
-Matthew McNally (Project Manager & Sarl agent developer) -
-Joshua Richards (Java Elevator Sim Server developer) -
-Joshua Beale (Sarl agent developer) -
-Dylan Rock (Documentation) -
+* A/Prof. Sebastian Sardina (sebastian.sardina@rmit.edu.au)
+Project supervisor and SARLRMIT admin
 
-###License###
 
-This project is using the GPL3 for open source licensing for information and the license visit GNU website (https://www.gnu.org/licenses/gpl-3.0.en.html)
+The project page is located at:
+https://bitbucket.org/sarlrmit/elevator-sim
+
+Report bugs and feature requests through the project page (Issues).
+
+## Building from Source ##
+
+#### Using Eclipse ####
+
+* Clone repository into Eclipse workspace
+* Import existing project, select the elevator-sim directory in the workspace
+* You can now run ElevatorSimulationApplication from Eclipse
+* If there are errors:
+    * Check the m2eclipse plugin is installed
+    * Run the "Discover m2e connectors" quick fix if there is an error on the
+    plugin tag in pom.xml
+    * Check maven proxy settings
+
+#### Using Maven ####
+
+* Clone repository
+* Change directory into 'elevator-sim'
+* run `mvn install` to create a JAR file
+* maven will copy a jar with the json dependency to target/
+* Make sure the json jar is in the same directory when executing rmit-elevator-simulator\*.jar
+
+## Running the networked simulator ##
+
+* Execute JAR file or ElevatorSimualationApplication
+* Select file > new
+* Select 'Random Rider Insertion' and click 'Real time'
+* Configure simulation settings to your liking or leave them at their defaults
+* Select 'NetworkWrapperController' under the 'Controller' option
+* Click apply
+* Run a client (see sarlrmit/java-elsim-client or sarlrmit/SARL-CONTROLLER)
+* Click 'Go, Dude!' once the client is connected and the bottom left panel
+is showing statistics
+* Adjust the time factor in the bottom right to speed up / slow down the simulation
+* It is up to the client to control the elevator cars
+
+## Configuration ##
+* The application will generate elsimsettings.json in the working directory if it
+does not already exist
+* 'port' is the port the server will listen for a connection on
+* 'timeout' is the time in seconds the server will wait for communication from a
+client before trying to throwing an error
+* set 'enableOldControllers' to true to enable MetaController and SimpleController
+which do not run over the network
+* set 'enableHiddenSimulators' to true to enable some old simulators from the original
+project that were created for development purposes

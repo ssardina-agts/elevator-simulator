@@ -1,11 +1,11 @@
-package io.sarl.wrapper.action;
+package au.edu.rmit.elevatorsim.action;
 
 import org.intranet.elevator.model.Car;
 import org.intranet.elevator.model.Floor;
 import org.json.JSONObject;
 
-import io.sarl.wrapper.WrapperModel;
-import io.sarl.wrapper.Direction;
+import au.edu.rmit.elevatorsim.Direction;
+import au.edu.rmit.elevatorsim.WrapperModel;
 
 /**
  * Performs the 'sendCar' action
@@ -68,14 +68,46 @@ public class SendCarAction extends Action
 		
 		if (model.getNextDirection(carId) != Direction.NONE)
 		{
-			failureReason = "Car with id: " + carId + " already in transit";
-			return ProcessingStatus.FAILED;
+			return changeDestination();
 		}
 		
 		// do the action
 		model.setNextDirection(carId, nextDirection);
 		car.setDestination(floor);
 		
+		return ProcessingStatus.IN_PROGRESS;
+	}
+	
+	private ProcessingStatus changeDestination()
+	{
+		Floor floor = model.getFloor(floorId);
+		Car car = model.getCar(carId);
+		
+		float currentHeight = car.getHeight();
+		float lastDestHeight = car.getDestination().getHeight();
+		float newDestHeight = floor.getHeight();
+		Direction currDirection = (currentHeight < lastDestHeight) ?
+				Direction.UP : Direction.DOWN;
+		
+		if (currDirection == Direction.UP)
+		{
+			if (newDestHeight < currentHeight)
+			{
+				failureReason = "Car " + carId + " already past floor " + floorId;
+				return ProcessingStatus.FAILED;
+			}
+		}
+		else
+		{
+			if (newDestHeight > currentHeight)
+			{
+				failureReason = "Car " + carId + " already past floor " + floorId;
+				return ProcessingStatus.FAILED;
+			}
+		}
+		
+		car.setDestination(floor);
+		model.setNextDirection(carId, nextDirection);
 		return ProcessingStatus.IN_PROGRESS;
 	}
 

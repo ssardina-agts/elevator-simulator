@@ -9,14 +9,20 @@ import java.util.List;
 
 import org.intranet.elevator.model.Floor;
 import org.intranet.elevator.model.operate.Person;
+import org.intranet.elevator.model.operate.controller.Controller;
+import org.intranet.elevator.model.operate.controller.MetaController;
+import org.intranet.elevator.model.operate.controller.SimpleController;
 import org.intranet.sim.clock.Clock;
 import org.intranet.sim.clock.ClockFactory;
 import org.intranet.sim.event.Event;
 import org.intranet.sim.event.EventQueue;
+import org.intranet.ui.ChoiceParameter;
 import org.intranet.ui.SingleValueParameter;
 import org.json.JSONObject;
 
-import io.sarl.wrapper.Transmittable;
+import au.edu.rmit.elevatorsim.ElsimSettings;
+import au.edu.rmit.elevatorsim.NetworkWrapperController;
+import au.edu.rmit.elevatorsim.Transmittable;
 
 /**
  * @author Neil McKellar and Chris Dailey
@@ -31,33 +37,44 @@ public abstract class Simulator
   private Clock clock;
   protected List<SingleValueParameter<?>> parameters =
     new ArrayList<SingleValueParameter<?>>();
+  private ChoiceParameter<Controller> controllerParameter;
   private List<SimulatorListener> listeners =
     new ArrayList<SimulatorListener>();
+  private boolean ended = false;
 
   Clock.FeedbackListener cc = new Clock.FeedbackListener()
   {
     public long timeUpdate(long time)
     {
+      // we need to track this here because clock.pause() cannot guarantee
+      // this method will not be called one last time
+      if (ended)
+    	return time;
       synchronized(getModel())
       {
-        if (eventQueue.processEventsUpTo(time))
-        {
-          for (SimulatorListener l : listeners)
-            l.modelUpdate(time);
-        }
-        if (eventQueue.getEventList().size() == 0)
-        {
-          if (clock.isRunning())
-            clock.pause();
-          // This is a critical section.  The simulator uses this condition
-          // to tell the Clock that it should not progress past the time
-          // of the last (as in final) event of the simultation.
-          // If the simultation framework is ever used for a
-          // real-time simulation (such as a game that is ongoing),
-          // this section would likely need to be changed, as the event
-          // queue may be empty at times and user input may add events.
-          return eventQueue.getLastEventProcessTime();
-        }
+    	synchronized(eventQueue)
+    	{
+          if (eventQueue.processEventsUpTo(time))
+          {
+            for (SimulatorListener l : listeners)
+              l.modelUpdate(time);
+          }
+          if (eventQueue.getEventList().size() == 0 && !eventQueue.isWaitingForEvents())
+          {
+            if (clock.isRunning())
+              clock.pause();
+            // This is a critical section.  The simulator uses this condition
+            // to tell the Clock that it should not progress past the time
+            // of the last (as in final) event of the simultation.
+            // If the simultation framework is ever used for a
+            // real-time simulation (such as a game that is ongoing),
+            // this section would likely need to be changed, as the event
+            // queue may be empty at times and user input may add events.
+            ended = true;
+            eventQueue.end();
+            return eventQueue.getLastEventProcessTime();
+          }
+    	}
         return time;
       }
     }
@@ -65,7 +82,7 @@ public abstract class Simulator
 
   public interface SimulatorListener
   {
-    void modelUpdate(long time);
+    public void modelUpdate(long time);
   }
   
   public class CarRequestEvent extends Event
@@ -146,6 +163,7 @@ public abstract class Simulator
     clock = clockFactory.createClock(cc);
     initializeModel();
     initialized = true;
+    ended = false;
   }
   
   public final boolean isInitializied()
@@ -156,6 +174,11 @@ public abstract class Simulator
   protected abstract void initializeModel();
   
   public abstract Model getModel();
+  
+  public Controller getController()
+  {
+	  return controllerParameter.getValue();
+  }
   
   public final SingleValueParameter getParameter(String description)
   {
@@ -173,4 +196,18 @@ public abstract class Simulator
   }
   
   public abstract Simulator duplicate();
+  
+  protected void addControllerParameter()
+  {
+    List<Controller> controllers = new ArrayList<Controller>();
+    controllers.add(new NetworkWrapperController());
+    if (ElsimSettings.instance.getEnableOldControllers())
+    {
+    	controllers.add(new MetaController());
+    	controllers.add(new SimpleController());
+    }
+
+    controllerParameter = new ChoiceParameter<Controller>("Controller", controllers, controllers.get(0));
+    parameters.add(controllerParameter);
+  }
 }

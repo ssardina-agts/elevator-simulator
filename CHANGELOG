@@ -1,0 +1,39 @@
+New Features (RMIT Elevator Simulator fork):
+============================================
+
+* Added NetworkWrapperController which sends events to a networked client and
+listens for actions.
+* Created new Event subclasses (Action and Percept) to represent actions
+a client a has requested and new events of interest to clients
+* Changed simulation end condition
+* Added configuration file
+* Hide old Controllers and some simulators by default
+
+From original Elevator Simulator 0.4
+Copyright 2004-2005 Neil McKellar and Chris Dailey
+http://sourceforge.net/projects/elevatorsim
+
+New Features in 0.4:
+====================
+Added an application icon.
+Added the ability to have more than one type of car controller.
+Added a time factor to the user interface to control the speed of the
+real-time simulation.
+Updated formatting of clock display.
+Added a capacity setting for elevator cars.
+Added animation of people getting on and off cars.
+Added sensor behaviour for car doors.
+Added an averaging feature for multiple simulations.  This makes the
+random seed setting more useful.
+Added additional error dialogs when the application encounters errors.
+Many, many bug fixes.
+
+
+New Features in 0.3:
+====================
+An ability to run blocks of simulations so results can be compared.
+Basically, the application will run simulations outside of the
+real-time clock.  The simulation increments each value by the
+specified step value until every combination is tested.  A table of
+results is produced that can show comparisons with two of the
+ranges of parameters.

@@ -12,6 +12,8 @@ import org.intranet.elevator.model.Floor;
 import org.intranet.elevator.model.operate.Building;
 import org.intranet.sim.event.EventQueue;
 
+import au.edu.rmit.elevatorsim.ui.ControllerDialogCreator;
+
 /**
  * @author Neil McKellar and Chris Dailey
  */
@@ -94,4 +96,16 @@ public class MetaController
         c = controller;
     return c;
   }
+
+  @Override
+  public void setControllerDialogCreator(ControllerDialogCreator cdc) {}
+
+  @Override
+  public String getInitMessage()
+  {
+    return "loading...";
+  }
+  
+  @Override
+  public void close() {}
 }

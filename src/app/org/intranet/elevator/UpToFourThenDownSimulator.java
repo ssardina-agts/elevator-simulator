@@ -6,6 +6,7 @@ package org.intranet.elevator;
 
 import org.intranet.elevator.model.operate.Building;
 import org.intranet.elevator.model.operate.Person;
+import org.intranet.elevator.model.operate.controller.Controller;
 import org.intranet.elevator.model.operate.controller.MetaController;
 import org.intranet.sim.Model;
 import org.intranet.sim.Simulator;
@@ -31,15 +32,18 @@ public class UpToFourThenDownSimulator
     parameters.add(floorsParameter);
     carsParameter = new IntegerParameter("Number of Elevators",1);
     parameters.add(carsParameter);
+    
+    addControllerParameter();
   }
   
+  @Override
   public void initializeModel()
   {
     int numFloors = floorsParameter.getIntegerValue();
     int numCars = carsParameter.getIntegerValue();
 
-    building = new Building(getEventQueue(), numFloors, numCars,
-        new MetaController());
+    Controller controller = getController();
+    building = new Building(getEventQueue(), numFloors, numCars, controller);
 
     final Person a = building.createPerson(building.getFloor(3), 3);
     Event event = new CarRequestEvent(0, a, building.getFloor(3), building.getFloor(3));

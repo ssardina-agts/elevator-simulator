@@ -11,14 +11,18 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JComponent;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JProgressBar;
 import javax.swing.JSpinner;
 import javax.swing.JSplitPane;
 import javax.swing.SpinnerNumberModel;
+import javax.swing.SwingWorker;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import org.intranet.elevator.model.operate.controller.Controller;
 import org.intranet.sim.Model;
 import org.intranet.sim.SimulationApplication;
 import org.intranet.sim.Simulator;
@@ -27,6 +31,9 @@ import org.intranet.sim.clock.Clock;
 import org.intranet.sim.clock.RealTimeClock;
 import org.intranet.ui.InputPanel;
 import org.intranet.ui.SingleValueInputPanel;
+
+import au.edu.rmit.elevatorsim.ui.ControllerDialogCreator;
+import au.edu.rmit.elevatorsim.ui.ControllerDialogCreatorImpl;
 
 /**
  * @author Neil McKellar and Chris Dailey
@@ -42,11 +49,12 @@ public class SimulationArea
   private JComponent leftPane = new JPanel();
   private JSplitPane rightSplitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT);
   private JPanel bottomPanel = new JPanel(new BorderLayout());
+  private JFrame parent;
   ClockDisplay clockDisplay = new ClockDisplay();
 
   private EventQueueDisplay eventQueueDisplay;
 
-  public SimulationArea(Simulator simulator, SimulationApplication simApp)
+  public SimulationArea(Simulator simulator, SimulationApplication simApp, JFrame parent)
   {
     super();
     sim = simulator;
@@ -67,18 +75,49 @@ public class SimulationArea
         bView.repaint();
       }
     });
+    
+    this.parent = parent;
   }
 
   private void createLeftPane(final SimulationApplication simApp)
   {
     leftPane.setLayout(new BorderLayout());
-    SingleValueInputPanel ip = new SingleValueInputPanel(sim.getParameters(),
-        new InputPanel.Listener()
-    {
+    SingleValueInputPanel ip = new SingleValueInputPanel(sim.getParameters(), null);
+    ip.addListener(new InputPanel.Listener()
+	{
       public void parametersApplied()
       {
-        sim.initialize(new RealTimeClock.RealTimeClockFactory());
-        reconfigureSimulation(simApp);
+    	new SwingWorker<Void, Void>()
+    	{
+		  @Override
+		  protected Void doInBackground()
+		  {
+			Controller controller = sim.getController();
+		    ip.showIndeterminateProgress(controller.getInitMessage());	
+		    ControllerDialogCreator cdc = new ControllerDialogCreatorImpl(parent);
+		    try
+		    {
+				sim.initialize(new RealTimeClock.RealTimeClockFactory());
+		    }
+		    catch (RuntimeException e)
+		    {
+		    	// Unrecoverable error while initializing sim. Show error and close application.
+		    	// TODO: Change exception type?
+		    	cdc.showErrorDialog(e.getMessage());
+		    	parent.dispose();
+		    	return null;
+		    }
+		    controller.setControllerDialogCreator(cdc);
+		    return null;
+		  }
+		
+		  @Override
+		  protected void done()
+		  {
+			ip.hideIndeterminateProgress();
+		    reconfigureSimulation(simApp);
+		  }
+    	}.execute();
       }
     });
     leftPane.add(ip, BorderLayout.NORTH);
@@ -209,5 +248,6 @@ public class SimulationArea
     Clock clock = sim.getClock();
     if (clock.isRunning())
       clock.pause();
+    sim.getController().close();
   }
 }

@@ -94,31 +94,36 @@ public class EventQueueDisplay
 
     public void eventAdded(Event e)
     {
-      list = eventQueue.getEventList();
-      final int index = list.indexOf(e);
       SwingUtilities.invokeLater(new Runnable()
       {
         public void run()
         {
-          fireIntervalAdded(EventListModel.this, index, index);
+          synchronized (EventListModel.this)
+          {
+            list = eventQueue.getEventList();
+            fireContentsChanged(EventListModel.this, 0, list.size());
+          }
         }
       });
     }
 
     public void eventRemoved(Event e)
     {
-      final int index = list.indexOf(e);
-      list = eventQueue.getEventList();
       SwingUtilities.invokeLater(new Runnable()
       {
         public void run()
         {
-          fireIntervalRemoved(EventListModel.this, index, index);
+          synchronized (EventListModel.this)
+          {
+            list = eventQueue.getEventList();
+            fireContentsChanged(EventListModel.this, 0, list.size());
+          }
         }
       });
     }
 
     public void eventError(Exception ex) {}
     public void eventProcessed(Event e) {}
+    public void simulationEnded() {}
   }
 }

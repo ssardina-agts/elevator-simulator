@@ -6,6 +6,7 @@ package org.intranet.elevator;
 
 import org.intranet.elevator.model.operate.Building;
 import org.intranet.elevator.model.operate.Person;
+import org.intranet.elevator.model.operate.controller.Controller;
 import org.intranet.elevator.model.operate.controller.MetaController;
 import org.intranet.sim.Model;
 import org.intranet.sim.Simulator;
@@ -35,8 +36,11 @@ public class ThreePersonElevatorSimulator
     parameters.add(carsParameter);
 //    durationParameter = new LongParameter("Sim duration (ms)",5000);
 //    parameters.add(durationParameter);
+    
+    addControllerParameter();
   }
   
+  @Override
   public void initializeModel()
   {
     int numFloors = floorsParameter.getIntegerValue();
@@ -44,8 +48,8 @@ public class ThreePersonElevatorSimulator
     
     EventQueue eQ = getEventQueue();
 
-    building = new Building(getEventQueue(), numFloors, numCars,
-        new MetaController());
+    Controller controller = getController();
+    building = new Building(getEventQueue(), numFloors, numCars, controller);
 
     final Person a = building.createPerson(building.getFloor(1), 1);
     Event eventA = new CarRequestEvent(0, a, building.getFloor(1), building.getFloor(2));

@@ -6,6 +6,7 @@ package org.intranet.elevator;
 
 import org.intranet.elevator.model.operate.Building;
 import org.intranet.elevator.model.operate.Person;
+import org.intranet.elevator.model.operate.controller.Controller;
 import org.intranet.elevator.model.operate.controller.MetaController;
 import org.intranet.sim.Model;
 import org.intranet.sim.Simulator;
@@ -31,14 +32,18 @@ public class ThreePersonBugSimulator
 //    parameters.add(floorsParameter);
     carsParameter = new IntegerParameter("Insert second request at",29000);
     parameters.add(carsParameter);
+    
+    addControllerParameter();
   }
   
+  @Override
   public void initializeModel()
   {
 //    int numFloors = floorsParameter.getValue();
     int numCars = carsParameter.getIntegerValue();
 
-    building = new Building(getEventQueue(), 6, 1, new MetaController());
+    Controller controller = getController();
+    building = new Building(getEventQueue(), 6, 1, controller);
     
     createPerson(3, 0, 0, 1);
     createPerson(1, 2, numCars, 2);

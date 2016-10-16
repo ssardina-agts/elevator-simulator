@@ -21,7 +21,8 @@ import org.intranet.ui.ChoiceParameter;
 import org.intranet.ui.IntegerParameter;
 import org.intranet.ui.LongParameter;
 
-import io.sarl.wrapper.NetworkWrapperController;
+import au.edu.rmit.elevatorsim.ElsimSettings;
+import au.edu.rmit.elevatorsim.NetworkWrapperController;
 
 /**
  * @author Neil McKellar and Chris Dailey
@@ -51,22 +52,15 @@ public class RandomElevatorSimulator
     parameters.add(capacityParameter);
     ridersParameter = new IntegerParameter("Number of People", 20);
     parameters.add(ridersParameter);
-    durationParameter = new LongParameter("Rider insertion time (ms)",50000);
+    durationParameter = new LongParameter("Simulation Duration (ms)", 50000);
     parameters.add(durationParameter);
-    seedParameter = new LongParameter("Random seed", 635359);
+    seedParameter = new LongParameter("Random seed", System.currentTimeMillis());
     parameters.add(seedParameter);
-
-    List<Controller> controllers = new ArrayList<Controller>();
-    Controller controller1 = new MetaController();
-    Controller controller2 = new SimpleController();
-    controllers.add(controller1);
-    controllers.add(controller2);
-    controllers.add(new NetworkWrapperController());
-    controllerParameter = new ChoiceParameter<Controller>("Controller", controllers,
-        controller1);
-    parameters.add(controllerParameter);
+    
+    addControllerParameter();
   }
 
+  @Override
   public void initializeModel()
   {
     int numFloors = floorsParameter.getIntegerValue();
@@ -75,10 +69,9 @@ public class RandomElevatorSimulator
     int numRiders = ridersParameter.getIntegerValue();
     long duration = durationParameter.getLongValue();
     long seed = seedParameter.getLongValue();
-    Controller controller = (Controller)controllerParameter.getChoiceValue();
+    Controller controller = getController();
 
-    building = new Building(getEventQueue(), numFloors, numCars, carCapacity,
-        controller);
+    building = new Building(getEventQueue(), numFloors, numCars, carCapacity, controller);
     
     Random rand = new Random(seed);
 
@@ -100,7 +93,7 @@ public class RandomElevatorSimulator
       getEventQueue().addEvent(event);
     }
   }
-
+  
   public final Model getModel()
   {
     return building;

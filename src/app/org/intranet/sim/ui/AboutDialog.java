@@ -39,7 +39,8 @@ public class AboutDialog extends JDialog
     aboutPanel.setLayout(new GridLayout(0, 1));
     aboutPanel.add(new JLabel(simApp.getApplicationName(), SwingConstants.CENTER));
     aboutPanel.add(new JLabel("Version " + simApp.getVersion(), SwingConstants.CENTER));
-    aboutPanel.add(new JLabel(simApp.getCopyright(), SwingConstants.CENTER));
+    String formattedCopyright = "<html>" + simApp.getCopyright().replace("\n", "<br>") + "</html>";
+    aboutPanel.add(new JLabel(formattedCopyright, SwingConstants.CENTER));
     getContentPane().add(aboutPanel, BorderLayout.NORTH);
     
     JScrollPane scrollPane = createLicensePane();
@@ -57,22 +58,31 @@ public class AboutDialog extends JDialog
     textArea.setFont(new Font("Monospaced",Font.PLAIN,12));
     JScrollPane scrollPane = new JScrollPane(textArea);
     // get license text
-    InputStream lgplStream = ClassLoader.getSystemResourceAsStream("lgpl.txt");
-    InputStreamReader lgplReader = new InputStreamReader(lgplStream);
-    BufferedReader bufferedReader = new BufferedReader(lgplReader);
-    for (;;)
+    InputStream gplStream = ClassLoader.getSystemResourceAsStream("gpl-3.0.txt");
+    BufferedReader bufferedReader = null;
+    if (gplStream != null)
     {
-      try
+      InputStreamReader gplReader = new InputStreamReader(gplStream);
+      bufferedReader = new BufferedReader(gplReader);
+      while (bufferedReader != null)
       {
-        String line = bufferedReader.readLine();
-        if (line == null) break;
-        textArea.append(line);
-        textArea.append("\n");
-      } catch (IOException e)
-      {
-        textArea.append("Unable to find license file.");
-        break;
+        try
+        {
+          String line = bufferedReader.readLine();
+          if (line == null) break;
+          textArea.append(line);
+          textArea.append("\n");
+        }
+        catch (IOException e)
+        {
+          textArea.append("Unable to find license file.");
+          break;
+        }
       }
+    }
+    else
+    {
+      textArea.append("Unable to find license file.");
     }
     textArea.setCaretPosition(0);  // set us back at the top
     return scrollPane;

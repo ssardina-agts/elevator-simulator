@@ -4,12 +4,15 @@
  */
 package org.intranet.elevator.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.intranet.sim.event.Event;
 import org.intranet.sim.event.EventQueue;
 import org.intranet.sim.event.TrackingUpdateEvent;
 import org.json.JSONObject;
 
-import io.sarl.wrapper.Transmittable;
+import au.edu.rmit.elevatorsim.Transmittable;
 
 /**
  * A location that can move. The state of movement is kept between height and
@@ -55,21 +58,30 @@ public abstract class MovableLocation extends Location
 		destinationHeight = height;
 		eQ.addListener(new EventQueue.Listener()
 		{
+			@Override
 			public void eventAdded(Event e)
 			{
 			}
 
+			@Override
 			public void eventError(Exception ex)
 			{
 			}
 
+			@Override
 			public void eventProcessed(Event e)
 			{
 			}
 
+			@Override
 			public void eventRemoved(Event e)
 			{
 				if (e == arrivalEvent) arrivalEvent = null;
+			}
+			
+			@Override
+			public void simulationEnded()
+			{
 			}
 		});
 	}
@@ -78,6 +90,7 @@ public abstract class MovableLocation extends Location
 	private float totalDistance = 0.0F;
 	private int numTravels = 0;
 	private Event arrivalEvent;
+	private List<Listener> listeners = new ArrayList<>();
 
 	/**
 	 * @return Total distance travelled by MovableLocation
@@ -168,6 +181,10 @@ public abstract class MovableLocation extends Location
 		public void updateTime()
 		{
 			setHeight(currentValue(eventQueue.getCurrentTime()));
+			for (Listener listener : new ArrayList<Listener>(listeners))
+			{
+				listener.heightChanged(getHeight());
+			}
 		}
 
 		@Override
@@ -233,5 +250,20 @@ public abstract class MovableLocation extends Location
 			System.err.println("arrivalTime  =" + arrivalTime);
 			throw iae;
 		}
+	}
+	
+	public void addListener(Listener listener)
+	{
+		listeners.add(listener);
+	}
+	
+	public boolean removeListener(Listener listener)
+	{
+		return listeners.remove(listener);
+	}
+	
+	public interface Listener
+	{
+		public void heightChanged(float height);
 	}
 }
