@@ -433,12 +433,10 @@ public final class Person
 
   private void tryToEnterCar(boolean up)
   {
-	System.out.println("tryToEnterCar called");
-	System.out.println("up: " + up);
-	System.out.println("id: " + identifier);
-	System.out.println("location: " + currentLocation);
-	System.out.println("destination: " + destination);
-	System.out.println();
+	if (!(currentLocation instanceof Floor))
+	{
+		return;
+	}
     Floor here = (Floor)currentLocation;
     final CarRequestPanel callButton = here.getCallPanel();
     List<Door> fullCarsAt = new ArrayList<>();
@@ -479,7 +477,6 @@ public final class Person
 			@Override
 			public void doorClosed()
 			{
-			  System.out.println("yo what's up i'm a debug statement");
               if (origin == currentLocation)
               {
                 startPayingAttention(up);
@@ -493,7 +490,6 @@ public final class Person
               door.removeListener(this);
 			}
 		}, true);
-    	System.out.println("car " +  car.getId() + " full");
       }
     }
 
