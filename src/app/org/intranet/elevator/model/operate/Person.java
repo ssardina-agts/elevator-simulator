@@ -467,7 +467,6 @@ public final class Person
       
       if (!isEntranceAvailable && car.isAtCapacity())
       {
-    	stopPayingAttention();
     	door.addListener(new Door.Listener()
 		{
     		Floor origin = here;
