@@ -32,6 +32,7 @@ import org.intranet.sim.clock.RealTimeClock;
 import org.intranet.ui.InputPanel;
 import org.intranet.ui.SingleValueInputPanel;
 
+import au.edu.rmit.elevatorsim.LaunchOptions;
 import au.edu.rmit.elevatorsim.ui.ControllerDialogCreator;
 import au.edu.rmit.elevatorsim.ui.ControllerDialogCreatorImpl;
 
@@ -143,7 +144,11 @@ public class SimulationArea
     JLabel timeFactorLabel = new JLabel("Time Factor");
 
     final SpinnerNumberModel spinnerNumberModel = new SpinnerNumberModel(0, -20, 20, 1);
+    LaunchOptions.get().getSpeedFactor().ifPresent(
+    		factor -> spinnerNumberModel.setValue(factor)
+    );
     JSpinner timeFactor = new JSpinner(spinnerNumberModel);
+    timeFactor.setEnabled(!LaunchOptions.get().getStatsFile().isPresent());
     spinnerNumberModel.addChangeListener(new ChangeListener()
     {
       public void stateChanged(ChangeEvent e)

@@ -33,6 +33,7 @@ public class Building
   private List<Floor> floors = new ArrayList<Floor>();
   private List<Car> cars = new ArrayList<Car>();
   private Controller metaController;
+  private long seed;
   
   private List<Person> people = new ArrayList<Person>();
   
@@ -48,18 +49,19 @@ public class Building
   }
 
   public Building(EventQueue eQ, int numFloors, int numCars, int carCapacity,
-      Controller controller)
+      Controller controller, long seed)
   {
     this(eQ, controller);
     createFloors(numFloors);
     createCars(numCars, carCapacity);
+    this.seed = seed;
     initialize();
   }
 
   public Building(EventQueue eQ, int numFloors, int numCars,
-      Controller controller)
+      Controller controller, long seed)
   {
-    this(eQ, numFloors, numCars, 8, controller);
+    this(eQ, numFloors, numCars, 8, controller, seed);
   }
   
   private void initialize()
@@ -165,7 +167,10 @@ public class Building
     return cars;
   }
   
-  
+  public long getSeed()
+  {
+	  return seed;
+  }
   
   public Floor getFloor(int index)
   {
@@ -205,7 +210,7 @@ public class Building
     }
 
     Table carTable = new Table(carRows, "Car");
-    carTable.addColumn(new FloatColumn("Travel Distances", travelDistances));
+    carTable.addColumn(new FloatColumn("Travel Distance", travelDistances));
     carTable.addColumn(new IntColumn("Number of Stops", numTravels));
     return carTable;
   }

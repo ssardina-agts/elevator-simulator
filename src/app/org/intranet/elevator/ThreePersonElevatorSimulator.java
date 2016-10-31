@@ -49,7 +49,7 @@ public class ThreePersonElevatorSimulator
     EventQueue eQ = getEventQueue();
 
     Controller controller = getController();
-    building = new Building(getEventQueue(), numFloors, numCars, controller);
+    building = new Building(getEventQueue(), numFloors, numCars, controller, seedParameter.getLongValue());
 
     final Person a = building.createPerson(building.getFloor(1), 1);
     Event eventA = new CarRequestEvent(0, a, building.getFloor(1), building.getFloor(2));

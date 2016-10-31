@@ -43,7 +43,7 @@ public class UpToFourThenDownSimulator
     int numCars = carsParameter.getIntegerValue();
 
     Controller controller = getController();
-    building = new Building(getEventQueue(), numFloors, numCars, controller);
+    building = new Building(getEventQueue(), numFloors, numCars, controller, seedParameter.getLongValue());
 
     final Person a = building.createPerson(building.getFloor(3), 3);
     Event event = new CarRequestEvent(0, a, building.getFloor(3), building.getFloor(3));

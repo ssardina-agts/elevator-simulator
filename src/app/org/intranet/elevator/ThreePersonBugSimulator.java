@@ -43,7 +43,7 @@ public class ThreePersonBugSimulator
     int numCars = carsParameter.getIntegerValue();
 
     Controller controller = getController();
-    building = new Building(getEventQueue(), 6, 1, controller);
+    building = new Building(getEventQueue(), 6, 1, controller, seedParameter.getLongValue());
     
     createPerson(3, 0, 0, 1);
     createPerson(1, 2, numCars, 2);

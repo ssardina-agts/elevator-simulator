@@ -36,7 +36,6 @@ public class RandomElevatorSimulator
   private IntegerParameter capacityParameter;
   private IntegerParameter ridersParameter;
   private LongParameter durationParameter;
-  private LongParameter seedParameter;
   private ChoiceParameter controllerParameter;
   
   private Building building;
@@ -71,7 +70,14 @@ public class RandomElevatorSimulator
     long seed = seedParameter.getLongValue();
     Controller controller = getController();
 
-    building = new Building(getEventQueue(), numFloors, numCars, carCapacity, controller);
+    building = new Building(
+    		getEventQueue(),
+    		numFloors,
+    		numCars,
+    		carCapacity,
+    		controller,
+    		seedParameter.getLongValue()
+    );
     
     Random rand = new Random(seed);
 

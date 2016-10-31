@@ -104,4 +104,9 @@ public class WrapperModel
 	{
 		return building.getStatistics();
 	}
+	
+	public long getSeed()
+	{
+		return building.getSeed();
+	}
 }

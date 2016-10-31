@@ -17,6 +17,7 @@ import org.intranet.sim.clock.ClockFactory;
 import org.intranet.sim.event.Event;
 import org.intranet.sim.event.EventQueue;
 import org.intranet.ui.ChoiceParameter;
+import org.intranet.ui.LongParameter;
 import org.intranet.ui.SingleValueParameter;
 import org.json.JSONObject;
 
@@ -41,6 +42,7 @@ public abstract class Simulator
   private List<SimulatorListener> listeners =
     new ArrayList<SimulatorListener>();
   private boolean ended = false;
+  protected LongParameter seedParameter;
 
   Clock.FeedbackListener cc = new Clock.FeedbackListener()
   {

@@ -30,7 +30,6 @@ public class MorningTrafficElevatorSimulator
   private IntegerParameter ridersParameter;
   private FloatParameter durationParameter;
   private IntegerParameter stdDeviationParameter;
-  private LongParameter seedParameter;
   
   private Building building;
 
@@ -65,7 +64,7 @@ public class MorningTrafficElevatorSimulator
     long seed = seedParameter.getLongValue();
 
     Controller controller = getController();
-    building = new Building(getEventQueue(), numFloors, numCars, controller);
+    building = new Building(getEventQueue(), numFloors, numCars, controller, seedParameter.getLongValue());
     // starting floor is the ground floor
     Floor startingFloor = building.getFloor(0);
     startingFloor.setCapacity(Integer.MAX_VALUE);

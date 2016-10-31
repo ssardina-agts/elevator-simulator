@@ -50,7 +50,7 @@ public class NoIdleElevatorCarSimulator
     final int downDest = downDestParameter.getIntegerValue() - 1;
 
     Controller controller = getController();
-    building = new Building(getEventQueue(), numFloors, numCars, controller);
+    building = new Building(getEventQueue(), numFloors, numCars, controller, seedParameter.getLongValue());
     final Person a = building.createPerson(building.getFloor(1), 1);
     Event eventA = new CarRequestEvent(0, a, building.getFloor(1), building.getFloor(upDest));
     getEventQueue().addEvent(eventA);

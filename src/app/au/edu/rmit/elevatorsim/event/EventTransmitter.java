@@ -1,5 +1,8 @@
 package au.edu.rmit.elevatorsim.event;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.net.SocketException;
 import java.util.ArrayList;
@@ -15,6 +18,7 @@ import org.intranet.statistics.Table;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import au.edu.rmit.elevatorsim.LaunchOptions;
 import au.edu.rmit.elevatorsim.NetworkHelper;
 import au.edu.rmit.elevatorsim.WrapperModel;
 
@@ -68,7 +72,9 @@ public class EventTransmitter implements EventQueue.Listener, NetworkHelper.List
 	@Override
 	public void simulationEnded()
 	{
-		eventProcessed(new SimulationEndedPercept());
+		Event e = new SimulationEndedEvent();
+		e.perform();
+		eventProcessed(e);
 	}
 	
 	private JSONObject makeEventJson(Event e)
@@ -138,12 +144,11 @@ public class EventTransmitter implements EventQueue.Listener, NetworkHelper.List
 		}
 	}
 	
-	private class SimulationEndedPercept extends Percept
+	private class SimulationEndedEvent extends Event
 	{
-
-		public SimulationEndedPercept()
+		public SimulationEndedEvent()
 		{
-			super(model.getEventQueue());
+			super(model.getEventQueue().getCurrentTime());
 		}
 
 		@Override
@@ -178,6 +183,55 @@ public class EventTransmitter implements EventQueue.Listener, NetworkHelper.List
 			return ret;
 		}
 		
+		@Override
+		public void perform()
+		{
+			LaunchOptions.get().getStatsFile().ifPresent(this::dumpStats);
+		}
+		
+		private void dumpStats(File file)
+		{
+			List<Table> statistics = model.getStatistics();
+			try
+			{
+				FileWriter writer = new FileWriter(file, true);
+
+				if (file.length() == 0)
+				{
+					StringBuilder columnNamesStr = new StringBuilder();
+					columnNamesStr.append("seed, speed factor, ");
+					for (Table table : statistics)
+					{
+						for (int i = 0; i < table.getColumnCount(); i++)
+						{
+							columnNamesStr.append(
+									"avg " + table.getName() + " " +
+										table.getColumn(i).getHeading() + ", "
+							);
+						}
+					}
+					writer.write(columnNamesStr.substring(0, columnNamesStr.lastIndexOf(",")) + "\n");
+				}
+				
+				StringBuilder statsRow = new StringBuilder();
+				statsRow.append("" + model.getSeed() + ", " +
+						LaunchOptions.get().getSpeedFactor().orElse(0) + ", ");
+				for (Table table : statistics)
+				{
+					for (int i = 0; i < table.getColumnCount(); i++)
+					{
+						statsRow.append("" + table.getColumn(i).getAverage() + ", ");
+					}
+				}
+				
+				writer.write(statsRow.substring(0, statsRow.lastIndexOf(",")) + "\n");
+				writer.close();
+			}
+			catch (IOException e)
+			{
+				System.err.println("Error writing to file: " + e.getMessage());
+			}
+		}
 	}
 
 	public void addListener(Listener l)

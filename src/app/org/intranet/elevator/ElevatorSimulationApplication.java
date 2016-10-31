@@ -20,6 +20,7 @@ import org.intranet.sim.Simulator;
 import org.intranet.sim.ui.ApplicationUI;
 
 import au.edu.rmit.elevatorsim.ElsimSettings;
+import au.edu.rmit.elevatorsim.LaunchOptions;
 
 /**
  * @author Neil McKellar and Chris Dailey
@@ -39,9 +40,9 @@ public class ElevatorSimulationApplication
 
   public static void main(String[] args)
   {
+    LaunchOptions.createFromCliArgs(args);
     ElevatorSimulationApplication sc = new ElevatorSimulationApplication();
  
-//    new SimulationSelection(sc);
     new ApplicationUI(sc);
   }
 
