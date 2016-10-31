@@ -87,6 +87,7 @@ public class ApplicationUI extends JFrame
     setJMenuBar(mb);
     
     setSize(800, 600);
+    setLocationRelativeTo(null);
     setVisible(true);
   }
   

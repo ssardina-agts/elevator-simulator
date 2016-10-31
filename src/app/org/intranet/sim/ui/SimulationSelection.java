@@ -52,11 +52,8 @@ public final class SimulationSelection
     JPanel buttonPanel = new JPanel();
     add(buttonPanel, BorderLayout.SOUTH);
     
-    JButton realtimeButton = new JButton("Real-Time");
+    JButton realtimeButton = new JButton("Open Real-Time Simulation");
     buttonPanel.add(realtimeButton);
-    
-    JButton multipleButton = new JButton("Multiple");
-    buttonPanel.add(multipleButton);
     
     ListModel listModel = new AbstractListModel()
     {
@@ -80,15 +77,6 @@ public final class SimulationSelection
       }
     });
     
-    multipleButton.addActionListener(new ActionListener()
-    {
-      public void actionPerformed(ActionEvent arg0)
-      {
-        int index = simulationJList.getSelectedIndex();
-        apply(index, true);
-      }
-    });
-
     simulationJList.setModel(listModel);
     simulationJList.setSelectedIndex(0);
 //    simulationJList.addMouseListener(new MouseAdapter()

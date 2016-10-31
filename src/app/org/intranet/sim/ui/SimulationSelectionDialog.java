@@ -17,12 +17,10 @@ import org.intranet.sim.Simulator;
  * @author Neil McKellar and Chris Dailey
  *
  */
-public class SimulationSelectionDialog
-  extends JDialog
+public class SimulationSelectionDialog extends JDialog
 {
-  /**
-   * 
-   */
+  private static final long serialVersionUID = -2566168298464355815L;
+
   public SimulationSelectionDialog(JFrame owner, SimulationApplication simApp,
     final SimulationSelection.Listener l)
   {
@@ -42,6 +40,7 @@ public class SimulationSelectionDialog
     SimulationSelection sel = new SimulationSelection(simApp, newListener);
     getContentPane().add(sel, BorderLayout.CENTER);
     setSize(320, 200);
+    setLocationRelativeTo(owner);
     setVisible(true);
   }
 }
