@@ -68,3 +68,13 @@ client before trying to throwing an error
 which do not run over the network
 * set 'enableHiddenSimulators' to true to enable some old simulators from the original
 project that were created for development purposes
+
+## Launch Options ##
+
+The following arguments can be given to the program:
+
+* `-speed <speed factor>`: Sets the simulation speed to <speed factor> when a
+simulation is created
+* `-filestats <csv file>`: Outputs csv statistics to <csv file>. One line
+will be appended to the file for every simulation that is run. The same csv file
+should not be used across different application versions.

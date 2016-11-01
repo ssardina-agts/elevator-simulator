@@ -203,7 +203,7 @@ public abstract class Simulator
   {
     List<Controller> controllers = new ArrayList<Controller>();
     controllers.add(new NetworkWrapperController());
-    if (ElsimSettings.instance.getEnableOldControllers())
+    if (ElsimSettings.get().getEnableOldControllers())
     {
     	controllers.add(new MetaController());
     	controllers.add(new SimpleController());

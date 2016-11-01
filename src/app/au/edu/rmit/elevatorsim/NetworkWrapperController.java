@@ -39,7 +39,7 @@ public class NetworkWrapperController implements Controller, EventTransmitter.Li
 		try
 		{
 			// TODO: add option to change port
-			connection = new NetworkHelper(ElsimSettings.instance.getPort(), eQ);
+			connection = new NetworkHelper(ElsimSettings.get().getPort(), eQ);
 		}
 		catch (IOException e)
 		{
@@ -138,6 +138,6 @@ public class NetworkWrapperController implements Controller, EventTransmitter.Li
 	@Override
 	public String getInitMessage()
 	{
-		return "Waiting for connection on port " + ElsimSettings.instance.getPort();
+		return "Waiting for connection on port " + ElsimSettings.get().getPort();
 	}
 }

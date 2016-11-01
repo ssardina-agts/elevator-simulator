@@ -1,7 +1,6 @@
 package au.edu.rmit.elevatorsim.event;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.net.SocketException;
@@ -77,6 +76,11 @@ public class EventTransmitter implements EventQueue.Listener, NetworkHelper.List
 		eventProcessed(e);
 	}
 	
+	/**
+	 * Create a json message from an Event
+	 * @param e
+	 * @return A json message representing the given Event
+	 */
 	private JSONObject makeEventJson(Event e)
 	{
 		JSONObject ret = new JSONObject();
@@ -87,6 +91,11 @@ public class EventTransmitter implements EventQueue.Listener, NetworkHelper.List
 		return ret;
 	}
 	
+	/**
+	 * Called when an eventProcessed is received from the client.
+	 * Removes the event from the collection of unprocessed events.
+	 * @param id the id of the event that the client has responded to
+	 */
 	public void onEventProcessedByClient(long id)
 	{
 		Event e;
@@ -129,6 +138,7 @@ public class EventTransmitter implements EventQueue.Listener, NetworkHelper.List
 			}
 		});
 	}
+
 	@Override
 	public void onConnectionClosed()
 	{
@@ -144,6 +154,13 @@ public class EventTransmitter implements EventQueue.Listener, NetworkHelper.List
 		}
 	}
 	
+	/**
+	 * Performed and transmitted when the simulation has ended.
+	 * The getDescription returns statistics in JSON format and
+	 * perform writes statistics to a csv file if one was provided
+	 * on aplication launch
+	 * @author Joshua Richards
+	 */
 	private class SimulationEndedEvent extends Event
 	{
 		public SimulationEndedEvent()
@@ -189,13 +206,20 @@ public class EventTransmitter implements EventQueue.Listener, NetworkHelper.List
 			LaunchOptions.get().getStatsFile().ifPresent(this::dumpStats);
 		}
 		
+		/**
+		 * Writes csv data to given file. If the file is empty, this method will
+		 * create a heading row with column names. The method will add one row to
+		 * the file with the average of every column of every table.
+		 * This method assumes the order of the return value of model.getStatistics
+		 * is consistent. The same stats file should not be used across different
+		 * versions of this software.
+		 * @param file
+		 */
 		private void dumpStats(File file)
 		{
 			List<Table> statistics = model.getStatistics();
-			try
+			try (FileWriter writer = new FileWriter(file, true))
 			{
-				FileWriter writer = new FileWriter(file, true);
-
 				if (file.length() == 0)
 				{
 					StringBuilder columnNamesStr = new StringBuilder();
@@ -225,11 +249,10 @@ public class EventTransmitter implements EventQueue.Listener, NetworkHelper.List
 				}
 				
 				writer.write(statsRow.substring(0, statsRow.lastIndexOf(",")) + "\n");
-				writer.close();
 			}
 			catch (IOException e)
 			{
-				System.err.println("Error writing to file: " + e.getMessage());
+				System.err.println("Error writing to csv file: " + e.getMessage());
 			}
 		}
 	}

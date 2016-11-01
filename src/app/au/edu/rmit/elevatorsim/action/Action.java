@@ -4,6 +4,11 @@ import org.intranet.sim.event.Event;
 import org.intranet.sim.event.EventQueue;
 import org.json.JSONObject;
 
+/**
+ * Represents the actionProcessed event and attempts to perform
+ * the operation requested by the client.
+ * @author Matthew McNally
+ */
 public abstract class Action extends Event 
 {
 	// ID of action that was generated
@@ -16,6 +21,7 @@ public abstract class Action extends Event
 	{
 		COMPLETED, IN_PROGRESS, FAILED;
 		
+		@Override
 		public String toString()
 		{
 			// so the status values in messages are consistent

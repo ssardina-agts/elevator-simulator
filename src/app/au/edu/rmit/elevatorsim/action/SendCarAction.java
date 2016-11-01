@@ -78,6 +78,10 @@ public class SendCarAction extends Action
 		return ProcessingStatus.IN_PROGRESS;
 	}
 	
+	/**
+	 * Called by performAction if the car is already in transit
+	 * @return the value that should be returned by performAction
+	 */
 	private ProcessingStatus changeDestination()
 	{
 		Floor floor = model.getFloor(floorId);

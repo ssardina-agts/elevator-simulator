@@ -61,7 +61,7 @@ public class NetworkHelper
 		{
 			ss.setSoTimeout(serverTimeoutSeconds * 1000);
 			socket = ss.accept();
-			socket.setSoTimeout(ElsimSettings.instance.getTimeout() * 1000);
+			socket.setSoTimeout(ElsimSettings.get().getTimeout() * 1000);
 			in = new DataInputStream(socket.getInputStream());
 			out = new DataOutputStream(socket.getOutputStream());
 			closed = false;

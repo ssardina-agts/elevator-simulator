@@ -12,6 +12,10 @@ import org.json.JSONObject;
 import au.edu.rmit.elevatorsim.NetworkHelper;
 import au.edu.rmit.elevatorsim.WrapperModel;
 
+/**
+ * Listens for and processes message from the client
+ * @author Joshua Richards
+ */
 public class ListenerThread extends Thread
 {
 	private NetworkHelper connection;
@@ -49,6 +53,13 @@ public class ListenerThread extends Thread
 		}
 	}
 	
+	/**
+	 * Processes a message received from the client. If the type
+	 * field is a key in specialTypes the corresponding MessageHandler
+	 * is invoked. Otherwise an Action is generated and added to the
+	 * eventQueue.
+	 * @param actionJson the json message received
+	 */
 	private void doAction(JSONObject actionJson)
 	{
 		System.out.println(actionJson.toString(4));
@@ -110,6 +121,7 @@ public class ListenerThread extends Thread
 	 * @author Joshua Richards
 	 *
 	 */
+	@FunctionalInterface
 	public interface MessageHandler
 	{
 		public void handleMessage(JSONObject message);

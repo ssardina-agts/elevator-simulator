@@ -29,8 +29,6 @@ public class WorldModelSensor extends Sensor
 	 * Represents the current state of the entire model.
 	 * Must be transmitted at the beginning of the simulation before any
 	 * other Event so a client can initialize its model.
-	 * May also be transmitted periodically over the course of the simulation
-	 * but this behaviour is not currently implemented.
 	 * @author Joshua Richards
 	 * @author Matthew McNally
 	 *

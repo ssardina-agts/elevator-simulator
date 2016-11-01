@@ -6,6 +6,10 @@ import org.intranet.elevator.model.FloorRequestPanel;
 import org.intranet.sim.event.EventQueue;
 import org.json.JSONObject;
 
+/**
+ * Listens for Floor requests and adds adds Percepts to the eventQueue
+ * @author Matthew McNally
+ */
 public class FloorRequestSensor extends Sensor
 {
 	private Car car;

@@ -5,6 +5,13 @@ import org.json.JSONObject;
 import au.edu.rmit.elevatorsim.Direction;
 import au.edu.rmit.elevatorsim.WrapperModel;
 
+/**
+ * Represents the changeNextDirection action which changes
+ * the direction indicator a moving elevator will show
+ * after it arrives at its destination
+ * @author Joshua Richards
+ *
+ */
 public class ChangeNextDirectionAction extends Action
 {
 	private WrapperModel model;

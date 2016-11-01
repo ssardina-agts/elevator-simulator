@@ -3,6 +3,11 @@ package au.edu.rmit.elevatorsim.event;
 import org.intranet.sim.event.Event;
 import org.intranet.sim.event.EventQueue;
 
+/**
+ * An Event that does nothing. Added to the EventQueue to notify
+ * listeners that something interesting has happened.
+ * @author Matthew McNally
+ */
 public abstract class Percept extends Event 
 {
 

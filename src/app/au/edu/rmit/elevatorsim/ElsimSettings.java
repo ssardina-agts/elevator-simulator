@@ -9,6 +9,11 @@ import java.util.logging.Logger;
 
 import org.json.JSONObject;
 
+/**
+ * Manages a json settings file. Uses the singleton pattern.
+ * The instance is created in the static initializer.
+ * @author Joshua Richards
+ */
 public class ElsimSettings
 {
 	public static final String SETTINGS_FILENAME = "elsimsettings.json";
@@ -27,7 +32,7 @@ public class ElsimSettings
 			ElsimSettings.class.getSimpleName()
 	);
 	
-	public static final ElsimSettings instance;
+	private static final ElsimSettings instance;
 	
 	static
 	{
@@ -39,12 +44,21 @@ public class ElsimSettings
 	private boolean enableOldControllers = DEFAULT_ENABLE_OLD_CONTROLLERS;
 	private int port = DEFAULT_PORT;
 	private boolean enableHiddenSimulators = DEFAULT_ENABLE_HIDDEN_SIMULATORS;
+	
+	public static ElsimSettings get()
+	{
+		return instance;
+	}
 
 	private ElsimSettings()
 	{
 		this(SETTINGS_FILENAME);
 	}
 	
+	/**
+	 * Loads settings from the given file. Creating a new file if necessary.
+	 * @param filename
+	 */
 	private ElsimSettings(String filename)
 	{
 		settingsFile = new File(filename);
@@ -70,6 +84,9 @@ public class ElsimSettings
 		parseFromJson(settingsJson);
 	}
 	
+	/**
+	 * writes the current setting to the file
+	 */
 	private void saveSettings()
 	{
 		JSONObject toWrite = new JSONObject();
@@ -91,6 +108,11 @@ public class ElsimSettings
 		}
 	}
 	
+	/**
+	 * loads any existing settings from the given json. If any required fields are
+	 * missing, the defaults are used and written to the file.
+	 * @param settingsJson
+	 */
 	private void parseFromJson(JSONObject settingsJson)
 	{
 		int keysFound = 0;

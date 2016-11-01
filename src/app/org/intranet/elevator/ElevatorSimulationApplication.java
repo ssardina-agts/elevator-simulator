@@ -62,7 +62,7 @@ public class ElevatorSimulationApplication
     simulations.add(new RandomElevatorSimulator());
     simulations.add(new MorningTrafficElevatorSimulator());
     simulations.add(new EveningTrafficElevatorSimulator());
-    if (ElsimSettings.instance.getEnableHiddenSimulators())
+    if (ElsimSettings.get().getEnableHiddenSimulators())
     {
       simulations.add(new ThreePersonBugSimulator());
       simulations.add(new ThreePersonElevatorSimulator());

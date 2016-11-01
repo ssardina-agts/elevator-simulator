@@ -4,9 +4,15 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Optional;
 
+/**
+ * Represents the arguments that were given at application launch.
+ * Uses the singleton pattern. Instance must be created manually.
+ * Typically by the application's main method.
+ * @author Joshua Richards
+ */
 public class LaunchOptions
 {
-	public static final String STATS_OPTION_KEY = "-stats";
+	public static final String STATS_OPTION_KEY = "-filestats";
 	public static final String SPEED_OPTION_KEY = "-speed";
 	
 	private static LaunchOptions instance;
@@ -28,6 +34,10 @@ public class LaunchOptions
 		return instance;
 	}
 
+	/**
+	 * parses the given command line arguments
+	 * @param cliArgs
+	 */
 	private LaunchOptions(String[] cliArgs)
 	{
 		for (int i = 0; i < cliArgs.length; i++)
@@ -57,6 +67,11 @@ public class LaunchOptions
 		}
 	}
 	
+	/**
+	 * creates the given stats file if required and checks the
+	 * application has write access.
+	 * @param filename
+	 */
 	private void initStatsFile(String filename)
 	{
 		File file = new File(filename);
@@ -82,6 +97,10 @@ public class LaunchOptions
 		statsFile = Optional.of(file);
 	}
 	
+	/**
+	 * parses the give string for the speed factor
+	 * @param factorStr
+	 */
 	private void initSpeedFactor(String factorStr)
 	{
 		Integer factor;
