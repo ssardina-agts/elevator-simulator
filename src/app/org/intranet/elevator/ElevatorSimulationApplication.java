@@ -33,7 +33,7 @@ public class ElevatorSimulationApplication
           "Copyright 2016 Joshua Beale, Matthew McNally, Joshua Richards, Dylan Rock, Sebastian Sardina.\n" +
           "Forked from Elevator Simulator (https://sourceforge.net/projects/elevatorsim/)\n" +
           "Copyright 2004-2005 Chris Dailey & Neil McKellar";
-  public static final String VERSION = "0.2";
+  public static final String VERSION = "1.0";
   public static final String APPLICATION_NAME = "RMIT Elevator Simulator";
 
   private Image iconImage;

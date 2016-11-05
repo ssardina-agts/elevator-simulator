@@ -39,7 +39,7 @@ public class NetworkWrapperController implements Controller, EventTransmitter.Li
 		try
 		{
 			// TODO: add option to change port
-			connection = new NetworkHelper(ElsimSettings.get().getPort(), eQ);
+			connection = new NetworkHelper(ElsimSettings.get().getPort());
 		}
 		catch (IOException e)
 		{

@@ -10,13 +10,9 @@ import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.atomic.AtomicBoolean;
 
-import org.intranet.sim.event.EventQueue;
 import org.json.JSONObject;
 
-import au.edu.rmit.elevatorsim.ui.ControllerDialog;
 import au.edu.rmit.elevatorsim.ui.ControllerDialogCreator;
 
 /**
@@ -27,7 +23,6 @@ import au.edu.rmit.elevatorsim.ui.ControllerDialogCreator;
 public class NetworkHelper
 {
 	private int port;
-	private EventQueue eventQueue;
 	private ServerSocket ss;
 	private Socket socket;
 	private DataInputStream in;
@@ -47,10 +42,9 @@ public class NetworkHelper
 	 * for a client to connect to it or there is a problem retrieving the
 	 * input and output streams
 	 */
-	public NetworkHelper(int port, EventQueue eventQueue) throws IOException
+	public NetworkHelper(int port) throws IOException
 	{
 		this.port = port;
-		this.eventQueue = eventQueue;
 		initSocket(0);
 	}
 	
