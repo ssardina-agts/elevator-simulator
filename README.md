@@ -8,10 +8,6 @@
 * Developed by final year RMIT CSIT students as part of their capstone project
 under the supervision of A/Prof. Sebastian Sardina
 
-### Contribution guidelines ###
-
-* TBD
-
 ### Who do I talk to? ###
 
 * A/Prof. Sebastian Sardina (sebastian.sardina@rmit.edu.au)
