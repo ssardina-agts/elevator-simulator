@@ -8,6 +8,14 @@
 * Developed by final year RMIT CSIT students as part of their capstone project
 under the supervision of A/Prof. Sebastian Sardina
 
+### Changes from r162 (0.4+) version ###
+
+* Network connectivity to simulation; allows controllers to run outside simulator.
+* Allows to change car destination while car is traveling.
+* People repress floor button if unable to enter car due to lack of capacity.
+* Generate special event when car passes through each floor while traveling.
+* Many bugs fixed.
+
 ### Who do I talk to? ###
 
 * A/Prof. Sebastian Sardina (sebastian.sardina@rmit.edu.au)
