@@ -130,12 +130,18 @@ class ResultsTable
       return 0.0f;
     return (f - min) / (max - min);
   }
-  
-  private static final class ResultsRowTableModel
+
+  //  TODO: List is a generic in the new Java version but this is legacy code. It then uses RAW type
+  //  https://docs.oracle.com/javase/tutorial/java/generics/rawTypes.html
+  //  The list params will store list of just Objects
+  //  See that getValue returns an Object
+    // Somehow I was not able to convert that Object into T, why?
+  private static final class ResultsRowTableModel<T>
     extends AbstractTableModel
   {
     private List params;
-    public ResultsRowTableModel(List secondaryParameters)
+
+	public ResultsRowTableModel(List secondaryParameters)
     {
       super();
       params = secondaryParameters;
