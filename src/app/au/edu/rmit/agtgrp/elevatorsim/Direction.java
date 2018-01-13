@@ -1,4 +1,4 @@
-package au.edu.rmit.elevatorsim;
+package au.edu.rmit.agtgrp.elevatorsim;
 
 public enum Direction
 {

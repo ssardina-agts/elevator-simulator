@@ -13,7 +13,7 @@ import org.intranet.elevator.model.Floor;
 import org.intranet.elevator.model.operate.Building;
 import org.intranet.sim.event.EventQueue;
 
-import au.edu.rmit.elevatorsim.ui.ControllerDialogCreator;
+import au.edu.rmit.agtgrp.elevatorsim.ui.ControllerDialogCreator;
 
 /**
  * Goal 1: (Complete)

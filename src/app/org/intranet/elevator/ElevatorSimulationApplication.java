@@ -19,8 +19,8 @@ import org.intranet.sim.SimulationApplication;
 import org.intranet.sim.Simulator;
 import org.intranet.sim.ui.ApplicationUI;
 
-import au.edu.rmit.elevatorsim.ElsimSettings;
-import au.edu.rmit.elevatorsim.LaunchOptions;
+import au.edu.rmit.agtgrp.elevatorsim.ElsimSettings;
+import au.edu.rmit.agtgrp.elevatorsim.LaunchOptions;
 
 /**
  * @author Neil McKellar and Chris Dailey

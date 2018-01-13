@@ -11,9 +11,9 @@ import java.util.PriorityQueue;
 import org.intranet.sim.event.EventQueue;
 import org.json.JSONObject;
 
-import au.edu.rmit.elevatorsim.Direction;
-import au.edu.rmit.elevatorsim.Transmittable;
-import au.edu.rmit.elevatorsim.event.Percept;
+import au.edu.rmit.agtgrp.elevatorsim.Direction;
+import au.edu.rmit.agtgrp.elevatorsim.Transmittable;
+import au.edu.rmit.agtgrp.elevatorsim.event.Percept;
 
 /**
  * The states of Car are substates of MovableLocation:IDLE. Valid states:

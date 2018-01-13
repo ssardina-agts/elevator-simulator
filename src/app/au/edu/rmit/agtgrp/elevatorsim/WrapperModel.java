@@ -1,4 +1,4 @@
-package au.edu.rmit.elevatorsim;
+package au.edu.rmit.agtgrp.elevatorsim;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -12,8 +12,8 @@ import org.intranet.elevator.model.operate.Building;
 import org.intranet.sim.event.EventQueue;
 import org.intranet.statistics.Table;
 
-import au.edu.rmit.elevatorsim.event.FloorRequestSensor;
-import au.edu.rmit.elevatorsim.event.WorldModelSensor;
+import au.edu.rmit.agtgrp.elevatorsim.event.FloorRequestSensor;
+import au.edu.rmit.agtgrp.elevatorsim.event.WorldModelSensor;
 
 /**
  * Holds all model information that needs to be accessed by wrapper components.

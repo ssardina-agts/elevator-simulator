@@ -21,9 +21,9 @@ import org.intranet.ui.LongParameter;
 import org.intranet.ui.SingleValueParameter;
 import org.json.JSONObject;
 
-import au.edu.rmit.elevatorsim.ElsimSettings;
-import au.edu.rmit.elevatorsim.NetworkWrapperController;
-import au.edu.rmit.elevatorsim.Transmittable;
+import au.edu.rmit.agtgrp.elevatorsim.ElsimSettings;
+import au.edu.rmit.agtgrp.elevatorsim.NetworkWrapperController;
+import au.edu.rmit.agtgrp.elevatorsim.Transmittable;
 
 /**
  * @author Neil McKellar and Chris Dailey

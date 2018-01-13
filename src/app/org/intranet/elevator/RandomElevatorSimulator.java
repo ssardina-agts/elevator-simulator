@@ -17,7 +17,7 @@ import org.intranet.ui.ChoiceParameter;
 import org.intranet.ui.IntegerParameter;
 import org.intranet.ui.LongParameter;
 
-import au.edu.rmit.elevatorsim.event.SimulationTimeoutEvent;
+import au.edu.rmit.agtgrp.elevatorsim.event.SimulationTimeoutEvent;
 
 /**
  * @author Neil McKellar and Chris Dailey

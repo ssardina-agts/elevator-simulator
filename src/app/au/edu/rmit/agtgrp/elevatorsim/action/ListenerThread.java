@@ -1,4 +1,4 @@
-package au.edu.rmit.elevatorsim.action;
+package au.edu.rmit.agtgrp.elevatorsim.action;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -9,8 +9,8 @@ import java.util.Set;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import au.edu.rmit.elevatorsim.NetworkHelper;
-import au.edu.rmit.elevatorsim.WrapperModel;
+import au.edu.rmit.agtgrp.elevatorsim.NetworkHelper;
+import au.edu.rmit.agtgrp.elevatorsim.WrapperModel;
 
 /**
  * Listens for and processes message from the client

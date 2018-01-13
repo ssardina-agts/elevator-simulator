@@ -32,9 +32,9 @@ import org.intranet.sim.clock.RealTimeClock;
 import org.intranet.ui.InputPanel;
 import org.intranet.ui.SingleValueInputPanel;
 
-import au.edu.rmit.elevatorsim.LaunchOptions;
-import au.edu.rmit.elevatorsim.ui.ControllerDialogCreator;
-import au.edu.rmit.elevatorsim.ui.ControllerDialogCreatorImpl;
+import au.edu.rmit.agtgrp.elevatorsim.LaunchOptions;
+import au.edu.rmit.agtgrp.elevatorsim.ui.ControllerDialogCreator;
+import au.edu.rmit.agtgrp.elevatorsim.ui.ControllerDialogCreatorImpl;
 
 /**
  * @author Neil McKellar and Chris Dailey

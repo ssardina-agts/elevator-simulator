@@ -1,4 +1,4 @@
-package au.edu.rmit.elevatorsim.ui;
+package au.edu.rmit.agtgrp.elevatorsim.ui;
 
 /**
  * Interface meant to enable model classes to create dialogs

@@ -1,4 +1,4 @@
-package au.edu.rmit.elevatorsim.event;
+package au.edu.rmit.agtgrp.elevatorsim.event;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -17,9 +17,9 @@ import org.intranet.statistics.Table;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import au.edu.rmit.elevatorsim.LaunchOptions;
-import au.edu.rmit.elevatorsim.NetworkHelper;
-import au.edu.rmit.elevatorsim.WrapperModel;
+import au.edu.rmit.agtgrp.elevatorsim.LaunchOptions;
+import au.edu.rmit.agtgrp.elevatorsim.NetworkHelper;
+import au.edu.rmit.agtgrp.elevatorsim.WrapperModel;
 
 /**
  * EventQueue listener that transmits json representations of Events

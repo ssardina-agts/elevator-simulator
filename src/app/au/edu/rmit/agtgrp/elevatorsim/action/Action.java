@@ -1,4 +1,4 @@
-package au.edu.rmit.elevatorsim.action;
+package au.edu.rmit.agtgrp.elevatorsim.action;
 
 import org.intranet.sim.event.Event;
 import org.intranet.sim.event.EventQueue;

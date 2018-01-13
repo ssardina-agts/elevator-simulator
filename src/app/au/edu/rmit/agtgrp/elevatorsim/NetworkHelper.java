@@ -1,4 +1,4 @@
-package au.edu.rmit.elevatorsim;
+package au.edu.rmit.agtgrp.elevatorsim;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -13,7 +13,7 @@ import java.util.List;
 
 import org.json.JSONObject;
 
-import au.edu.rmit.elevatorsim.ui.ControllerDialogCreator;
+import au.edu.rmit.agtgrp.elevatorsim.ui.ControllerDialogCreator;
 
 /**
  * Abstracts networking operations so other classes only need to work with JSON.

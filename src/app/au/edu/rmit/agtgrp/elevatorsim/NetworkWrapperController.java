@@ -1,4 +1,4 @@
-package au.edu.rmit.elevatorsim;
+package au.edu.rmit.agtgrp.elevatorsim;
 
 import java.io.IOException;
 
@@ -9,10 +9,10 @@ import org.intranet.elevator.model.operate.controller.Controller;
 import org.intranet.sim.event.EventQueue;
 import org.json.JSONObject;
 
-import au.edu.rmit.elevatorsim.action.Action;
-import au.edu.rmit.elevatorsim.action.ListenerThread;
-import au.edu.rmit.elevatorsim.event.EventTransmitter;
-import au.edu.rmit.elevatorsim.ui.ControllerDialogCreator;
+import au.edu.rmit.agtgrp.elevatorsim.action.Action;
+import au.edu.rmit.agtgrp.elevatorsim.action.ListenerThread;
+import au.edu.rmit.agtgrp.elevatorsim.event.EventTransmitter;
+import au.edu.rmit.agtgrp.elevatorsim.ui.ControllerDialogCreator;
 
 import org.intranet.elevator.model.operate.*;
 

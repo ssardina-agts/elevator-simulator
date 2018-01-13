@@ -12,7 +12,7 @@ import org.intranet.sim.event.EventQueue;
 import org.intranet.sim.event.TrackingUpdateEvent;
 import org.json.JSONObject;
 
-import au.edu.rmit.elevatorsim.Transmittable;
+import au.edu.rmit.agtgrp.elevatorsim.Transmittable;
 
 /**
  * A location that can move. The state of movement is kept between height and

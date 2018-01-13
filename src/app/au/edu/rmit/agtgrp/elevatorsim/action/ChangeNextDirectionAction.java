@@ -1,9 +1,9 @@
-package au.edu.rmit.elevatorsim.action;
+package au.edu.rmit.agtgrp.elevatorsim.action;
 
 import org.json.JSONObject;
 
-import au.edu.rmit.elevatorsim.Direction;
-import au.edu.rmit.elevatorsim.WrapperModel;
+import au.edu.rmit.agtgrp.elevatorsim.Direction;
+import au.edu.rmit.agtgrp.elevatorsim.WrapperModel;
 
 /**
  * Represents the changeNextDirection action which changes
