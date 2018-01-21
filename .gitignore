@@ -64,8 +64,6 @@ SourceAnalysisViolations.xml
 *.bak
 *.backup	# kile
 *~		# emacs
-*.cache
-*.log
 *.tmp
 *.swp
 *.user
@@ -115,8 +113,6 @@ nbproject/private/
 *~
 *.lock
 *.DS_Store
-*.swp
-*.out
 *.~lock*
 
 # Jack jar files
@@ -137,6 +133,15 @@ jackagt.jar
 .settings
 /target/
 
+# Eclipse artifacts, including WTP generated manifests
+.classpath
+
+# IDEA artifacts and output dirs
+*.iml
+*.ipr
+*.iws
+.idea
+
+# Project specific ignores
 elsimsettings.json
 *.csv
-.idea/
