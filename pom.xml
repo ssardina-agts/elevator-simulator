@@ -3,6 +3,8 @@
   <groupId>au.edu.rmit.elevatorsim</groupId>
   <artifactId>rmit-elevator-sim</artifactId>
   <version>1.0</version>
+
+
   <build>
     <sourceDirectory>src/app</sourceDirectory>
     <resources>
@@ -13,7 +15,9 @@
         </excludes>
       </resource>
     </resources>
+
     <plugins>
+
       <plugin>
         <artifactId>maven-compiler-plugin</artifactId>
         <version>3.3</version>
@@ -22,6 +26,7 @@
           <target>1.8</target>
         </configuration>
       </plugin>
+
       <plugin>
       	<artifactId>maven-jar-plugin</artifactId>
       	<version>2.4</version>
@@ -34,6 +39,7 @@
       	  </archive>
       	</configuration>
       </plugin>
+
       <plugin>
         <artifactId>maven-dependency-plugin</artifactId>
         <executions>
@@ -48,6 +54,32 @@
           </execution>
         </executions>
       </plugin>
+
+    <plugin>
+    <artifactId>maven-assembly-plugin</artifactId>
+    <configuration>
+        <archive>
+            <manifest>
+                <addClasspath>true</addClasspath>
+                <mainClass>fully.qualified.MainClass</mainClass>
+            </manifest>
+        </archive>
+        <descriptorRefs>
+            <descriptorRef>jar-with-dependencies</descriptorRef>
+        </descriptorRefs>
+    </configuration>
+    <executions>
+        <execution>
+            <id>make-my-jar-with-dependencies</id>
+            <phase>package</phase>
+            <goals>
+                <goal>single</goal>
+            </goals>
+        </execution>
+    </executions>
+    </plugin>
+
+
     </plugins>
   </build>
   <dependencies>
