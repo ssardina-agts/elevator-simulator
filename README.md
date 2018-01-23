@@ -56,7 +56,7 @@ under the supervision of A/Prof. Sebastian Sardina
 * It is up to the client to control the elevator cars
 
 
-## Configuration 
+### Configuration 
 
 * The application will generate `elsimsettings.json` in the working directory if it does not already exist
 * `port` is the port the server will listen for a connection on
@@ -65,7 +65,7 @@ under the supervision of A/Prof. Sebastian Sardina
 * set `enableHiddenSimulators` to true to enable some old simulators from the original project that were created for development purposes
 
 
-## Launch Options ##
+### Launch Options 
 
 The following arguments can be given to the program:
 
