@@ -43,7 +43,7 @@ under the supervision of A/Prof. Sebastian Sardina
 
 ## Running the networked simulator ##
 
-* Execute JAR file or `ElevatorSimualationApplication` class.
+* Execute JAR file (provided under Downloads) or `ElevatorSimualationApplication` class.
     * e.g., `java -jar target/rmit-elevator-sim-1.0-jar-with-dependencies.jar`
 * Select file > new`
 * Select 'Random Rider Insertion' and click 'Real time'
