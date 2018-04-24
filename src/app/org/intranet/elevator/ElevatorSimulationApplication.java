@@ -11,6 +11,8 @@ import org.intranet.elevator.view.BuildingView;
 import org.intranet.sim.Model;
 import org.intranet.sim.SimulationApplication;
 import org.intranet.sim.Simulator;
+import org.intranet.sim.runner.SimulationRunner;
+import org.intranet.sim.ui.ApplicationUI;
 
 import javax.swing.*;
 import java.awt.*;
@@ -38,11 +40,12 @@ public class ElevatorSimulationApplication
         ElevatorSimulationApplication sc = new ElevatorSimulationApplication();
 
         if (LaunchOptions.get().isHeadless()) {
-            System.err.println("I can't run headless at the momemt");
             Simulator defaultSimulator = new RandomElevatorSimulator();
+            SimulationRunner runner = new SimulationRunner();
+            runner.run(defaultSimulator);
+        } else {
+            new ApplicationUI(sc);
         }
-
-//        new ApplicationUI(sc);
     }
 
     public ElevatorSimulationApplication() {
