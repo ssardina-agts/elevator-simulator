@@ -18,8 +18,8 @@ public class LaunchOptions {
     public static final String STATS_OPTION_KEY_L = "filestats";
     public static final String SPEED_OPTION_KEY = "s";
     public static final String SPEED_OPTION_KEY_L = "speed";
-    public static final String NOGUI_OPTION_KEY = "g";
-    public static final String NOGUI_OPTION_KEY_L = "nogui";
+    public static final String HEADLESS_OPTION_KEY = "g";
+    public static final String HEADLESS_OPTION_KEY_L = "headless";
 
     private static LaunchOptions instance;
 
@@ -52,7 +52,7 @@ public class LaunchOptions {
                 .desc("run simulation at speed factor times real-time")
                 .hasArg().argName("SPEED")
                 .required(false).build();
-        Option guiOpt = Option.builder(NOGUI_OPTION_KEY).longOpt(NOGUI_OPTION_KEY_L)
+        Option guiOpt = Option.builder(HEADLESS_OPTION_KEY).longOpt(HEADLESS_OPTION_KEY_L)
                 .desc("create a headless instance")
                 .hasArg(false)
                 .required(false).build();
@@ -78,7 +78,7 @@ public class LaunchOptions {
         try {
             CommandLine cmd = cliParser.parse(cliOptions, cliArgs, false);
 
-            if (cmd.hasOption(NOGUI_OPTION_KEY)) {
+            if (cmd.hasOption(HEADLESS_OPTION_KEY)) {
                 isHeadless = true;
             }
 
