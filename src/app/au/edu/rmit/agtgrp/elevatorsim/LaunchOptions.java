@@ -14,12 +14,14 @@ import java.util.Optional;
  * @author Joshua Richards
  */
 public class LaunchOptions {
-    public static final String STATS_OPTION_KEY = "f";
-    public static final String STATS_OPTION_KEY_L = "filestats";
-    public static final String SPEED_OPTION_KEY = "s";
-    public static final String SPEED_OPTION_KEY_L = "speed";
-    public static final String HEADLESS_OPTION_KEY = "g";
-    public static final String HEADLESS_OPTION_KEY_L = "headless";
+    private static final String STATS_OPTION_KEY = "f";
+    private static final String STATS_OPTION_KEY_L = "filestats";
+    private static final String SPEED_OPTION_KEY = "s";
+    private static final String SPEED_OPTION_KEY_L = "speed";
+    private static final String HEADLESS_OPTION_KEY = "g";
+    private static final String HEADLESS_OPTION_KEY_L = "headless";
+    private static final String JSON_PARAM_OPTION_KEY = "j";
+    private static final String JSON_PARAM_OPTION_KEY_L = "json";
 
     private static LaunchOptions instance;
 
@@ -56,10 +58,15 @@ public class LaunchOptions {
                 .desc("create a headless instance")
                 .hasArg(false)
                 .required(false).build();
+        Option jsonParamFileOpt = Option.builder(JSON_PARAM_OPTION_KEY).longOpt(JSON_PARAM_OPTION_KEY_L)
+                .desc("JSON formatted parameter file for simulators")
+                .hasArg().argName("JSON_PARAM")
+                .required(false).build();
 
         cliOptions.addOption(statFileOpt);
         cliOptions.addOption(speedOpt);
         cliOptions.addOption(guiOpt);
+        cliOptions.addOption(jsonParamFileOpt);
     }
 
     private void showHelp() {

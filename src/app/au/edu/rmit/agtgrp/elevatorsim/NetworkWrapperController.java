@@ -1,20 +1,17 @@
 package au.edu.rmit.agtgrp.elevatorsim;
 
-import java.io.IOException;
-
-import org.intranet.elevator.model.Car;
-
-import org.intranet.elevator.model.Floor;
-import org.intranet.elevator.model.operate.controller.Controller;
-import org.intranet.sim.event.EventQueue;
-import org.json.JSONObject;
-
 import au.edu.rmit.agtgrp.elevatorsim.action.Action;
 import au.edu.rmit.agtgrp.elevatorsim.action.ListenerThread;
 import au.edu.rmit.agtgrp.elevatorsim.event.EventTransmitter;
 import au.edu.rmit.agtgrp.elevatorsim.ui.ControllerDialogCreator;
+import org.intranet.elevator.model.Car;
+import org.intranet.elevator.model.Floor;
+import org.intranet.elevator.model.operate.Building;
+import org.intranet.elevator.model.operate.controller.Controller;
+import org.intranet.sim.event.EventQueue;
+import org.json.JSONObject;
 
-import org.intranet.elevator.model.operate.*;
+import java.io.IOException;
 
 /**
  * Entry point for controlling the simulation over a network.
