@@ -74,6 +74,11 @@ public class LaunchOptions {
         help.printHelp("elevator", cliOptions, true);
     }
 
+    private void showHelpAndExit() {
+        showHelp();
+        System.exit(0);
+    }
+
     /**
      * parses the given command line arguments
      *
@@ -98,7 +103,7 @@ public class LaunchOptions {
             }
         } catch (ParseException e) {
             System.err.println(e.getMessage());
-            showHelp();
+            showHelpAndExit();
         }
     }
 
@@ -110,13 +115,12 @@ public class LaunchOptions {
      */
     private void initStatsFile(String filename) {
         File file = new File(filename);
-        if (!file.exists()) {
-            try {
-                file.createNewFile();
-            } catch (IOException e) {
-                System.err.println("Cannot create stats file: " + filename);
-                return;
-            }
+        try {
+            //noinspection ResultOfMethodCallIgnored
+            file.createNewFile();
+        } catch (IOException e) {
+            System.err.println("Cannot create stats file: " + filename);
+            return;
         }
 
         if (!file.canWrite()) {
