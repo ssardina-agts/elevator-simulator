@@ -103,13 +103,12 @@ public class LaunchOptions {
      */
     private void initStatsFile(String filename) {
         File file = new File(filename);
-        if (!file.exists()) {
-            try {
-                file.createNewFile();
-            } catch (IOException e) {
-                System.err.println("Cannot create stats file: " + filename);
-                return;
-            }
+        try {
+            //noinspection ResultOfMethodCallIgnored
+            file.createNewFile();
+        } catch (IOException e) {
+            System.err.println("Cannot create stats file: " + filename);
+            return;
         }
 
         if (!file.canWrite()) {
@@ -117,6 +116,7 @@ public class LaunchOptions {
             return;
         }
 
+        System.out.println("Simulation statistics will be written to " + file.getAbsolutePath());
         statsFile = Optional.of(file);
     }
 
