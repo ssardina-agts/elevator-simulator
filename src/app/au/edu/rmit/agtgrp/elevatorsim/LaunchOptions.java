@@ -139,6 +139,7 @@ public class LaunchOptions {
             return;
         }
 
+        System.out.println("Simulation statistics will be written to " + file.getAbsolutePath());
         statsFile = Optional.of(file);
     }
 
