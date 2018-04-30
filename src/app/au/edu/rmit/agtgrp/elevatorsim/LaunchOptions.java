@@ -22,6 +22,8 @@ public class LaunchOptions {
     private static final String HEADLESS_OPTION_KEY_L = "headless";
     private static final String JSON_PARAM_OPTION_KEY = "j";
     private static final String JSON_PARAM_OPTION_KEY_L = "json";
+    private static final String HELP_OPTION_KEY = "h";
+    private static final String HELP_OPTION_KEY_L = "help";
 
     private static LaunchOptions instance;
 
@@ -62,16 +64,26 @@ public class LaunchOptions {
                 .desc("JSON formatted parameter file for simulators")
                 .hasArg().argName("JSON_PARAM")
                 .required(false).build();
+        Option helpOpt = Option.builder(HELP_OPTION_KEY).longOpt(HELP_OPTION_KEY_L)
+                .desc("show this help")
+                .hasArg(false)
+                .required(false).build();
 
         cliOptions.addOption(statFileOpt);
         cliOptions.addOption(speedOpt);
         cliOptions.addOption(guiOpt);
         cliOptions.addOption(jsonParamFileOpt);
+        cliOptions.addOption(helpOpt);
     }
 
     private void showHelp() {
         HelpFormatter help = new HelpFormatter();
         help.printHelp("elevator", cliOptions, true);
+    }
+
+    private void showHelpAndExit() {
+        showHelp();
+        System.exit(0);
     }
 
     /**
@@ -84,6 +96,10 @@ public class LaunchOptions {
 
         try {
             CommandLine cmd = cliParser.parse(cliOptions, cliArgs, false);
+
+            if (cmd.hasOption(HELP_OPTION_KEY)) {
+                showHelpAndExit();
+            }
 
             if (cmd.hasOption(HEADLESS_OPTION_KEY)) {
                 isHeadless = true;
@@ -98,7 +114,7 @@ public class LaunchOptions {
             }
         } catch (ParseException e) {
             System.err.println(e.getMessage());
-            showHelp();
+            showHelpAndExit();
         }
     }
 
