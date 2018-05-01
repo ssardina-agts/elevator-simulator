@@ -1,19 +1,19 @@
 /*
-* Copyright 2003-2005 Neil McKellar and Chris Dailey
-* All rights reserved.
-*/
+ * Copyright 2003-2005 Neil McKellar and Chris Dailey
+ * All rights reserved.
+ */
 package org.intranet.elevator.model;
+
+import au.edu.rmit.agtgrp.elevatorsim.Transmittable;
+import au.edu.rmit.agtgrp.elevatorsim.event.Percept;
+import org.intranet.sim.event.EventQueue;
+import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.PriorityQueue;
-
-import org.intranet.sim.event.EventQueue;
-import org.json.JSONObject;
-
-import au.edu.rmit.agtgrp.elevatorsim.Direction;
-import au.edu.rmit.agtgrp.elevatorsim.Transmittable;
-import au.edu.rmit.agtgrp.elevatorsim.event.Percept;
 
 /**
  * The states of Car are substates of MovableLocation:IDLE. Valid states:
@@ -64,297 +64,265 @@ import au.edu.rmit.agtgrp.elevatorsim.event.Percept;
  * <td><i>Impossible</i></td>
  * </tr>
  * </table>
- * 
+ *
  * @author Neil McKellar and Chris Dailey
  * @author Joshua Beale
  */
-public final class Car extends MovableLocation
-{
-	private String name;
-	private Floor location;
-	private Floor destination;
-	private FloorRequestPanel panel = new FloorRequestPanel();
-	private List<Listener> listeners = new ArrayList<Listener>();
-	private float stoppingDistance;
-	private int id;
+public final class Car extends MovableLocation {
 
-	public interface Listener
-	{
-		void docked();
-	}
+    private static final Logger LOG = LoggerFactory.getLogger(Car.class.getSimpleName());
+    private String name;
+    private Floor location;
+    private Floor destination;
+    private FloorRequestPanel panel = new FloorRequestPanel();
+    private List<Listener> listeners = new ArrayList<Listener>();
+    private float stoppingDistance;
+    private int id;
 
-	private class ArrivalMessage implements Transmittable
-	{
-		private int dest;
+    public interface Listener {
+        void docked();
+    }
 
-		public ArrivalMessage()
-		{
-			dest = destination.getFloorNumber();
-		}
+    private class ArrivalMessage implements Transmittable {
+        private int dest;
 
-		public String getName()
-		{
-			return "carArrived";
-		}
+        public ArrivalMessage() {
+            dest = destination.getFloorNumber();
+        }
 
-		public JSONObject getDescription()
-		{
-			JSONObject ret = new JSONObject();
-			ret.put("floor", dest);
-			ret.put("car", id);
-			return ret;
-		}
-	}
-	
-	private class MovementTracker implements MovableLocation.Listener
-	{
-		private float origin;
-		private float dest;
-		private PriorityQueue<Floor> floorsToPass;
+        public String getName() {
+            return "carArrived";
+        }
 
-		public MovementTracker(float origin, float dest)
-		{
-			this.origin = origin;
-			this.dest = dest;
-			if (origin == dest)
-			{
-				throw new IllegalArgumentException("no movement to track");
-			}
+        public JSONObject getDescription() {
+            JSONObject ret = new JSONObject();
+            ret.put("floor", dest);
+            ret.put("car", id);
+            return ret;
+        }
+    }
 
-			List<Floor> floorsInRange = new ArrayList<>(panel.getServicedFloors());
-			floorsInRange.removeIf(f -> !floorInRange(f));
-			if (floorsInRange.size() == 0)
-			{
-				floorsToPass = new PriorityQueue<>();
-				return;
-			}
+    private class MovementTracker implements MovableLocation.Listener {
+        private float origin;
+        private float dest;
+        private PriorityQueue<Floor> floorsToPass;
 
-			floorsToPass = new PriorityQueue<>(floorsInRange.size(), (floor1, floor2) ->
-			{
-				int ret = (int) (floor1.getHeight() - floor2.getHeight());
-				return (origin < dest) ? ret : 0 - ret;
-			});
-			
-			floorsToPass.addAll(floorsInRange);
-		}
-		
-		private boolean floorInRange(Floor floor)
-		{
-			boolean ret = Math.min(origin, dest) < floor.getHeight() &&
-					Math.max(origin, dest) > floor.getHeight();
-			return ret;
-		}
-		
-		@Override
-		public void heightChanged(float height)
-		{
-			Floor floorToPass = floorsToPass.peek();
-			if (floorToPass == null)
-			{
-				Car.super.removeListener(this);
-				return;
-			}
-			
-			if (origin < dest)
-			{
-				if (height >= floorToPass.getHeight())
-				{
-					floorsToPass.poll();
-					fireFloorPassed(floorToPass);
-				}
-				return;
-			}
-			if (origin > dest)
-			{
-				if (height <= floorToPass.getHeight())
-				{
-					floorsToPass.poll();
-					fireFloorPassed(floorToPass);
-				}
-				return;
-			}
-		}
-		
-		private void fireFloorPassed(Floor passed)
-		{
-			eventQueue.addEvent(new Percept(eventQueue)
-			{
-				@Override
-				public String getName()
-				{
-					return "floorPassed";
-				}
+        public MovementTracker(float origin, float dest) {
+            this.origin = origin;
+            this.dest = dest;
+            if (origin == dest) {
+                throw new IllegalArgumentException("no movement to track");
+            }
 
-				@Override
-				public JSONObject getDescription()
-				{
-					JSONObject ret = new JSONObject();
-					ret.put("floor", passed.getFloorNumber());
-					ret.put("car", id);
+            List<Floor> floorsInRange = new ArrayList<>(panel.getServicedFloors());
+            floorsInRange.removeIf(f -> !floorInRange(f));
+            if (floorsInRange.size() == 0) {
+                floorsToPass = new PriorityQueue<>();
+                return;
+            }
 
-					return ret;
-				}
-				
-			});
-		}
-	}
+            floorsToPass = new PriorityQueue<>(floorsInRange.size(), (floor1, floor2) ->
+            {
+                int ret = (int) (floor1.getHeight() - floor2.getHeight());
+                return (origin < dest) ? ret : 0 - ret;
+            });
 
-	public Car(EventQueue eQ, String name, float height, int capacity, int id, float stoppingDistance)
-	{
-		super(eQ, height, capacity);
-		this.name = name;
-		this.id = id;
-		this.stoppingDistance = stoppingDistance;
-	}
+            floorsToPass.addAll(floorsInRange);
+        }
 
-	/**
-	 * Travel to specified destination floor
-	 * 
-	 * @param destination
-	 *            Floor to travel to
-	 */
-	public void setDestination(Floor destination)
-	{
-		this.destination = destination;
-		if (location == null)
-		{
-			setDestinationHeight(destination.getHeight());
-			if (destination.getHeight() != getHeight())
-			{
-				super.addListener(new MovementTracker(getHeight(), destination.getHeight()));
-			}
-		}
-	}
+        private boolean floorInRange(Floor floor) {
+            boolean ret = Math.min(origin, dest) < floor.getHeight() &&
+                    Math.max(origin, dest) > floor.getHeight();
+            return ret;
+        }
 
-	/**
-	 * 
-	 * @param floor
-	 *            Destination
-	 * @return Time to travel to specified floor
-	 */
-	public float getTravelTime(Floor floor)
-	{
-		float floorHeight = floor.getHeight();
-		float travelDistance = floorHeight - getHeight();
-		return getTravelTime(travelDistance);
-	}
+        @Override
+        public void heightChanged(float height) {
+            Floor floorToPass = floorsToPass.peek();
+            if (floorToPass == null) {
+                Car.super.removeListener(this);
+                return;
+            }
 
-	/**
-	* Undock from current location
-	*/
-	public void undock()
-	{
-		if (location == null) throw new IllegalStateException("Must be docked to undock");
+            if (origin < dest) {
+                if (height >= floorToPass.getHeight()) {
+                    floorsToPass.poll();
+                    fireFloorPassed(floorToPass);
+                }
+                return;
+            }
+            if (origin > dest) {
+                if (height <= floorToPass.getHeight()) {
+                    floorsToPass.poll();
+                    fireFloorPassed(floorToPass);
+                }
+                return;
+            }
+        }
 
-		location = null;
-		if (destination != null) setDestinationHeight(destination.getHeight());
-	}
+        private void fireFloorPassed(Floor passed) {
+            eventQueue.addEvent(new Percept(eventQueue) {
+                @Override
+                public String getName() {
+                    return "floorPassed";
+                }
 
-	/**
-	 * @return Current destination floor
-	 */
-	public Floor getDestination()
-	{
-		return destination;
-	}
+                @Override
+                public JSONObject getDescription() {
+                    JSONObject ret = new JSONObject();
+                    ret.put("floor", passed.getFloorNumber());
+                    ret.put("car", id);
 
-	/**
-	 * @return Current docked location floor
-	 */
-	public Floor getLocation()
-	{
-		return location;
-	}
+                    return ret;
+                }
 
-	/**
-	 * @param listener
-	 */
-	public void addListener(Listener listener)
-	{
-		listeners.add(listener);
-	}
+            });
+        }
+    }
 
-	/**
-	 * @param listener
-	 */
-	public void removeListener(Listener listener)
-	{
-		listeners.remove(listener);
-	}
+    public Car(EventQueue eQ, String name, float height, int capacity, int id, float stoppingDistance) {
+        super(eQ, height, capacity);
+        this.name = name;
+        this.id = id;
+        this.stoppingDistance = stoppingDistance;
+    }
 
-	/**
-	 * @return
-	 */
-	public String getName()
-	{
-		return name;
-	}
-	
-	public int getId()
-	{
-		return id;
-	}
-	
-	public float getStoppingDistance()
-	{
-		return stoppingDistance;
-	}
+    /**
+     * Travel to specified destination floor
+     *
+     * @param destination Floor to travel to
+     */
+    public void setDestination(Floor destination) {
+        LOG.debug("{}.setDestination called for {}", this, destination);
+        for (StackTraceElement ste : Thread.currentThread().getStackTrace()) {
+            LOG.debug("{}", ste);
+        }
+        this.destination = destination;
+        if (location == null) {
+            setDestinationHeight(destination.getHeight());
+            if (destination.getHeight() != getHeight()) {
+                super.addListener(new MovementTracker(getHeight(), destination.getHeight()));
+            }
+        }
+    }
 
-	/**
-	 * @return FloorRequestPanel of Car
-	 */
-	public FloorRequestPanel getFloorRequestPanel()
-	{
-		return panel;
-	}
+    /**
+     * @param floor Destination
+     * @return Time to travel to specified floor
+     */
+    public float getTravelTime(Floor floor) {
+        float floorHeight = floor.getHeight();
+        float travelDistance = floorHeight - getHeight();
+        return getTravelTime(travelDistance);
+    }
 
-	/**
-	 * Get Floor of undocked, non-travelling Car
-	 * Really bad method? TODO re-factor me
-	 * 
-	 * @return Floor at specified height attached to FloorRequestPanel
-	 * 
-	 */
-	public Floor getFloorAt()
-	{
-		if (destination == null && location == null) return panel.getFloorAt(getHeight());
-		return null;
-	}
+    /**
+     * Undock from current location
+     */
+    public void undock() {
+        if (location == null) throw new IllegalStateException("Must be docked to undock");
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.intranet.elevator.model.MovableLocation#getRatePerSecond()
-	 */
-	public final float getRatePerSecond()
-	{
-		return (float) (1000 * 10.0 / 4030.0);
-	}
+        location = null;
+        if (destination != null) setDestinationHeight(destination.getHeight());
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.intranet.elevator.model.MovableLocation#arrive()
-	 */
-	protected void arrive()
-	{
-		location = destination;
-		destination = null;
-		panel.requestFulfilled(location);
-		fireDockedEvent();
-	}
+    /**
+     * @return Current destination floor
+     */
+    public Floor getDestination() {
+        return destination;
+    }
 
-	/**
-	* Notify Listeners that Car has docked to destination Location
-	*/
-	private void fireDockedEvent()
-	{
-		for (Listener l : new ArrayList<Listener>(listeners))
-			l.docked();
-	}
+    /**
+     * @return Current docked location floor
+     */
+    public Floor getLocation() {
+        return location;
+    }
 
-	public Transmittable getArrivalMessage()
-	{
-		return new ArrivalMessage();
-	}
+    /**
+     * @param listener
+     */
+    public void addListener(Listener listener) {
+        listeners.add(listener);
+    }
+
+    /**
+     * @param listener
+     */
+    public void removeListener(Listener listener) {
+        listeners.remove(listener);
+    }
+
+    /**
+     * @return
+     */
+    public String getName() {
+        return name;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public float getStoppingDistance() {
+        return stoppingDistance;
+    }
+
+    /**
+     * @return FloorRequestPanel of Car
+     */
+    public FloorRequestPanel getFloorRequestPanel() {
+        return panel;
+    }
+
+    /**
+     * Get Floor of undocked, non-travelling Car
+     * Really bad method? TODO re-factor me
+     *
+     * @return Floor at specified height attached to FloorRequestPanel
+     */
+    public Floor getFloorAt() {
+        if (destination == null && location == null) return panel.getFloorAt(getHeight());
+        return null;
+    }
+
+    /*
+     * (non-Javadoc)
+     *
+     * @see org.intranet.elevator.model.MovableLocation#getRatePerSecond()
+     */
+    public final float getRatePerSecond() {
+        return (float) (1000 * 10.0 / 4030.0);
+    }
+
+    /*
+     * (non-Javadoc)
+     *
+     * @see org.intranet.elevator.model.MovableLocation#arrive()
+     */
+    protected void arrive() {
+        LOG.debug("I am {} and I have arrived at {}", this, destination);
+        location = destination;
+        destination = null;
+        panel.requestFulfilled(location);
+        fireDockedEvent();
+    }
+
+    /**
+     * Notify Listeners that Car has docked to destination Location
+     */
+    private void fireDockedEvent() {
+        for (Listener l : new ArrayList<Listener>(listeners))
+            l.docked();
+    }
+
+    public Transmittable getArrivalMessage() {
+        return new ArrivalMessage();
+    }
+
+    @Override
+    public String toString() {
+        return "Car[" + name + "]-" + id + "@" + location + "_TO_" + destination;
+    }
 }

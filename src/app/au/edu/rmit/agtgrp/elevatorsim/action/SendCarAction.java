@@ -1,11 +1,12 @@
 package au.edu.rmit.agtgrp.elevatorsim.action;
 
+import au.edu.rmit.agtgrp.elevatorsim.Direction;
+import au.edu.rmit.agtgrp.elevatorsim.WrapperModel;
 import org.intranet.elevator.model.Car;
 import org.intranet.elevator.model.Floor;
 import org.json.JSONObject;
-
-import au.edu.rmit.agtgrp.elevatorsim.Direction;
-import au.edu.rmit.agtgrp.elevatorsim.WrapperModel;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Performs the 'sendCar' action
@@ -13,6 +14,7 @@ import au.edu.rmit.agtgrp.elevatorsim.WrapperModel;
  */
 public class SendCarAction extends Action
 {
+    private static final Logger LOG = LoggerFactory.getLogger(SendCarAction.class.getSimpleName());
 	private WrapperModel model;
 	private int carId;
 	private int floorId;
@@ -86,7 +88,11 @@ public class SendCarAction extends Action
 	{
 		Floor floor = model.getFloor(floorId);
 		Car car = model.getCar(carId);
-		
+
+        LOG.debug("Call changeDestination: {}", car);
+        LOG.debug("Current Destination is: {}", car.getDestination());
+        LOG.debug("    New Destination is: {}", floor);
+
 		float currentHeight = car.getHeight();
 		float lastDestHeight = car.getDestination().getHeight();
 		float newDestHeight = floor.getHeight();

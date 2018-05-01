@@ -4,10 +4,10 @@
 */
 package org.intranet.elevator.model;
 
+import org.intranet.sim.event.EventQueue;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import org.intranet.sim.event.EventQueue;
 
 /**
  * Floor of Building with a CarRequestPanel and CarEntrance(s) leading to Car(s)
@@ -146,6 +146,6 @@ public final class Floor extends Location
 
 	public String toString()
 	{
-		return "Floor" + number + "@" + getHeight();
+		return "Floor-" + number + "@" + getHeight();
 	}
 }
