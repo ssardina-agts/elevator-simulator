@@ -5,14 +5,25 @@ import org.intranet.elevator.model.operate.controller.Controller;
 import org.intranet.sim.Simulator;
 import org.intranet.sim.clock.Clock;
 import org.intranet.sim.clock.RealTimeClock;
+import org.intranet.ui.SingleValueParameter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class SimulationRunner {
+    private static final Logger LOG = LoggerFactory.getLogger(SimulationRunner.class.getSimpleName());
+
     public void run(Simulator simulator) {
         new Thread() {
             @Override
             public void run() {
                 Controller controller = simulator.getController();
-                System.out.println(controller.getInitMessage());
+
+                LOG.info("Starting simulation with {} using following parameters:", simulator.getController());
+                for (SingleValueParameter param : simulator.getParameters()) {
+                    LOG.info("{}: {}", param.getDescription(), param.getValue());
+                }
+                LOG.info(controller.getInitMessage());
+
                 ControllerCliMessageView cdc = new ControllerCliMessageView();
                 try {
                     simulator.initialize(new RealTimeClock.RealTimeClockFactory());
