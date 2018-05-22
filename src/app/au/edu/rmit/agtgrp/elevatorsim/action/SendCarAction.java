@@ -87,7 +87,7 @@ public class SendCarAction extends Action {
         LOG.debug("Call changeDestination: {}", car);
         LOG.debug("Current Destination is: {}", car.getDestination());
         LOG.debug("    New Destination is: {}", floor);
-        LOG.debug("Stacktrace for this method:", new Exception());
+        LOG.trace("Stacktrace for this method:", new Exception());
 
         float currentHeight = car.getHeight();
         float lastDestHeight = car.getDestination().getHeight();

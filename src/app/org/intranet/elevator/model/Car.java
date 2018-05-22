@@ -194,7 +194,7 @@ public final class Car extends MovableLocation {
      * @param destination Floor to travel to
      */
     public void setDestination(Floor destination) {
-        LOG.debug("{}.setDestination called for {}", this, destination, new Exception("stacktrace for this call"));
+        LOG.trace("{}.setDestination called for {}", this, destination, new Exception("stacktrace for this call"));
         this.destination = destination;
         if (location == null) {
             setDestinationHeight(destination.getHeight());
