@@ -46,33 +46,30 @@ public class SendCarAction extends Action {
 
     @Override
     protected ProcessingStatus performAction() {
+        ProcessingStatus status = ProcessingStatus.FAILED;
         Floor floor = model.getFloor(floorId);
         Car car = model.getCar(carId);
+
         if (car == null) {
             failureReason = "No car with id: " + carId;
-            return ProcessingStatus.FAILED;
-        }
-
-        if (floor == null) {
+        } else if (floor == null) {
             failureReason = "No floor with id: " + floorId;
-            return ProcessingStatus.FAILED;
+        } else if (nextDirection == Direction.NONE) {
+            failureReason = "Invalid value for 'nextDirection' parameter. Valid values are 'up' and 'down'";
+        } else if (model.getCar(carId).getDestination() != null) {
+            try {
+                status = changeDestination();
+            } catch (Exception e) {
+                LOG.error("Cannot send car, requires illegal change of destination to {} in direction {}", floor, nextDirection);
+            }
         }
 
-        if (nextDirection == Direction.NONE) {
-            failureReason = "Invalid value for 'nextDirection' parameter. " +
-                    "Valid values are 'up' and 'down'";
-            return ProcessingStatus.FAILED;
+        if (status == ProcessingStatus.IN_PROGRESS) {
+            model.setNextDirection(carId, nextDirection);
+            car.setDestination(floor);
         }
 
-        if (model.getNextDirection(carId) != Direction.NONE) {
-            return changeDestination();
-        }
-
-        // do the action
-        model.setNextDirection(carId, nextDirection);
-        car.setDestination(floor);
-
-        return ProcessingStatus.IN_PROGRESS;
+        return status;
     }
 
     /**
@@ -87,7 +84,7 @@ public class SendCarAction extends Action {
         LOG.debug("Call changeDestination: {}", car);
         LOG.debug("Current Destination is: {}", car.getDestination());
         LOG.debug("    New Destination is: {}", floor);
-        LOG.trace("Stacktrace for this method:", new Exception());
+        LOG.trace("Call hierarchy for this method:", new Exception());
 
         float currentHeight = car.getHeight();
         float lastDestHeight = car.getDestination().getHeight();
@@ -107,8 +104,6 @@ public class SendCarAction extends Action {
             }
         }
 
-        car.setDestination(floor);
-        model.setNextDirection(carId, nextDirection);
         return ProcessingStatus.IN_PROGRESS;
     }
 

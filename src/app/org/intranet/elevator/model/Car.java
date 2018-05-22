@@ -72,6 +72,7 @@ import java.util.PriorityQueue;
 public final class Car extends MovableLocation {
 
     private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass().getSimpleName());
+
     private String name;
     private Floor location;
     private Floor destination;

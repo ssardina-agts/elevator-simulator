@@ -15,7 +15,6 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.lang.invoke.MethodHandles;
-import java.util.List;
 
 /**
  * Entry point for controlling the simulation over a network.
@@ -93,22 +92,35 @@ public class NetworkWrapperController implements Controller, EventTransmitter.Li
 
     @Override
     public boolean arrive(Car car) {
+        LOG.debug("Car arrived: {}", car);
         Direction d = model.getNextDirection(car.getId());
 
-        if (d != Direction.NONE) {
-            // register the car as not moving
-            model.setNextDirection(car.getId(), Direction.NONE);
-            return d == Direction.UP;
+        if (d == Direction.NONE) {
+            throw new RuntimeException("arrive called for car that is not known to be moving. carId: " + car.getId());
         }
 
-        throw new RuntimeException(
-                "arrive called for car that is not known to be moving. carId: " + car.getId()
-        );
+        return d == Direction.UP;
     }
 
     @Override
     public void setNextDestination(Car car) {
-        LOG.debug("Shouldn't I be setting the next destination of my {} here?", car);
+        LOG.trace("Set next destination for {} here?", car, new Exception("stacktrace for this call"));
+        /*Direction nextDirection = model.getNextDirection(car.getId());
+
+        if (nextDirection != Direction.NONE) {
+            List<Floor> floors = car.getFloorRequestPanel().getServicedFloors();
+            Floor currentLocation = car.getLocation();
+            if (currentLocation == null) {
+                currentLocation = car.getFloorAt();
+            }
+            int floorIdx = floors.indexOf(currentLocation);
+            // Which direction to go? It at top, then go down, else opposite
+            boolean dirUp = (floorIdx != floors.size() - 1) || floorIdx == 0;
+            floorIdx += dirUp ? 1 : -1;
+            Floor nextFloor = floors.get(floorIdx);
+            car.setDestination(nextFloor);
+            LOG.debug("Next Destination for {} is {}", car, nextFloor);
+        }*/
     }
 
     @Override
