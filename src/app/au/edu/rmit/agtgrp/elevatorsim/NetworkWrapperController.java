@@ -14,6 +14,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.lang.invoke.MethodHandles;
+import java.util.List;
 
 /**
  * Entry point for controlling the simulation over a network.
@@ -24,7 +26,7 @@ import java.io.IOException;
  */
 public class NetworkWrapperController implements Controller, EventTransmitter.Listener {
 
-    private static final Logger LOG = LoggerFactory.getLogger(NetworkWrapperController.class.getSimpleName());
+    private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass().getSimpleName());
     private WrapperModel model;
     private NetworkHelper connection;
     private ListenerThread listenerThread;

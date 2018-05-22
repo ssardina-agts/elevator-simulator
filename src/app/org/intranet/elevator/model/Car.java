@@ -11,6 +11,7 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.PriorityQueue;
@@ -70,7 +71,7 @@ import java.util.PriorityQueue;
  */
 public final class Car extends MovableLocation {
 
-    private static final Logger LOG = LoggerFactory.getLogger(Car.class.getSimpleName());
+    private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass().getSimpleName());
     private String name;
     private Floor location;
     private Floor destination;
@@ -193,10 +194,7 @@ public final class Car extends MovableLocation {
      * @param destination Floor to travel to
      */
     public void setDestination(Floor destination) {
-        LOG.debug("{}.setDestination called for {}", this, destination);
-        for (StackTraceElement ste : Thread.currentThread().getStackTrace()) {
-            LOG.debug("{}", ste);
-        }
+        LOG.debug("{}.setDestination called for {}", this, destination, new Exception("stacktrace for this call"));
         this.destination = destination;
         if (location == null) {
             setDestinationHeight(destination.getHeight());
