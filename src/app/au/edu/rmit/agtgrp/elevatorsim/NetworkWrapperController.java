@@ -104,6 +104,8 @@ public class NetworkWrapperController implements Controller, EventTransmitter.Li
 
     @Override
     public void setNextDestination(Car car) {
+//        This should do nothing, the NetworkWrapperController does not decide itself where the next destintaion is
+//        it will receive from the network SendCar
         LOG.trace("Set next destination for {} here?", car, new Exception("stacktrace for this call"));
         /*Direction nextDirection = model.getNextDirection(car.getId());
 

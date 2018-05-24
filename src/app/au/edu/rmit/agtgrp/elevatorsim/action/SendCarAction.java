@@ -50,27 +50,68 @@ public class SendCarAction extends Action {
         Floor floor = model.getFloor(floorId);
         Car car = model.getCar(carId);
 
+        LOG.debug("Performing the action for SendCarAction for car {} to floor {}" +
+                " towards {}", carId, floorId, nextDirection.toString());
         if (car == null) {
+            LOG.error("SendCarAction is missing the car!");
             failureReason = "No car with id: " + carId;
+            status = ProcessingStatus.FAILED;
         } else if (floor == null) {
+            LOG.error("SendCarAction is missing the floor!");
             failureReason = "No floor with id: " + floorId;
+            status = ProcessingStatus.FAILED;
         } else if (nextDirection == Direction.NONE) {
+            LOG.error("SendCarAction is missing the next towards direction!");
             failureReason = "Invalid value for 'nextDirection' parameter. Valid values are 'up' and 'down'";
-        } else if (model.getCar(carId).getDestination() != null) {
-            try {
-                status = changeDestination();
-            } catch (Exception e) {
+            status = ProcessingStatus.FAILED;
+        } else {
+            if (model.getCar(carId).getDestination() == null  || LegalChangeDestination()) {
+                LOG.debug("SendCarAction about to set the next direction to {}", nextDirection.toString());
+                model.setNextDirection(carId, nextDirection);
+                car.setDestination(floor);
+                status = ProcessingStatus.IN_PROGRESS;
+            } else {
                 LOG.error("Cannot send car, requires illegal change of destination to {} in direction {}", floor, nextDirection);
             }
         }
-
-        if (status == ProcessingStatus.IN_PROGRESS) {
-            model.setNextDirection(carId, nextDirection);
-            car.setDestination(floor);
-        }
-
         return status;
     }
+
+    private boolean LegalChangeDestination() {
+        Floor floor = model.getFloor(floorId);
+        Car car = model.getCar(carId);
+
+        LOG.debug("Call changeDestination: {}", car);
+        LOG.debug("Current Destination is: {}", car.getDestination());
+        LOG.debug("    New Destination is: {}", floor);
+        LOG.trace("Call hierarchy for this method:", new Exception());
+
+        if (car.getDestination() == null ) {
+            return true;
+        }
+
+        float currentHeight = car.getHeight();
+        float lastDestHeight = car.getDestination().getHeight();
+        float newDestHeight = floor.getHeight();
+        Direction currDirection = (currentHeight < lastDestHeight) ? Direction.UP : Direction.DOWN;
+
+            // TODO: this is very tight, we need to giv emore space because it can be OK now but the elevator is traveling fast!
+        if (currDirection == Direction.UP) {
+            if (newDestHeight < currentHeight) {
+                failureReason = "Car " + carId + " already past floor " + floorId;
+                return false;
+            }
+        } else {
+            if (newDestHeight > currentHeight) {
+                failureReason = "Car " + carId + " already past floor " + floorId;
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+
 
     /**
      * Called by performAction if the car is already in transit
@@ -92,6 +133,7 @@ public class SendCarAction extends Action {
         Direction currDirection = (currentHeight < lastDestHeight) ?
                 Direction.UP : Direction.DOWN;
 
+        // TODO: this is very tight, we need to giv emore space because it can be OK now but the elevator is traveling fast!
         if (currDirection == Direction.UP) {
             if (newDestHeight < currentHeight) {
                 failureReason = "Car " + carId + " already past floor " + floorId;
