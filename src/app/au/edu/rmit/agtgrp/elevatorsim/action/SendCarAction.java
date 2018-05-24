@@ -46,27 +46,24 @@ public class SendCarAction extends Action {
 
     @Override
     protected ProcessingStatus performAction() {
+        LOG.debug("Sending car {} to floor {} towards {}", carId, floorId, nextDirection);
+
         ProcessingStatus status = ProcessingStatus.FAILED;
         Floor floor = model.getFloor(floorId);
         Car car = model.getCar(carId);
 
-        LOG.debug("Performing the action for SendCarAction for car {} to floor {}" +
-                " towards {}", carId, floorId, nextDirection.toString());
         if (car == null) {
-            LOG.error("SendCarAction is missing the car!");
+            LOG.error("Car with ID {} missing!", carId);
             failureReason = "No car with id: " + carId;
-            status = ProcessingStatus.FAILED;
         } else if (floor == null) {
-            LOG.error("SendCarAction is missing the floor!");
+            LOG.error("Floor with ID {} missing!", floorId);
             failureReason = "No floor with id: " + floorId;
-            status = ProcessingStatus.FAILED;
         } else if (nextDirection == Direction.NONE) {
-            LOG.error("SendCarAction is missing the next towards direction!");
+            LOG.error("nextDirection should not be {}", nextDirection);
             failureReason = "Invalid value for 'nextDirection' parameter. Valid values are 'up' and 'down'";
-            status = ProcessingStatus.FAILED;
         } else {
             if (model.getCar(carId).getDestination() == null  || LegalChangeDestination()) {
-                LOG.debug("SendCarAction about to set the next direction to {}", nextDirection.toString());
+                LOG.debug("About to set next direction to {}", nextDirection);
                 model.setNextDirection(carId, nextDirection);
                 car.setDestination(floor);
                 status = ProcessingStatus.IN_PROGRESS;
@@ -74,6 +71,9 @@ public class SendCarAction extends Action {
                 LOG.error("Cannot send car, requires illegal change of destination to {} in direction {}", floor, nextDirection);
             }
         }
+
+        LOG.debug("Processing Status: {}", status);
+
         return status;
     }
 
