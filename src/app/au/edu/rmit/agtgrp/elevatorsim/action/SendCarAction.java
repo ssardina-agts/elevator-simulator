@@ -61,8 +61,7 @@ public class SendCarAction extends Action {
         } else if (nextDirection == Direction.NONE) {
             LOG.error("nextDirection should not be {}", nextDirection);
             failureReason = "Invalid value for 'nextDirection' parameter. Valid values are 'up' and 'down'";
-        } else {
-            if (model.getCar(carId).getDestination() == null  || LegalChangeDestination()) {
+        } else if (LegalChangeDestination()) {
                 LOG.debug("About to set next direction to {}", nextDirection);
                 model.setNextDirection(carId, nextDirection);
                 car.setDestination(floor);
@@ -81,9 +80,8 @@ public class SendCarAction extends Action {
         Floor floor = model.getFloor(floorId);
         Car car = model.getCar(carId);
 
-        LOG.debug("Call changeDestination: {}", car);
-        LOG.debug("Current Destination is: {}", car.getDestination());
-        LOG.debug("    New Destination is: {}", floor);
+        LOG.debug("Checking if legal change of destination to floor {} for car {} with current destination {}",
+                floor, car, car.getDestination());
         LOG.trace("Call hierarchy for this method:", new Exception());
 
         if (car.getDestination() == null ) {
@@ -109,44 +107,6 @@ public class SendCarAction extends Action {
         }
 
         return true;
-    }
-
-
-
-    /**
-     * Called by performAction if the car is already in transit
-     *
-     * @return the value that should be returned by performAction
-     */
-    private ProcessingStatus changeDestination() {
-        Floor floor = model.getFloor(floorId);
-        Car car = model.getCar(carId);
-
-        LOG.debug("Call changeDestination: {}", car);
-        LOG.debug("Current Destination is: {}", car.getDestination());
-        LOG.debug("    New Destination is: {}", floor);
-        LOG.trace("Call hierarchy for this method:", new Exception());
-
-        float currentHeight = car.getHeight();
-        float lastDestHeight = car.getDestination().getHeight();
-        float newDestHeight = floor.getHeight();
-        Direction currDirection = (currentHeight < lastDestHeight) ?
-                Direction.UP : Direction.DOWN;
-
-        // TODO: this is very tight, we need to giv emore space because it can be OK now but the elevator is traveling fast!
-        if (currDirection == Direction.UP) {
-            if (newDestHeight < currentHeight) {
-                failureReason = "Car " + carId + " already past floor " + floorId;
-                return ProcessingStatus.FAILED;
-            }
-        } else {
-            if (newDestHeight > currentHeight) {
-                failureReason = "Car " + carId + " already past floor " + floorId;
-                return ProcessingStatus.FAILED;
-            }
-        }
-
-        return ProcessingStatus.IN_PROGRESS;
     }
 
 }
