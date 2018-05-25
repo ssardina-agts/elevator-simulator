@@ -62,13 +62,12 @@ public class SendCarAction extends Action {
             LOG.error("nextDirection should not be {}", nextDirection);
             failureReason = "Invalid value for 'nextDirection' parameter. Valid values are 'up' and 'down'";
         } else if (LegalChangeDestination()) {
-                LOG.debug("About to set next direction to {}", nextDirection);
-                model.setNextDirection(carId, nextDirection);
-                car.setDestination(floor);
-                status = ProcessingStatus.IN_PROGRESS;
-            } else {
-                LOG.error("Cannot send car, requires illegal change of destination to {} in direction {}", floor, nextDirection);
-            }
+            LOG.debug("About to set next direction to {}", nextDirection);
+            model.setNextDirection(carId, nextDirection);
+            car.setDestination(floor);
+            status = ProcessingStatus.IN_PROGRESS;
+        } else {
+            LOG.error("Cannot send car, requires illegal change of destination to {} in direction {}", floor, nextDirection);
         }
 
         LOG.debug("Processing Status: {}", status);
@@ -84,7 +83,7 @@ public class SendCarAction extends Action {
                 floor, car, car.getDestination());
         LOG.trace("Call hierarchy for this method:", new Exception());
 
-        if (car.getDestination() == null ) {
+        if (car.getDestination() == null) {
             return true;
         }
 
@@ -93,7 +92,7 @@ public class SendCarAction extends Action {
         float newDestHeight = floor.getHeight();
         Direction currDirection = (currentHeight < lastDestHeight) ? Direction.UP : Direction.DOWN;
 
-            // TODO: this is very tight, we need to giv emore space because it can be OK now but the elevator is traveling fast!
+        // TODO: this is very tight, we need to giv emore space because it can be OK now but the elevator is traveling fast!
         if (currDirection == Direction.UP) {
             if (newDestHeight < currentHeight) {
                 failureReason = "Car " + carId + " already past floor " + floorId;
