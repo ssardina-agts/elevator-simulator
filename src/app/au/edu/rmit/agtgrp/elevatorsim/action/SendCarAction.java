@@ -51,7 +51,7 @@ public class SendCarAction extends Action {
 
     @Override
     protected ProcessingStatus performAction() {
-        LOG.debug("Sending car {} to floor {} then {}", carId, floorId, nextDirection);
+        LOG.info("Sending car {} to floor {} then {}", carId, floorId, nextDirection);
 
         ProcessingStatus status = ProcessingStatus.FAILED;
 

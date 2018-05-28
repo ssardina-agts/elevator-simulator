@@ -15,7 +15,8 @@ public final class MultipleChoiceParameter
     extends MultipleValueParameter
 {
   private ChoiceParameter choiceParam;
-  private Object[] selectedValues;
+  private List selectedValues;
+
 
   public MultipleChoiceParameter(ChoiceParameter param)
   {
@@ -29,13 +30,12 @@ public final class MultipleChoiceParameter
     if (!isMultiple)
     {
       ChoiceParameter p = choiceParam.clone();
-      p.setValue(selectedValues[0]);
-      params.add(p);
+        p.setValue(selectedValues.get(0));
+        params.add(p);
       return params;
     }
-    for (int i = 0; i < selectedValues.length; i++)
+    for (Object value: selectedValues)
     {
-      Object value = selectedValues[i];
       ChoiceParameter p = choiceParam.clone();
       p.setValue(value);
       params.add(p);
@@ -48,13 +48,13 @@ public final class MultipleChoiceParameter
     return choiceParam.getLegalValues();
   }
 
-  public void setChoice(Object[] selectedValues)
+  public void setChoice(List selectedValues)
   {
     this.selectedValues = selectedValues;
   }
 
   public Object getSingleValue()
   {
-    return selectedValues[0];
+    return selectedValues.get(0);
   }
 }

@@ -4,17 +4,11 @@
  */
 package org.intranet.ui;
 
-import java.awt.GridBagConstraints;
-import java.util.List;
-
-import javax.swing.JCheckBox;
-import javax.swing.JComponent;
-import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.JTextField;
-import javax.swing.ListSelectionModel;
+import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import java.awt.*;
+import java.util.List;
 
 /**
  * @author Neil McKellar and Chris Dailey
@@ -146,7 +140,7 @@ public final class MultipleValueInputPanel
       JList list = (JList)field;
       multiChoiceParam.setMultiple(check.isSelected());
       
-      multiChoiceParam.setChoice(list.getSelectedValues());
+      multiChoiceParam.setChoice(list.getSelectedValuesList());
     }
     else
       throw new UnsupportedOperationException();
