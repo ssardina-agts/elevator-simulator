@@ -90,19 +90,14 @@ public class SendCarAction extends Action {
         float currentHeight = car.getHeight();
         float lastDestHeight = car.getDestination().getHeight();
         float newDestHeight = floor.getHeight();
+        float stoppingDistance = car.getStoppingDistance()
         Direction currDirection = (currentHeight < lastDestHeight) ? Direction.UP : Direction.DOWN;
 
-        // TODO: this is very tight, we need to giv emore space because it can be OK now but the elevator is traveling fast!
-        if (currDirection == Direction.UP) {
-            if (newDestHeight < currentHeight) {
-                failureReason = "Car " + carId + " already past floor " + floorId;
-                return false;
-            }
-        } else {
-            if (newDestHeight > currentHeight) {
-                failureReason = "Car " + carId + " already past floor " + floorId;
-                return false;
-            }
+        // To late to change to desired destination, floor requested is passed towards direction...
+        if ((currDirection == Direction.UP && newDestHeight - stoppingDistance < currentHeight ) ||
+        (currDirection == Direction.DOWN && newDestHeight + - stoppingDistance > currentHeight)) {
+            failureReason = "Car " + carId + " already past floor " + floorId;
+            return false;
         }
 
         return true;
