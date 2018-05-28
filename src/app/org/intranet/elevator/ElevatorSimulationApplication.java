@@ -13,9 +13,12 @@ import org.intranet.sim.SimulationApplication;
 import org.intranet.sim.Simulator;
 import org.intranet.sim.runner.SimulationRunner;
 import org.intranet.sim.ui.ApplicationUI;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
 import java.awt.*;
+import java.lang.invoke.MethodHandles;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -31,10 +34,12 @@ public class ElevatorSimulationApplication
                     "Copyright 2004-2005 Chris Dailey & Neil McKellar";
     public static final String VERSION = "1.0";
     public static final String APPLICATION_NAME = "RMIT Elevator Simulator";
+    private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass().getSimpleName());
 
     private Image iconImage;
 
     public static void main(String[] args) {
+        LOG.info("Starting Application {}", APPLICATION_NAME);
         LaunchOptions.createFromCliArgs(args);
 
         ElevatorSimulationApplication sc = new ElevatorSimulationApplication();
@@ -46,6 +51,7 @@ public class ElevatorSimulationApplication
         } else {
             new ApplicationUI(sc);
         }
+        LOG.info("Started Application {}", APPLICATION_NAME);
     }
 
     public ElevatorSimulationApplication() {

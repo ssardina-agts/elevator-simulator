@@ -4,6 +4,10 @@
  */
 package org.intranet.sim.event;
 
+import com.sun.media.jfxmedia.logging.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.SortedSet;
@@ -16,7 +20,9 @@ import java.util.concurrent.ConcurrentSkipListSet;
  */
 public final class EventQueue
 {
-  private long currentTime = -1; // Invalid time value initially
+    private static final org.slf4j.Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass().getSimpleName());
+
+    private long currentTime = -1; // Invalid time value initially
 
   private long lastTime = -1;
   private long lastEventProcessTime;
@@ -98,6 +104,7 @@ public final class EventQueue
     {
       if (eventSet.size() == 0) break;  // can't process events if there aren't any
       Event currentEvent = eventSet.first();
+//      LOG.debug("I have just taken one event from the event queue for processing....");
       // Since eventSet is ordered, and we're only interested in processing events
       // up to 'time', if we find an event after 'time' then we stop processing
       // the Set.
