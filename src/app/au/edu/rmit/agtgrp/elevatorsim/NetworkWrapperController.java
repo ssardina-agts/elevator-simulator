@@ -104,25 +104,9 @@ public class NetworkWrapperController implements Controller, EventTransmitter.Li
 
     @Override
     public void setNextDestination(Car car) {
-//        This should do nothing, the NetworkWrapperController does not decide itself where the next destintaion is
-//        it will receive from the network SendCar
-        LOG.trace("Set next destination for {} here?", car, new Exception("stacktrace for this call"));
-        /*Direction nextDirection = model.getNextDirection(car.getId());
-
-        if (nextDirection != Direction.NONE) {
-            List<Floor> floors = car.getFloorRequestPanel().getServicedFloors();
-            Floor currentLocation = car.getLocation();
-            if (currentLocation == null) {
-                currentLocation = car.getFloorAt();
-            }
-            int floorIdx = floors.indexOf(currentLocation);
-            // Which direction to go? It at top, then go down, else opposite
-            boolean dirUp = (floorIdx != floors.size() - 1) || floorIdx == 0;
-            floorIdx += dirUp ? 1 : -1;
-            Floor nextFloor = floors.get(floorIdx);
-            car.setDestination(nextFloor);
-            LOG.debug("Next Destination for {} is {}", car, nextFloor);
-        }*/
+        // This should do nothing, the NetworkWrapperController does not decide itself where the next destination is
+        // it will receive from the network SendCar
+        LOG.trace("Set next destination called for {} here? No action required", car, new Exception("stacktrace for this call"));
     }
 
     @Override
