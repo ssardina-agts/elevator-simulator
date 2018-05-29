@@ -51,7 +51,7 @@ public class SendCarAction extends Action {
 
     @Override
     protected ProcessingStatus performAction() {
-        LOG.debug("Sending car {} to floor {} then {}", carId, floorId, nextDirection);
+        LOG.info("Sending car {} to floor {} then {}", carId, floorId, nextDirection);
 
         ProcessingStatus status = ProcessingStatus.FAILED;
 
@@ -63,9 +63,13 @@ public class SendCarAction extends Action {
             failureReason = "Next direction cannot be " + nextDirection;
         } else if (canChangeDestination()) {
             LOG.debug("About to set next destination to {} in direction {}", floor, nextDirection);
-            model.setNextDirection(carId, nextDirection);
-            car.setDestination(floor);
-            status = ProcessingStatus.IN_PROGRESS;
+            try {
+                model.setNextDirection(carId, nextDirection);
+                car.setDestination(floor);
+                status = ProcessingStatus.IN_PROGRESS;
+            } catch (Exception e) {
+                LOG.error("Couldn't change direction or destination because {}", e.getMessage());
+            }
         } else {
             failureReason = "Illegal change in destination. Cannot send to " + floor;
         }
