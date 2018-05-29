@@ -4,15 +4,17 @@
  */
 package org.intranet.elevator.model;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import au.edu.rmit.agtgrp.elevatorsim.Transmittable;
 import org.intranet.sim.event.Event;
 import org.intranet.sim.event.EventQueue;
 import org.intranet.sim.event.TrackingUpdateEvent;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import au.edu.rmit.elevatorsim.Transmittable;
+import java.lang.invoke.MethodHandles;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A location that can move. The state of movement is kept between height and
@@ -46,224 +48,193 @@ import au.edu.rmit.elevatorsim.Transmittable;
  * Note that <code>arrive()</code> is like an event that is picked up by the
  * subclass, as it is an abstract method.
  * </p>
- * 
+ *
  * @author Neil McKellar and Chris Dailey
  * @author Joshua Beale
  */
-public abstract class MovableLocation extends Location
-{
-	MovableLocation(EventQueue eQ, float height, int capacity)
-	{
-		super(eQ, height, capacity);
-		destinationHeight = height;
-		eQ.addListener(new EventQueue.Listener()
-		{
-			@Override
-			public void eventAdded(Event e)
-			{
-			}
+public abstract class MovableLocation extends Location {
+    MovableLocation(EventQueue eQ, float height, int capacity) {
+        super(eQ, height, capacity);
+        destinationHeight = height;
+        eQ.addListener(new EventQueue.Listener() {
+            @Override
+            public void eventAdded(Event e) {
+            }
 
-			@Override
-			public void eventError(Exception ex)
-			{
-			}
+            @Override
+            public void eventError(Exception ex) {
+            }
 
-			@Override
-			public void eventProcessed(Event e)
-			{
-			}
+            @Override
+            public void eventProcessed(Event e) {
+            }
 
-			@Override
-			public void eventRemoved(Event e)
-			{
-				if (e == arrivalEvent) arrivalEvent = null;
-			}
-			
-			@Override
-			public void simulationEnded()
-			{
-			}
-		});
-	}
+            @Override
+            public void eventRemoved(Event e) {
+                if (e == arrivalEvent) arrivalEvent = null;
+            }
 
-	private float destinationHeight;
-	private float totalDistance = 0.0F;
-	private int numTravels = 0;
-	private Event arrivalEvent;
-	private List<Listener> listeners = new ArrayList<>();
+            @Override
+            public void simulationEnded() {
+            }
+        });
+    }
 
-	/**
-	 * @return Total distance travelled by MovableLocation
-	 */
-	public final float getTotalDistance()
-	{
-		return totalDistance;
-	}
+    private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass().getSimpleName());
 
-	/**
-	 * @return Number of travels
-	 */
-	public final int getNumTravels()
-	{
-		return numTravels;
-	}
+    private float destinationHeight;
+    private float totalDistance = 0.0F;
+    private int numTravels = 0;
+    private Event arrivalEvent;
+    private List<Listener> listeners = new ArrayList<>();
 
-	/**
-	 * @param distance
-	 *            Distance to travel
-	 * @return Time required to travel distance
-	 */
-	public final float getTravelTime(float distance)
-	{
-		return Math.abs(distance / getRatePerSecond());
-	}
+    /**
+     * @return Total distance travelled by MovableLocation
+     */
+    public final float getTotalDistance() {
+        return totalDistance;
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.intranet.elevator.model.Location#setHeight(float)
-	 */
-	public final void setHeight(float newHeight)
-	{
-		totalDistance += Math.abs(newHeight - getHeight());
-		super.setHeight(newHeight);
-	}
+    /**
+     * @return Number of travels
+     */
+    public final int getNumTravels() {
+        return numTravels;
+    }
 
-	/**
-	 * Travel to specified height
-	 * 
-	 * @param h
-	 *            Height to travel to
-	 */
-	protected final void setDestinationHeight(float h)
-	{
-		if (arrivalEvent != null)
-		{
-			eventQueue.removeEvent(arrivalEvent);
-			arrivalEvent = null;
-		}
+    /**
+     * @param distance Distance to travel
+     * @return Time required to travel distance
+     */
+    public final float getTravelTime(float distance) {
+        return Math.abs(distance / getRatePerSecond());
+    }
 
-		checkDirectionChange(h);
-		destinationHeight = h;
+    /*
+     * (non-Javadoc)
+     *
+     * @see org.intranet.elevator.model.Location#setHeight(float)
+     */
+    public final void setHeight(float newHeight) {
+        totalDistance += Math.abs(newHeight - getHeight());
+        super.setHeight(newHeight);
+    }
 
-		if (getHeight() == h) arrive();
-		else
-			travel();
-	}
+    /**
+     * Travel to specified height
+     *
+     * @param h Height to travel to
+     */
+    protected final void setDestinationHeight(float h) {
+        if (arrivalEvent != null) {
+            eventQueue.removeEvent(arrivalEvent);
+            arrivalEvent = null;
+        }
 
-	/**
-	 * Arrive at destination height
-	 */
-	protected abstract void arrive();
+        // Check if this assignment results in change in directions, which might throw an exception if not allowed
+        checkDirectionChange(h);
+        destinationHeight = h;
 
-	/**
-	 * @return Travel speed
-	 */
-	protected abstract float getRatePerSecond();
+        // Trigger either arrive or travel based on current height
+        if (getHeight() == h) {
+            arrive();
+        } else {
+            travel();
+        }
+    }
 
-	private class ArrivalEvent extends TrackingUpdateEvent
-	{
-		private Transmittable arrivalMessage;
+    /**
+     * Arrive at destination height
+     */
+    protected abstract void arrive();
 
-		public ArrivalEvent(float departureHeight, long departureTime, long arrivalTime)
-		{
-			super(departureTime, departureHeight, arrivalTime, destinationHeight);
-			arrivalMessage = getArrivalMessage();
-		}
+    /**
+     * @return Travel speed
+     */
+    protected abstract float getRatePerSecond();
 
-		public void perform()
-		{
-			setHeight(destinationHeight);
-			numTravels++;
-			arrive();
-		}
+    private class ArrivalEvent extends TrackingUpdateEvent {
+        private Transmittable arrivalMessage;
 
-		public void updateTime()
-		{
-			setHeight(currentValue(eventQueue.getCurrentTime()));
-			for (Listener listener : new ArrayList<Listener>(listeners))
-			{
-				listener.heightChanged(getHeight());
-			}
-		}
+        public ArrivalEvent(float departureHeight, long departureTime, long arrivalTime) {
+            super(departureTime, departureHeight, arrivalTime, destinationHeight);
+            arrivalMessage = getArrivalMessage();
+        }
 
-		@Override
-		public String getName()
-		{
-			return arrivalMessage.getName();
-		}
+        public void perform() {
+            setHeight(destinationHeight);
+            numTravels++;
+            arrive();
+        }
 
-		@Override
-		public JSONObject getDescription()
-		{
-			return arrivalMessage.getDescription();
-		}
-	}
+        public void updateTime() {
+            setHeight(currentValue(eventQueue.getCurrentTime()));
+            for (Listener listener : new ArrayList<Listener>(listeners)) {
+                listener.heightChanged(getHeight());
+            }
+        }
 
-	public abstract Transmittable getArrivalMessage();
+        @Override
+        public String getName() {
+            return arrivalMessage.getName();
+        }
 
-	/**
-	 * Check if the MovableLocation needs to change direction
-	 * 
-	 * @param h
-	 *            Destination height
-	 */
-	private void checkDirectionChange(float h)
-	{
-		boolean areMoving = getHeight() != destinationHeight;
-		if (areMoving)
-		{
-			boolean oldUp = destinationHeight > getHeight();
-			boolean newUp = h > getHeight();
-			if (oldUp != newUp)
-			{
-				System.err.println("MovableLocation.setDestination: destinationHeight=" + destinationHeight
-						+ ", currentHeight=" + getHeight() + ", new destHeight=" + h);
-				// TODO : Make fault-tolerant -- remove assignments from list
-				// and give them back to the building for re-assignment
-				// TODO : Or rejecting the destination
-				throw new IllegalArgumentException("Can't change directions in mid-travel.");
-			}
-		}
-	}
+        @Override
+        public JSONObject getDescription() {
+            return arrivalMessage.getDescription();
+        }
+    }
 
-	/**
-	 * Travel to destination
-	 */
-	private void travel()
-	{
-		float ratePerMillisecond = getRatePerSecond() / 1000;
-		long arrivalTime = eventQueue.getCurrentTime()
-				+ (long) (Math.abs(getHeight() - destinationHeight) / ratePerMillisecond);
-		long departureTime = eventQueue.getCurrentTime();
-		float departureHeight = getHeight();
-		// create and remember IncrementalUpdateEvent(arrivalTime)
-		arrivalEvent = new ArrivalEvent(departureHeight, departureTime, arrivalTime);
-		try
-		{
-			eventQueue.addEvent(arrivalEvent);
-		}
-		catch (IllegalArgumentException iae)
-		{
-			System.err.println("MovableLocation.travel():eventQueue.getCurrentTime()=" + eventQueue.getCurrentTime());
-			System.err.println("departureTime=" + departureTime);
-			System.err.println("arrivalTime  =" + arrivalTime);
-			throw iae;
-		}
-	}
-	
-	public void addListener(Listener listener)
-	{
-		listeners.add(listener);
-	}
-	
-	public boolean removeListener(Listener listener)
-	{
-		return listeners.remove(listener);
-	}
-	
-	public interface Listener
-	{
-		public void heightChanged(float height);
-	}
+    public abstract Transmittable getArrivalMessage();
+
+    /**
+     * Check if the MovableLocation needs to change direction
+     *
+     * @param h Destination height
+     */
+    private void checkDirectionChange(float h) {
+        boolean areMoving = getHeight() != destinationHeight;
+        if (areMoving) {
+            boolean oldUp = destinationHeight > getHeight();
+            boolean newUp = h > getHeight();
+            if (oldUp != newUp) {
+                LOG.error("Mid-travel direction change not allowed: destinationHeight={}, currentHeight={}, new destHeight={} ", destinationHeight, getHeight(), h);
+                // TODO : Make fault-tolerant -- remove assignments from list and give them back to the building for re-assignment
+                // TODO : Or rejecting the destination
+                throw new IllegalArgumentException("Can't change directions in mid-travel.");
+            }
+        }
+    }
+
+    /**
+     * Travel to destination
+     */
+    private void travel() {
+        float ratePerMillisecond = getRatePerSecond() / 1000;
+        long arrivalTime = eventQueue.getCurrentTime()
+                + (long) (Math.abs(getHeight() - destinationHeight) / ratePerMillisecond);
+        long departureTime = eventQueue.getCurrentTime();
+        float departureHeight = getHeight();
+        // create and remember IncrementalUpdateEvent(arrivalTime)
+        arrivalEvent = new ArrivalEvent(departureHeight, departureTime, arrivalTime);
+        try {
+            eventQueue.addEvent(arrivalEvent);
+        } catch (IllegalArgumentException iae) {
+            LOG.error("Couldn't add arrival event to queue in travel()");
+            LOG.error("eventQueue.getCurrentTime()={}, departureTime={}, arrivalTime={}", eventQueue.getCurrentTime(), departureTime, arrivalTime);
+            throw iae;
+        }
+    }
+
+    public void addListener(Listener listener) {
+        listeners.add(listener);
+    }
+
+    public boolean removeListener(Listener listener) {
+        return listeners.remove(listener);
+    }
+
+    public interface Listener {
+        public void heightChanged(float height);
+    }
 }

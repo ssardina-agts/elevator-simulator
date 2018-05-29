@@ -6,7 +6,7 @@ package org.intranet.sim.event;
 
 import java.util.Comparator;
 
-import au.edu.rmit.elevatorsim.Transmittable;
+import au.edu.rmit.agtgrp.elevatorsim.Transmittable;
 
 /**
  * @author Neil McKellar and Chris Dailey

@@ -4,16 +4,12 @@
  */
 package org.intranet.elevator;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 
 import org.intranet.elevator.model.Floor;
 import org.intranet.elevator.model.operate.Building;
 import org.intranet.elevator.model.operate.Person;
 import org.intranet.elevator.model.operate.controller.Controller;
-import org.intranet.elevator.model.operate.controller.MetaController;
-import org.intranet.elevator.model.operate.controller.SimpleController;
 import org.intranet.sim.Model;
 import org.intranet.sim.Simulator;
 import org.intranet.sim.event.Event;
@@ -21,8 +17,7 @@ import org.intranet.ui.ChoiceParameter;
 import org.intranet.ui.IntegerParameter;
 import org.intranet.ui.LongParameter;
 
-import au.edu.rmit.elevatorsim.ElsimSettings;
-import au.edu.rmit.elevatorsim.NetworkWrapperController;
+import au.edu.rmit.agtgrp.elevatorsim.event.SimulationTimeoutEvent;
 
 /**
  * @author Neil McKellar and Chris Dailey
@@ -35,6 +30,7 @@ public class RandomElevatorSimulator
   private IntegerParameter carsParameter;
   private IntegerParameter capacityParameter;
   private IntegerParameter ridersParameter;
+  private LongParameter lastRequestParameter;
   private LongParameter durationParameter;
   private ChoiceParameter controllerParameter;
   
@@ -51,7 +47,9 @@ public class RandomElevatorSimulator
     parameters.add(capacityParameter);
     ridersParameter = new IntegerParameter("Number of People", 20);
     parameters.add(ridersParameter);
-    durationParameter = new LongParameter("Simulation Duration (ms)", 50000);
+    lastRequestParameter = new LongParameter("Last Request (ms)", 50000);
+    parameters.add(lastRequestParameter);
+    durationParameter = new LongParameter("Simulation Duration (ms)", 100000);
     parameters.add(durationParameter);
     seedParameter = new LongParameter("Random seed", System.currentTimeMillis());
     parameters.add(seedParameter);
@@ -66,6 +64,7 @@ public class RandomElevatorSimulator
     int numCars = carsParameter.getIntegerValue();
     int carCapacity = capacityParameter.getIntegerValue();
     int numRiders = ridersParameter.getIntegerValue();
+    long lastRequestTime = lastRequestParameter.getLongValue();
     long duration = durationParameter.getLongValue();
     long seed = seedParameter.getLongValue();
     Controller controller = getController();
@@ -93,11 +92,14 @@ public class RandomElevatorSimulator
       } while (floor == startingFloor);
       final Floor destFloor = floor;
       // time to insert
-      long insertTime = rand.nextInt((int)duration);
+      long insertTime = rand.nextInt((int)lastRequestTime);
       // insertion event for destination at time
       Event event = new CarRequestEvent(insertTime, person, startingFloor, destFloor);
       getEventQueue().addEvent(event);
     }
+    
+    Event simulationTimeout = new SimulationTimeoutEvent(duration);
+    getEventQueue().addEvent(simulationTimeout);
   }
   
   public final Model getModel()

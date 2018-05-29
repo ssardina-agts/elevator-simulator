@@ -4,14 +4,10 @@
 */
 package org.intranet.sim.ui.multiple;
 
-import java.awt.Component;
-import java.awt.FontMetrics;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
+import javax.swing.*;
+import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-
-import javax.swing.Icon;
 
 /**
 VTextIcon is an Icon implementation which draws a short string vertically.
@@ -238,9 +234,9 @@ class VTextIcon
    from http://www.unicode.org/unicode/reports/tr9/tr9-3.html
    When setting text using the Arabic script in vertical lines, 
    it is more common to employ a horizontal baseline that 
-   is rotated by 90¡ counterclockwise so that the characters 
+   is rotated by 90 degrees counterclockwise so that the characters
    are ordered from top to bottom. Latin text and numbers 
-   may be rotated 90¡ clockwise so that the characters 
+   may be rotated 90 degrees clockwise so that the characters
    are also ordered from top to bottom.
    
     Rotation rules
