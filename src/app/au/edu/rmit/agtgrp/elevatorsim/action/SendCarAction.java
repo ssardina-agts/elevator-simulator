@@ -63,13 +63,9 @@ public class SendCarAction extends Action {
             failureReason = "Next direction cannot be " + nextDirection;
         } else if (canChangeDestination()) {
             LOG.debug("About to set next destination to {} in direction {}", floor, nextDirection);
-            try {
-                model.setNextDirection(carId, nextDirection);
-                car.setDestination(floor);
-                status = ProcessingStatus.IN_PROGRESS;
-            } catch (Exception e) {
-                LOG.error("Couldn't change direction or destination because {}", e.getMessage());
-            }
+            model.setNextDirection(carId, nextDirection);
+            car.setDestination(floor);
+            status = ProcessingStatus.COMPLETED;
         } else {
             failureReason = "Illegal change in destination. Cannot send to " + floor;
         }
