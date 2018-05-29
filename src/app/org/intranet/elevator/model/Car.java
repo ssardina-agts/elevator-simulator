@@ -196,9 +196,18 @@ public final class Car extends MovableLocation {
      */
     public void setDestination(Floor destination) {
         LOG.trace("{}.setDestination called for {}", this, destination, new Exception("stacktrace for this call"));
+
         this.destination = destination;
-        if (location == null) {
-            setDestinationHeight(destination.getHeight());
+
+        // FIXME: What is the purpose of the following block?
+        if (location == null) { // If the car is currently not docked
+            try { // Try to travel to this destination
+                setDestinationHeight(destination.getHeight());
+            } catch (Exception e) {
+                LOG.error("Cannot travel to the current destination {} because {}", destination, e.getMessage());
+            }
+
+            // If haven't yet arrived at this new destination, keep monitoring this movement.
             if (destination.getHeight() != getHeight()) {
                 super.addListener(new MovementTracker(getHeight(), destination.getHeight()));
             }
