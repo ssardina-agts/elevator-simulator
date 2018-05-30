@@ -22,4 +22,14 @@ public class ClassLoader {
             throw new IllegalStateException(e);
         }
     }
+
+    public static boolean classExists(final String className) {
+        try {
+            Class.forName(className, false, ClassLoader.class.getClassLoader());
+            return true;
+        } catch (LinkageError
+                | ClassNotFoundException e) {
+            return false;
+        }
+    }
 }

@@ -29,6 +29,7 @@ public class SimulationRunner {
                 simulator.initialize(new RealTimeClock.RealTimeClockFactory());
                 Clock clock = simulator.getClock();
                 clock.start();
+                LOG.debug("Simulator initialised");
             } catch (RuntimeException e) {
                 // Unrecoverable error while initializing sim. Show error and close application.
                 // TODO: Change exception type?

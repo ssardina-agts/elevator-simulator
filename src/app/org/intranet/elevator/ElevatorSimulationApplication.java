@@ -50,13 +50,18 @@ public class ElevatorSimulationApplication
             if (LaunchOptions.get().hasJsonParams()) {
                 try {
                     loadedSimulator = ClassLoader.instantiate(SimulatorParams.instance().getActiveSimulatorClass(), Simulator.class);
+                    LOG.debug("Simulator loaded from JSON parameters");
                 } catch (IllegalStateException e) {
                     LOG.error("Error loading class from params file: {}", e.getMessage());
                     LOG.error("Loading default simulator");
-                    loadedSimulator = new RandomElevatorSimulator();
                 }
-                LOG.debug("Simulator class loaded: {}", loadedSimulator);
             }
+
+            if (loadedSimulator == null) {
+                loadedSimulator = new RandomElevatorSimulator();
+            }
+
+            LOG.debug("Simulator class loaded: {}", loadedSimulator);
 
             SimulationRunner runner = new SimulationRunner();
             runner.run(loadedSimulator);

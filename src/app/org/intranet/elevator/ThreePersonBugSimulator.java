@@ -29,7 +29,7 @@ public class ThreePersonBugSimulator
 
     @Override
     protected void initialiseParameters() {
-        if (SimulatorParams.instance().isParamsLoaded()) {
+        if (SimulatorParams.instance().isValid()) {
             SimulatorParams params = SimulatorParams.instance();
 //        floorsParameter = new IntegerParameter("Number of Floors", 10);
             carsParameter = new IntegerParameter("Insert second request at", params.getParamValueInt("cars"));

@@ -1,5 +1,6 @@
 package au.edu.rmit.agtgrp.elevatorsim;
 
+import au.edu.rmit.agtgrp.elevatorsim.utils.ClassLoader;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -12,7 +13,14 @@ import java.nio.file.Files;
 
 public class SimulatorParams {
     private static       SimulatorParams _instance        = new SimulatorParams();
+    /**
+     * Whether this JSON file has been parsed and loaded
+     */
     private              boolean         paramsLoaded     = false;
+    /**
+     * Whether this JSON file has valid simulators and controllers. A valid JSON must have already been loaded.
+     */
+    private              boolean         isValid          = false;
     private              JSONObject      jsonParams       = null;
     private              JSONObject      simulators       = null;
     private              JSONObject      controllers      = null;
@@ -50,7 +58,11 @@ public class SimulatorParams {
                 activeSimulator = simulators.getJSONObject(jsonParams.getString("activeSimulator"));
                 activeController = controllers.getJSONObject(jsonParams.getString("activeController"));
 
+                // Check whether the simulator and controller class exist in classpath
                 paramsLoaded = true;
+                if (ClassLoader.classExists(getActiveSimulatorClass()) && ClassLoader.classExists(getActiveControllerClass())) {
+                    isValid = true;
+                }
             } catch (IOException | JSONException e) {
                 LOG.error(e.getMessage());
             }
@@ -62,36 +74,24 @@ public class SimulatorParams {
         return paramsLoaded;
     }
 
+    public boolean isValid() {
+        return isValid;
+    }
+
     public String getActiveSimulatorName() {
-        if (paramsLoaded) {
-            return activeSimulator.getString("name");
-        } else {
-            throw new IllegalStateException("JSON parameters haven't been loaded yet");
-        }
+        return activeSimulator.getString("name");
     }
 
     public String getActiveControllerName() {
-        if (paramsLoaded) {
-            return activeController.getString("name");
-        } else {
-            throw new IllegalStateException("JSON parameters haven't been loaded yet");
-        }
+        return activeController.getString("name");
     }
 
     public String getActiveSimulatorClass() {
-        if (paramsLoaded) {
-            return activeSimulator.getString("class");
-        } else {
-            throw new IllegalStateException("JSON parameters haven't been loaded yet");
-        }
+        return activeSimulator.getString("class");
     }
 
     public String getActiveControllerClass() {
-        if (paramsLoaded) {
-            return activeController.getString("class");
-        } else {
-            throw new IllegalStateException("JSON parameters haven't been loaded yet");
-        }
+        return activeController.getString("class");
     }
 
     public <T> T getParamValue(String paramKey, Class<T> type) {

@@ -30,7 +30,7 @@ public class ThreePersonTwoElevatorSimulator
 
     @Override
     protected void initialiseParameters() {
-        if (SimulatorParams.instance().isParamsLoaded()) {
+        if (SimulatorParams.instance().isValid()) {
             SimulatorParams params = SimulatorParams.instance();
             floorsParameter = new IntegerParameter("Number of Floors", params.getParamValueInt("floors"));
             carsParameter = new IntegerParameter("Number of Elevators", params.getParamValueInt("cars"));
