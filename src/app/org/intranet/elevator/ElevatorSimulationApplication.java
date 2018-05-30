@@ -6,6 +6,8 @@ package org.intranet.elevator;
 
 import au.edu.rmit.agtgrp.elevatorsim.ElsimSettings;
 import au.edu.rmit.agtgrp.elevatorsim.LaunchOptions;
+import au.edu.rmit.agtgrp.elevatorsim.SimulatorParams;
+import au.edu.rmit.agtgrp.elevatorsim.utils.ClassLoader;
 import org.intranet.elevator.model.operate.Building;
 import org.intranet.elevator.view.BuildingView;
 import org.intranet.sim.Model;
@@ -39,13 +41,24 @@ public class ElevatorSimulationApplication
     private Image iconImage;
 
     public static void main(String[] args) {
-        LOG.debug("Starting Application {}", APPLICATION_NAME);
-
         LaunchOptions.createFromCliArgs(args);
+
+        LOG.debug("Starting Application {}", APPLICATION_NAME);
         if (LaunchOptions.get().isHeadless()) {
-            Simulator defaultSimulator = new RandomElevatorSimulator();
+            Simulator loadedSimulator = null;
+
+            if (LaunchOptions.get().hasJsonParams()) {
+                try {
+                    loadedSimulator = ClassLoader.instantiate(SimulatorParams.instance().getActiveSimulatorClass(), Simulator.class);
+                } catch (IllegalStateException e) {
+                    LOG.error("Error loading class from params file: {}", e.getMessage());
+                    loadedSimulator = new RandomElevatorSimulator();
+                }
+                LOG.debug("Simulator class loaded: {}", loadedSimulator);
+            }
+
             SimulationRunner runner = new SimulationRunner();
-            runner.run(defaultSimulator);
+            runner.run(loadedSimulator);
         } else {
             ElevatorSimulationApplication sc = new ElevatorSimulationApplication();
             new ApplicationUI(sc);

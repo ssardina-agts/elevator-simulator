@@ -30,7 +30,7 @@
       }
     },
     "RandomElevatorSimulatorSmallBuilding": {
-      "class": "org.intranet.elevator.RandomElevatorSimulator",
+      "class": "org.intranet.elevator.RandomElevatorSimulators",
       "name": "RandomElevatorSimulator",
       "params": {
         "floors": 5,
