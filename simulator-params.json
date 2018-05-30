@@ -1,5 +1,5 @@
 {
-  "activeController": "NetworkWrapperController",
+  "activeController": "MetaController",
   "activeSimulator": "RandomElevatorSimulatorSmallBuilding",
   "controllers": {
     "NetworkWrapperController": {

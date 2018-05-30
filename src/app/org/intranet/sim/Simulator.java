@@ -6,6 +6,7 @@ package org.intranet.sim;
 
 import au.edu.rmit.agtgrp.elevatorsim.ElsimSettings;
 import au.edu.rmit.agtgrp.elevatorsim.NetworkWrapperController;
+import au.edu.rmit.agtgrp.elevatorsim.SimulatorParams;
 import org.intranet.elevator.model.Floor;
 import org.intranet.elevator.model.operate.Person;
 import org.intranet.elevator.model.operate.controller.Controller;
@@ -76,7 +77,7 @@ public abstract class Simulator {
     };
 
     public interface SimulatorListener {
-        public void modelUpdate(long time);
+        void modelUpdate(long time);
     }
 
     public static class CarRequestEvent extends Event {
@@ -190,6 +191,13 @@ public abstract class Simulator {
         }
 
         controllerParameter = new ChoiceParameter<Controller>("Controller", controllers, controllers.get(0));
+        if (SimulatorParams.instance().isValid()) {
+            try {
+                controllerParameter.setValueFromString(SimulatorParams.instance().getActiveControllerName());
+            } catch (IllegalArgumentException e) {
+                LOG.error("Cannot use controller specified in JSON file: {}", e.getMessage());
+            }
+        }
         parameters.add(controllerParameter);
     }
 }
