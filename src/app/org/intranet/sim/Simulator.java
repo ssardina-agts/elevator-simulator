@@ -151,7 +151,7 @@ public abstract class Simulator {
         ended = false;
     }
 
-    public final boolean isInitializied() {
+    public final boolean isInitialized() {
         return initialized;
     }
 
