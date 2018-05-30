@@ -1,0 +1,118 @@
+{
+  "activeController": "NetworkWrapperController",
+  "activeSimulator": "RandomElevatorSimulatorSmallBuilding",
+  "controllers": {
+    "NetworkWrapperController": {
+      "class": "au.edu.rmit.agtgrp.elevatorsim.NetworkWrapperController",
+      "name": "NetworkWrapperController"
+    },
+    "MetaController": {
+      "class": "org.intranet.elevator.model.operate.controller.MetaController",
+      "name": "Default MetaController"
+    },
+    "SimpleController": {
+      "class": "org.intranet.elevator.model.operate.controller.SimpleController",
+      "name": "SimpleController"
+    }
+  },
+  "simulators": {
+    "RandomElevatorSimulator": {
+      "class": "org.intranet.elevator.RandomElevatorSimulator",
+      "name": "RandomElevatorSimulator",
+      "params": {
+        "floors": 10,
+        "cars": 3,
+        "capacity": 8,
+        "riders": 20,
+        "lastRequest": 50000,
+        "duration": 100000,
+        "seed": 827377482348
+      }
+    },
+    "RandomElevatorSimulatorSmallBuilding": {
+      "class": "org.intranet.elevator.RandomElevatorSimulator",
+      "name": "RandomElevatorSimulator",
+      "params": {
+        "floors": 5,
+        "cars": 2,
+        "capacity": 4,
+        "riders": 20,
+        "lastRequest": 50000,
+        "duration": 100000,
+        "seed": 827377482348
+      }
+    },
+    "EveningTrafficElevatorSimulator": {
+      "class": "org.intranet.elevator.EveningTrafficElevatorSimulator",
+      "name": "EveningTrafficElevatorSimulator",
+      "params": {
+        "floors": 4,
+        "cars": 4,
+        "riders": 4,
+        "duration": 4,
+        "stdDeviation": 4,
+        "seed": 8347095872409578
+      }
+    },
+    "MorningTrafficElevatorSimulator": {
+      "class": "org.intranet.elevator.MorningTrafficElevatorSimulator",
+      "name": "MorningTrafficElevatorSimulator",
+      "params": {
+        "floors": 4,
+        "cars": 4,
+        "riders": 4,
+        "duration": 4,
+        "stdDeviation": 4,
+        "seed": 8347095872409578
+      }
+    },
+    "NoIdleElevatorCarSimulator": {
+      "class": "org.intranet.elevator.NoIdleElevatorCarSimulator",
+      "name": "NoIdleElevatorCarSimulator",
+      "params": {
+        "downDest": 4,
+        "upDest": 4,
+        "floors": 4,
+        "cars": 4,
+        "seed": 8347095872409578
+      }
+    },
+    "ThreePersonBugSimulator": {
+      "class": "org.intranet.elevator.ThreePersonBugSimulator",
+      "name": "ThreePersonBugSimulator",
+      "params": {
+        "cars": 4,
+        "floors": 4,
+        "seed": 8347095872409578
+      }
+    },
+    "ThreePersonElevatorSimulator": {
+      "class": "org.intranet.elevator.ThreePersonElevatorSimulator",
+      "name": "ThreePersonElevatorSimulator",
+      "params": {
+        "floors": 4,
+        "cars": 4,
+        "duration": 4,
+        "seed": 8347095872409578
+      }
+    },
+    "ThreePersonTwoElevatorSimulator": {
+      "class": "org.intranet.elevator.ThreePersonTwoElevatorSimulator",
+      "name": "ThreePersonTwoElevatorSimulator",
+      "params": {
+        "floors": 4,
+        "cars": 4,
+        "seed": 8347095872409578
+      }
+    },
+    "UpToFourThenDownSimulator": {
+      "class": "org.intranet.elevator.UpToFourThenDownSimulator",
+      "name": "UpToFourThenDownSimulator",
+      "params": {
+        "floors": 4,
+        "cars": 4,
+        "seed": 8347095872409578
+      }
+    }
+  }
+}

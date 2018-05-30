@@ -39,18 +39,18 @@ public class ElevatorSimulationApplication
     private Image iconImage;
 
     public static void main(String[] args) {
-        LOG.info("Starting Application {}", APPLICATION_NAME);
+        LOG.debug("Starting Application {}", APPLICATION_NAME);
+
         LaunchOptions.createFromCliArgs(args);
-
-        ElevatorSimulationApplication sc = new ElevatorSimulationApplication();
-
         if (LaunchOptions.get().isHeadless()) {
             Simulator defaultSimulator = new RandomElevatorSimulator();
             SimulationRunner runner = new SimulationRunner();
             runner.run(defaultSimulator);
         } else {
+            ElevatorSimulationApplication sc = new ElevatorSimulationApplication();
             new ApplicationUI(sc);
         }
+
         LOG.info("Started Application {}", APPLICATION_NAME);
     }
 
