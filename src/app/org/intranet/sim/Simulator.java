@@ -31,17 +31,17 @@ import java.util.List;
  */
 public abstract class Simulator {
     // TODO : Write tests
-    private              EventQueue                    eventQueue;
-    private              boolean                       initialized;
-    private              ClockFactory                  clockFactory;
-    private              Clock                         clock;
-    private              ChoiceParameter<Controller>   controllerParameter;
-    private              List<SimulatorListener>       listeners  = new ArrayList<SimulatorListener>();
-    private              boolean                       ended      = false;
-    private static final Logger                        LOG        = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass().getSimpleName());
+    private              EventQueue                  eventQueue;
+    private              boolean                     initialized;
+    private              ClockFactory                clockFactory;
+    private              Clock                       clock;
+    private              ChoiceParameter<Controller> controllerParameter;
+    private              List<SimulatorListener>     listeners = new ArrayList<SimulatorListener>();
+    private              boolean                     ended     = false;
+    private static final Logger                      LOG       = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass().getSimpleName());
 
-    protected            List<SingleValueParameter<?>> parameters = new ArrayList<SingleValueParameter<?>>();
-    protected            LongParameter                 seedParameter;
+    protected List<SingleValueParameter<?>> parameters = new ArrayList<SingleValueParameter<?>>();
+    protected LongParameter                 seedParameter;
 
     Clock.FeedbackListener cc = new Clock.FeedbackListener() {
         public long timeUpdate(long time) {
@@ -124,6 +124,7 @@ public abstract class Simulator {
 
     protected Simulator() {
         super();
+        initialiseParameters();
     }
 
     public final EventQueue getEventQueue() {
@@ -154,6 +155,8 @@ public abstract class Simulator {
     public final boolean isInitialized() {
         return initialized;
     }
+
+    protected abstract void initialiseParameters();
 
     protected abstract void initializeModel();
 
@@ -186,10 +189,7 @@ public abstract class Simulator {
             controllers.add(new SimpleController());
         }
 
-        LOG.debug("List of controllers: {}", controllers);
-
         controllerParameter = new ChoiceParameter<Controller>("Controller", controllers, controllers.get(0));
         parameters.add(controllerParameter);
-        LOG.debug("List of parameters: {}", parameters);
     }
 }

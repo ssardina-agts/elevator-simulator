@@ -11,12 +11,14 @@ import java.lang.invoke.MethodHandles;
 import java.nio.file.Files;
 
 public class SimulatorParams {
-    private static       SimulatorParams _instance    = new SimulatorParams();
-    private              boolean         paramsLoaded = false;
-    private              JSONObject      jsonParams   = null;
-    private              JSONObject      simulators   = null;
-    private              JSONObject      controllers  = null;
-    private static final Logger          LOG          = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass().getSimpleName());
+    private static       SimulatorParams _instance        = new SimulatorParams();
+    private              boolean         paramsLoaded     = false;
+    private              JSONObject      jsonParams       = null;
+    private              JSONObject      simulators       = null;
+    private              JSONObject      controllers      = null;
+    private              JSONObject      activeController = null;
+    private              JSONObject      activeSimulator  = null;
+    private static final Logger          LOG              = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass().getSimpleName());
 
     /**
      * Private constructor to prevent public object creation for this singleton class.
@@ -45,6 +47,8 @@ public class SimulatorParams {
                 jsonParams = new JSONObject(jsonParamsString);
                 simulators = jsonParams.getJSONObject("simulators");
                 controllers = jsonParams.getJSONObject("controllers");
+                activeSimulator = simulators.getJSONObject(jsonParams.getString("activeSimulator"));
+                activeController = controllers.getJSONObject(jsonParams.getString("activeController"));
 
                 paramsLoaded = true;
             } catch (IOException | JSONException e) {
@@ -58,19 +62,75 @@ public class SimulatorParams {
         return paramsLoaded;
     }
 
-    public String getActiveSimulator() {
-        return jsonParams.getString("activeSimulator");
+    public String getActiveSimulatorName() {
+        if (paramsLoaded) {
+            return activeSimulator.getString("name");
+        } else {
+            throw new IllegalStateException("JSON parameters haven't been loaded yet");
+        }
     }
 
-    public String getActiveController() {
-        return jsonParams.getString("activeController");
+    public String getActiveControllerName() {
+        if (paramsLoaded) {
+            return activeController.getString("name");
+        } else {
+            throw new IllegalStateException("JSON parameters haven't been loaded yet");
+        }
     }
 
     public String getActiveSimulatorClass() {
-        return simulators.getJSONObject(getActiveSimulator()).getString("class");
+        if (paramsLoaded) {
+            return activeSimulator.getString("class");
+        } else {
+            throw new IllegalStateException("JSON parameters haven't been loaded yet");
+        }
     }
 
     public String getActiveControllerClass() {
-        return controllers.getJSONObject(getActiveController()).getString("class");
+        if (paramsLoaded) {
+            return activeController.getString("class");
+        } else {
+            throw new IllegalStateException("JSON parameters haven't been loaded yet");
+        }
+    }
+
+    public <T> T getParamValue(String paramKey, Class<T> type) {
+        if (paramsLoaded) {
+            return type.cast(activeSimulator.getJSONObject("params").get(paramKey));
+        } else {
+            throw new IllegalStateException("JSON parameters haven't been loaded yet");
+        }
+    }
+
+    public int getParamValueInt(String paramKey) {
+        if (paramsLoaded) {
+            return activeSimulator.getJSONObject("params").getInt(paramKey);
+        } else {
+            throw new IllegalStateException("JSON parameters haven't been loaded yet");
+        }
+    }
+
+    public long getParamValueLong(String paramKey) {
+        if (paramsLoaded) {
+            return activeSimulator.getJSONObject("params").getLong(paramKey);
+        } else {
+            throw new IllegalStateException("JSON parameters haven't been loaded yet");
+        }
+    }
+
+    public boolean getParamValueBoolean(String paramKey) {
+        if (paramsLoaded) {
+            return activeSimulator.getJSONObject("params").getBoolean(paramKey);
+        } else {
+            throw new IllegalStateException("JSON parameters haven't been loaded yet");
+        }
+    }
+
+    public double getParamValueDouble(String paramKey) {
+        if (paramsLoaded) {
+            return activeSimulator.getJSONObject("params").getDouble(paramKey);
+        } else {
+            throw new IllegalStateException("JSON parameters haven't been loaded yet");
+        }
     }
 }

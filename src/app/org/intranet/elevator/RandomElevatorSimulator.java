@@ -4,6 +4,7 @@
  */
 package org.intranet.elevator;
 
+import au.edu.rmit.agtgrp.elevatorsim.SimulatorParams;
 import au.edu.rmit.agtgrp.elevatorsim.event.SimulationTimeoutEvent;
 import org.intranet.elevator.model.Floor;
 import org.intranet.elevator.model.operate.Building;
@@ -33,21 +34,36 @@ public class RandomElevatorSimulator
 
     public RandomElevatorSimulator() {
         super();
-        floorsParameter = new IntegerParameter("Number of Floors", 10);
-        parameters.add(floorsParameter);
-        carsParameter = new IntegerParameter("Number of Elevators", 3);
-        parameters.add(carsParameter);
-        capacityParameter = new IntegerParameter("Elevator Capacity", 8);
-        parameters.add(capacityParameter);
-        ridersParameter = new IntegerParameter("Number of People", 20);
-        parameters.add(ridersParameter);
-        lastRequestParameter = new LongParameter("Last Request (ms)", 50000);
-        parameters.add(lastRequestParameter);
-        durationParameter = new LongParameter("Simulation Duration (ms)", 100000);
-        parameters.add(durationParameter);
-        seedParameter = new LongParameter("Random seed", System.currentTimeMillis());
-        parameters.add(seedParameter);
+    }
 
+    @Override
+    protected void initialiseParameters() {
+        if (SimulatorParams.instance().isParamsLoaded()) {
+            SimulatorParams params = SimulatorParams.instance();
+            floorsParameter = new IntegerParameter("Number of Floors", params.getParamValueInt("floors"));
+            carsParameter = new IntegerParameter("Number of Elevators", params.getParamValueInt("cars"));
+            capacityParameter = new IntegerParameter("Elevator Capacity", params.getParamValueInt("capacity"));
+            ridersParameter = new IntegerParameter("Number of People", params.getParamValueInt("riders"));
+            lastRequestParameter = new LongParameter("Last Request (ms)", params.getParamValueLong("lastRequest"));
+            durationParameter = new LongParameter("Simulation Duration (ms)", params.getParamValueLong("duration"));
+            seedParameter = new LongParameter("Random seed", params.getParamValueLong("seed"));
+        } else {
+            floorsParameter = new IntegerParameter("Number of Floors", 10);
+            carsParameter = new IntegerParameter("Number of Elevators", 3);
+            capacityParameter = new IntegerParameter("Elevator Capacity", 8);
+            ridersParameter = new IntegerParameter("Number of People", 20);
+            lastRequestParameter = new LongParameter("Last Request (ms)", 50000);
+            durationParameter = new LongParameter("Simulation Duration (ms)", 100000);
+            seedParameter = new LongParameter("Random seed", System.currentTimeMillis());
+        }
+
+        parameters.add(floorsParameter);
+        parameters.add(carsParameter);
+        parameters.add(capacityParameter);
+        parameters.add(ridersParameter);
+        parameters.add(lastRequestParameter);
+        parameters.add(durationParameter);
+        parameters.add(seedParameter);
         addControllerParameter();
     }
 

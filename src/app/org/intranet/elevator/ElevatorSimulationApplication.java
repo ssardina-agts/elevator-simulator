@@ -52,6 +52,7 @@ public class ElevatorSimulationApplication
                     loadedSimulator = ClassLoader.instantiate(SimulatorParams.instance().getActiveSimulatorClass(), Simulator.class);
                 } catch (IllegalStateException e) {
                     LOG.error("Error loading class from params file: {}", e.getMessage());
+                    LOG.error("Loading default simulator");
                     loadedSimulator = new RandomElevatorSimulator();
                 }
                 LOG.debug("Simulator class loaded: {}", loadedSimulator);
