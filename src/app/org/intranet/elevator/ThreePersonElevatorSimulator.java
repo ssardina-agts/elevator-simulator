@@ -4,10 +4,10 @@
  */
 package org.intranet.elevator;
 
+import au.edu.rmit.agtgrp.elevatorsim.SimulatorParams;
 import org.intranet.elevator.model.operate.Building;
 import org.intranet.elevator.model.operate.Person;
 import org.intranet.elevator.model.operate.controller.Controller;
-import org.intranet.elevator.model.operate.controller.MetaController;
 import org.intranet.sim.Model;
 import org.intranet.sim.Simulator;
 import org.intranet.sim.event.Event;
@@ -16,66 +16,72 @@ import org.intranet.ui.IntegerParameter;
 
 /**
  * @author Neil McKellar and Chris Dailey
- *
  */
 public class ThreePersonElevatorSimulator
-  extends Simulator
-{
-  private IntegerParameter floorsParameter;
-  private IntegerParameter carsParameter;
+        extends Simulator {
+    private IntegerParameter floorsParameter;
+    private IntegerParameter carsParameter;
 //  private LongParameter durationParameter;
-  
-  private Building building;
 
-  public ThreePersonElevatorSimulator()
-  {
-    super();
-    floorsParameter = new IntegerParameter("Number of Floors",5);
-    parameters.add(floorsParameter);
-    carsParameter = new IntegerParameter("Number of Elevators",2);
-    parameters.add(carsParameter);
+    private Building building;
+
+    public ThreePersonElevatorSimulator() {
+        super();
+    }
+
+    @Override
+    protected void initialiseParameters() {
+
+        if (SimulatorParams.instance().isValid()) {
+            SimulatorParams params = SimulatorParams.instance();
+            floorsParameter = new IntegerParameter("Number of Floors", params.getParamValueInt("floors"));
+            carsParameter = new IntegerParameter("Number of Elevators", params.getParamValueInt("cars"));
 //    durationParameter = new LongParameter("Sim duration (ms)",5000);
+        } else {
+            floorsParameter = new IntegerParameter("Number of Floors", 5);
+            carsParameter = new IntegerParameter("Number of Elevators", 2);
+//    durationParameter = new LongParameter("Sim duration (ms)",5000);
+        }
+
+        parameters.add(floorsParameter);
+        parameters.add(carsParameter);
 //    parameters.add(durationParameter);
-    
-    addControllerParameter();
-  }
-  
-  @Override
-  public void initializeModel()
-  {
-    int numFloors = floorsParameter.getIntegerValue();
-    int numCars = carsParameter.getIntegerValue();
-    
-    EventQueue eQ = getEventQueue();
 
-    Controller controller = getController();
-    building = new Building(getEventQueue(), numFloors, numCars, controller, seedParameter.getLongValue());
+        addControllerParameter();
+    }
 
-    final Person a = building.createPerson(building.getFloor(1), 1);
-    Event eventA = new CarRequestEvent(0, a, building.getFloor(1), building.getFloor(2));
-    eQ.addEvent(eventA);
+    @Override
+    public void initializeModel() {
+        int numFloors = floorsParameter.getIntegerValue();
+        int numCars = carsParameter.getIntegerValue();
 
-    final Person b = building.createPerson(building.getFloor(1), 2);
-    Event eventB = new CarRequestEvent(0, b, building.getFloor(1), building.getFloor(4));
-    eQ.addEvent(eventB);
+        EventQueue eQ = getEventQueue();
 
-    final Person c = building.createPerson(building.getFloor(3), 3);
-    Event eventC = new CarRequestEvent(0, c, building.getFloor(3), building.getFloor(1));
-    eQ.addEvent(eventC);
-  }
+        Controller controller = getController();
+        building = new Building(getEventQueue(), numFloors, numCars, controller, seedParameter.getLongValue());
 
-  public final Model getModel()
-  {
-    return building;
-  }
-  
-  public String getDescription()
-  {
-    return "Three Person Elevator";
-  }
+        final Person a = building.createPerson(building.getFloor(1), 1);
+        Event eventA = new CarRequestEvent(0, a, building.getFloor(1), building.getFloor(2));
+        eQ.addEvent(eventA);
 
-  public Simulator duplicate()
-  {
-    return new ThreePersonElevatorSimulator();
-  }
+        final Person b = building.createPerson(building.getFloor(1), 2);
+        Event eventB = new CarRequestEvent(0, b, building.getFloor(1), building.getFloor(4));
+        eQ.addEvent(eventB);
+
+        final Person c = building.createPerson(building.getFloor(3), 3);
+        Event eventC = new CarRequestEvent(0, c, building.getFloor(3), building.getFloor(1));
+        eQ.addEvent(eventC);
+    }
+
+    public final Model getModel() {
+        return building;
+    }
+
+    public String getDescription() {
+        return "Three Person Elevator";
+    }
+
+    public Simulator duplicate() {
+        return new ThreePersonElevatorSimulator();
+    }
 }

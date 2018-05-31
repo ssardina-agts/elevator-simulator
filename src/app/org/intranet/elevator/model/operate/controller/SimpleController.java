@@ -4,16 +4,15 @@
  */
 package org.intranet.elevator.model.operate.controller;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import au.edu.rmit.agtgrp.elevatorsim.ui.ControllerDialogCreator;
 import org.intranet.elevator.model.Car;
 import org.intranet.elevator.model.CarRequestPanel;
 import org.intranet.elevator.model.Floor;
 import org.intranet.elevator.model.operate.Building;
 import org.intranet.sim.event.EventQueue;
 
-import au.edu.rmit.agtgrp.elevatorsim.ui.ControllerDialogCreator;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Goal 1: (Complete)
@@ -95,7 +94,7 @@ public class SimpleController
   @Override
   public String toString()
   {
-    return "SimpleController";
+    return getClass().getSimpleName();
   }
 
   private void evaluateCarsMoving(final Car car)

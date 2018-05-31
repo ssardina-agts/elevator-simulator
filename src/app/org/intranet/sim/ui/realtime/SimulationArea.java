@@ -123,7 +123,7 @@ public class SimulationArea
         timeFactor.setEnabled(!LaunchOptions.get().getStatsFile().isPresent());
         spinnerNumberModel.addChangeListener(new ChangeListener() {
             public void stateChanged(ChangeEvent e) {
-                if (!sim.isInitializied()) return;
+                if (!sim.isInitialized()) return;
 
                 int factor = ((Number) spinnerNumberModel.getValue()).intValue();
                 RealTimeClock rtClock = (RealTimeClock) sim.getClock();

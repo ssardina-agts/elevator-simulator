@@ -14,25 +14,26 @@ import java.util.Optional;
  * @author Joshua Richards
  */
 public class LaunchOptions {
-    private static final String STATS_OPTION_KEY = "f";
-    private static final String STATS_OPTION_KEY_L = "filestats";
-    private static final String SPEED_OPTION_KEY = "s";
-    private static final String SPEED_OPTION_KEY_L = "speed";
-    private static final String HEADLESS_OPTION_KEY = "g";
-    private static final String HEADLESS_OPTION_KEY_L = "headless";
-    private static final String JSON_PARAM_OPTION_KEY = "j";
+    private static final String STATS_OPTION_KEY        = "f";
+    private static final String STATS_OPTION_KEY_L      = "filestats";
+    private static final String SPEED_OPTION_KEY        = "s";
+    private static final String SPEED_OPTION_KEY_L      = "speed";
+    private static final String HEADLESS_OPTION_KEY     = "g";
+    private static final String HEADLESS_OPTION_KEY_L   = "headless";
+    private static final String JSON_PARAM_OPTION_KEY   = "j";
     private static final String JSON_PARAM_OPTION_KEY_L = "json";
-    private static final String HELP_OPTION_KEY = "h";
-    private static final String HELP_OPTION_KEY_L = "help";
+    private static final String HELP_OPTION_KEY         = "h";
+    private static final String HELP_OPTION_KEY_L       = "help";
 
     private static LaunchOptions instance;
 
-    private Optional<File> statsFile = Optional.empty();
-    private Optional<Integer> speedFactor = Optional.empty();
-    private boolean isHeadless = false;
+    private Optional<File>    statsFile     = Optional.empty();
+    private Optional<Integer> speedFactor   = Optional.empty();
+    private boolean           isHeadless    = false;
+    private boolean           hasJsonParams = false;
 
-    private Options cliOptions = new Options();
-    private CommandLineParser cliParser = new DefaultParser();
+    private Options           cliOptions = new Options();
+    private CommandLineParser cliParser  = new DefaultParser();
 
 
     // FIXME: This is a bad design. This will circumvent Singleton pattern
@@ -112,6 +113,10 @@ public class LaunchOptions {
             if (cmd.hasOption(SPEED_OPTION_KEY)) {
                 initSpeedFactor(cmd.getOptionValue(SPEED_OPTION_KEY));
             }
+
+            if (cmd.hasOption(JSON_PARAM_OPTION_KEY)) {
+                initSimulatorParams(cmd.getOptionValue(JSON_PARAM_OPTION_KEY));
+            }
         } catch (ParseException e) {
             System.err.println(e.getMessage());
             showHelpAndExit();
@@ -160,6 +165,21 @@ public class LaunchOptions {
         speedFactor = Optional.of(factor);
     }
 
+    private void initSimulatorParams(String filename) {
+        File file = new File(filename);
+
+        if (file.exists() && !file.isDirectory() && file.canRead()) {
+            hasJsonParams = SimulatorParams.instance().loadParamsJson(file);
+            if (!hasJsonParams) {
+                System.err.println("Cannot parse file '" + filename + "' as JSON");
+                showHelpAndExit();
+            }
+        } else {
+            System.err.println("Cannot access: '" + filename + "': File does not exist or is a directory");
+            showHelpAndExit();
+        }
+    }
+
     public Optional<File> getStatsFile() {
         return statsFile;
     }
@@ -170,5 +190,9 @@ public class LaunchOptions {
 
     public boolean isHeadless() {
         return isHeadless;
+    }
+
+    public boolean hasJsonParams() {
+        return hasJsonParams;
     }
 }
