@@ -1,6 +1,6 @@
 {
-  "activeController": "MetaController",
-  "activeSimulator": "RandomElevatorSimulatorSmallBuilding",
+  "activeController": "NetworkWrapperController",
+  "activeSimulator": "RandomElevatorSimulator-AOPD01",
   "controllers": {
     "NetworkWrapperController": {
       "class": "au.edu.rmit.agtgrp.elevatorsim.NetworkWrapperController",
@@ -16,9 +16,9 @@
     }
   },
   "simulators": {
-    "RandomElevatorSimulator": {
+    "RandomElevatorSimulator-AOPD01": {
       "class": "org.intranet.elevator.RandomElevatorSimulator",
-      "name": "RandomElevatorSimulator",
+      "name": "RandomElevatorSimulator AOPD01",
       "params": {
         "floors": 10,
         "cars": 3,
@@ -26,7 +26,7 @@
         "riders": 20,
         "lastRequest": 50000,
         "duration": 100000,
-        "seed": 827377482348
+        "seed": 1536032223642
       }
     },
     "RandomElevatorSimulatorSmallBuilding": {
