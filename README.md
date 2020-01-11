@@ -18,42 +18,33 @@ under the supervision of A/Prof. Sebastian Sardina
 
 
 
-## Building from Source
+## Building & Running
 
-### Via Eclipse 
+You can run the simulation via command line, Maven, or inside an IDE like Eclipse.
 
-* Clone repository into Eclipse workspace
-* Import existing project, select the elevator-sim directory in the workspace
-* You can now run **ElevatorSimulationApplication** from Eclipse
-* If there are errors:
-    * Check the `m2eclipse` plugin is installed
-    * Run the "Discover m2e connectors" quick fix if there is an error on the plugin tag in `pom.xml`
-    * Check maven proxy settings
+The main class is `org.intranet.elevator.ElevatorSimulationApplication`
 
-### Via Maven 
+The easiest way is to just obtain the latest JAR file from the [release](https://github.com/ssardina-agts/elevator-simulator/releases) section and just run:
 
-* Clone repository
-* Change directory into `elevator-sim`
-* Run `mvn package`.
-    * This will install the normal JAR file and one with all dependencies.
-* Can also run `mvn install` to create a JAR file and:
-    * maven will copy a JAR with the json dependency to `target/`
-    * Make sure the json JAR is in the same directory when executing `rmit-elevator-simulator\*.jar`
+```bash
+java -jar elevator-simulator-1.0-jar-with-dependencies.jar
+```
 
+Alternatively, you can first produce the JAR file via Maven via `mvn clean package `, which will leave the JAR file under `target/`
 
-## Running the networked simulator ##
+Also, if you have cloned the source, you can just run the system via `mvn exec:java`
 
-* Execute JAR file (provided under Downloads) or `ElevatorSimualationApplication` class.
-    * e.g., `java -jar target/rmit-elevator-sim-1.0-jar-with-dependencies.jar`
-* Select file > new`
-* Select 'Random Rider Insertion' and click 'Real time'
-* Configure simulation settings to your liking or leave them at their defaults
-* Select 'NetworkWrapperController' under the 'Controller' option
-* Click apply
-* Run a client to connect and control the elevators.
-* Click 'Go, Dude!' once the client is connected and the bottom left panel is showing statistics
-* Adjust the time factor in the bottom right to speed up / slow down the simulation
-* It is up to the client to control the elevator cars
+Once the applicatio is up and running:
+
+1. Select **File > New**.
+2. Select **Random Rider Insertion** and click **Real time**.
+3. Configure simulation settings to your liking or leave them at their defaults.
+4. Select **NetworkWrapperController** under the **Controller** option.
+5. Click **Apply**.
+6. Run a client system (e.g., Java, Python, or SARL based) to connect and control the elevators.
+7. Click **Go, Dude!** once the client is connected and the bottom left panel is showing statistics.
+8. Adjust the time factor in the bottom right to speed up / slow down the simulation.
+9. It is up to the client to control the elevator cars.
 
 
 ### Configuration 
@@ -77,10 +68,10 @@ The following arguments can be given to the program:
 
 ## PROJECT CONTRIBUTORS 
 
-* Sebastian Sardina (Project leader & contact- ssardina@gmail.com)
+* Sebastian Sardina (Project leader & contact - ssardina@gmail.com)
 * Matthew McNally
 * Joshua Richards
-
+* Abhijeet Anand.
 
 ## LICENSE 
 
