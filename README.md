@@ -16,25 +16,51 @@ under the supervision of A/Prof. Sebastian Sardina
 * Generate special event when car passes through each floor while traveling.
 * Many bugs fixed.
 
+## Running the simulator
+
+You can run the simulation via CLI, Maven, or inside an IDE like Eclipse. The main class is `org.intranet.elevator.ElevatorSimulationApplication`.
+
+The easiest way is to just obtain the latest JAR file from the [release](https://github.com/ssardina-agts/elevator-simulator/releases) section. Alternatively, you can first produce the JAR file via Maven via `mvn clean package `, which will leave the JAR file under `target/`.
+
+To get the options available:
 
 
-## Building & Running
+```bash
 
-You can run the simulation via command line, Maven, or inside an IDE like Eclipse.
+[ssardina@Thinkpad-X1 elevator-simulator.git]$ java -jar target/elevator-simulator-1.1-jar-with-dependencies.jar  -h
+usage: elevator [-f <STAT_FILE>] [-g] [-h] [-j <JSON_PARAM>] [-s <SPEED>]
+ -f,--filestats <STAT_FILE>   store statistics in a CSV file
+ -g,--headless                create a headless instance
+ -h,--help                    show this help
+ -j,--json <JSON_PARAM>       JSON formatted parameter file for simulators
+ -s,--speed <SPEED>           run simulation at speed factor times
+                              real-time
+``` 
 
-The main class is `org.intranet.elevator.ElevatorSimulationApplication`
+Notes:
 
-The easiest way is to just obtain the latest JAR file from the [release](https://github.com/ssardina-agts/elevator-simulator/releases) section and just run:
+* In the csv file, one line will be appended to the file for every simulation that is run. The same csv file should not be used across different application versions.
+* the JSON file contains various simulation configurations and a chosen  active one to be used. See example `simulator-params.json`
+
+
+The application will generate `elsimsettings.json` in the working directory if it does not already exist:
+
+* `port` is the port the server will listen for a connection on
+* `timeout` is the time in seconds the server will wait for communication from a client before trying to throwing an error
+* set `enableOldControllers` to true to enable MetaController and SimpleController which do not run over the network
+* set `enableHiddenSimulators` to true to enable some old simulators from the original project that were created for development purposes
+
+### Simulation with GUI
+
+If you have the JAR file, just do:
 
 ```bash
 java -jar elevator-simulator-1.0-jar-with-dependencies.jar
 ```
 
-Alternatively, you can first produce the JAR file via Maven via `mvn clean package `, which will leave the JAR file under `target/`
+If you have cloned the source, you can just run the system via `mvn exec:java`
 
-Also, if you have cloned the source, you can just run the system via `mvn exec:java`
-
-Once the applicatio is up and running:
+Once the application is up and running:
 
 1. Select **File > New**.
 2. Select **Random Rider Insertion** and click **Real time**.
@@ -46,32 +72,43 @@ Once the applicatio is up and running:
 8. Adjust the time factor in the bottom right to speed up / slow down the simulation.
 9. It is up to the client to control the elevator cars.
 
+A log file `elevator-simulator.log` will be created and left at the end of the simulation.
 
-### Configuration 
+### Headless simulation with no GUI
 
-* The application will generate `elsimsettings.json` in the working directory if it does not already exist
-* `port` is the port the server will listen for a connection on
-* `timeout` is the time in seconds the server will wait for communication from a client before trying to throwing an error
-* set `enableOldControllers` to true to enable MetaController and SimpleController which do not run over the network
-* set `enableHiddenSimulators` to true to enable some old simulators from the original project that were created for development purposes
+One can also run the simulator with no GUI display using the `-g` option:
+
+```bash
+
+java -jar target/elevator-simulator-1.1-jar-with-dependencies.jar   -g
+```
+
+This will run the simulator as a server (so that controllers can connect as clients) in a default simulation (10 floors, 3 elevators of capacity 8 and 20 people).
+
+One can specify various types of simulation configurations and the "active" one in a json file and use it as follows to run the simulator headless:
+
+```bash
+
+java -jar target/elevator-simulator-1.1-jar-with-dependencies.jar  -j simulator-params.json  -g
+```
+
+See JSON file `simulator-params.json` for an example.
 
 
-### Launch Options 
 
-The following arguments can be given to the program:
 
-* `-speed <speed factor>`: Sets the simulation speed to <speed factor> when a simulation is created
-* `-filestats <csv file>`: Outputs csv statistics to `<csv file>`. One line will be appended to the file for every simulation that is run. The same csv file should not be used across different application versions.
+
 
 
 ----------------------------------------------
 
 ## PROJECT CONTRIBUTORS 
 
-* Sebastian Sardina (Project leader & contact - ssardina@gmail.com)
-* Matthew McNally
-* Joshua Richards
+* Sebastian Sardina (Project leader & contact - ssardina@gmail.com).
+* Matthew McNally.
+* Joshua Richards.
 * Abhijeet Anand.
+
 
 ## LICENSE 
 
