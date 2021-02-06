@@ -1,13 +1,11 @@
 # RMIT Elevator Simulator #
-
-## What is this repository for? 
+## What is this repository for?
 
 * Fork of [elevatorsim](http://sourceforge.net/projects/elevatorsim)
 * Adapted original simulator to allow control over a network
 * Forked from r162 (0.4+)
 * Developed by final year RMIT CSIT students as part of their capstone project
 under the supervision of A/Prof. Sebastian Sardina
-
 ### Changes from r162 (0.4+) version 
 
 * Network connectivity to simulation; allows controllers to run outside simulator.
@@ -15,15 +13,13 @@ under the supervision of A/Prof. Sebastian Sardina
 * People repress floor button if unable to enter car due to lack of capacity.
 * Generate special event when car passes through each floor while traveling.
 * Many bugs fixed.
-
 ## Running the simulator
 
 You can run the simulation via CLI, Maven, or inside an IDE like Eclipse. The main class is `org.intranet.elevator.ElevatorSimulationApplication`.
 
-The easiest way is to just obtain the latest JAR file from the [release](https://github.com/ssardina-agts/elevator-simulator/releases) section. Alternatively, you can first produce the JAR file via Maven via `mvn clean package `, which will leave the JAR file under `target/`.
+The easiest way is to just obtain the latest JAR file from the [release](https://github.com/ssardina-agts/elevator-simulator/releases) section. Alternatively, you can first produce the JAR file via Maven via `mvn clean package`, which will leave the JAR file under `target/`.
 
 To get the options available:
-
 
 ```bash
 
@@ -42,14 +38,12 @@ Notes:
 * In the csv file, one line will be appended to the file for every simulation that is run. The same csv file should not be used across different application versions.
 * the JSON file contains various simulation configurations and a chosen  active one to be used. See example `simulator-params.json`
 
-
 The application will generate `elsimsettings.json` in the working directory if it does not already exist:
 
 * `port` is the port the server will listen for a connection on
 * `timeout` is the time in seconds the server will wait for communication from a client before trying to throwing an error
 * set `enableOldControllers` to true to enable MetaController and SimpleController which do not run over the network
 * set `enableHiddenSimulators` to true to enable some old simulators from the original project that were created for development purposes
-
 ### Simulation with GUI
 
 If you have the JAR file, just do:
@@ -73,7 +67,6 @@ Once the application is up and running:
 9. It is up to the client to control the elevator cars.
 
 A log file `elevator-simulator.log` will be created and left at the end of the simulation.
-
 ### Headless simulation with no GUI
 
 One can also run the simulator with no GUI display using the `-g` option:
@@ -94,21 +87,12 @@ java -jar target/elevator-simulator-1.1-jar-with-dependencies.jar  -j simulator-
 
 See JSON file `simulator-params.json` for an example.
 
-
-
-
-
-
-
-----------------------------------------------
-
 ## PROJECT CONTRIBUTORS 
 
 * Sebastian Sardina (Project leader & contact - ssardina@gmail.com).
 * Matthew McNally.
 * Joshua Richards.
 * Abhijeet Anand.
-
 
 ## LICENSE 
 
