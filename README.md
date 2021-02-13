@@ -92,6 +92,7 @@ See JSON file `simulator-params.json` for an example.
 * Sebastian Sardina (Project leader & contact - ssardina@gmail.com).
 * Matthew McNally.
 * Joshua Richards.
+* Joshua Beale.
 * Abhijeet Anand.
 
 ## LICENSE 

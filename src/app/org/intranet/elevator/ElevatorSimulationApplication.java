@@ -31,7 +31,7 @@ import java.util.List;
 public class ElevatorSimulationApplication
         implements SimulationApplication {
     public static final String COPYRIGHT =
-            "Copyright 2016 Joshua Beale, Matthew McNally, Joshua Richards, Dylan Rock, Sebastian Sardina.\n" +
+            "Copyright 2016 Joshua Beale, Matthew McNally, Joshua Richards, Abhijeet Anand, Sebastian Sardina.\n" +
                     "Forked from Elevator Simulator (https://sourceforge.net/projects/elevatorsim/)\n" +
                     "Copyright 2004-2005 Chris Dailey & Neil McKellar";
     public static final String VERSION = "1.1";
