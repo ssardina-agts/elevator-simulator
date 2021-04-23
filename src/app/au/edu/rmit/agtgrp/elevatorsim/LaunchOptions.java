@@ -17,6 +17,8 @@ public class LaunchOptions {
     private static final String STATS_OPTION_KEY        = "f";
     private static final String STATS_OPTION_KEY_L      = "filestats";
     private static final String SPEED_OPTION_KEY        = "s";
+    private static final String NAME_OPTION_KEY_L      = "name";
+    private static final String NAME_OPTION_KEY        = "n";
     private static final String SPEED_OPTION_KEY_L      = "speed";
     private static final String HEADLESS_OPTION_KEY     = "g";
     private static final String HEADLESS_OPTION_KEY_L   = "headless";
@@ -28,6 +30,7 @@ public class LaunchOptions {
     private static LaunchOptions instance;
 
     private Optional<File>    statsFile     = Optional.empty();
+    private Optional<String>  nameSim       = Optional.empty();
     private Optional<Integer> speedFactor   = Optional.empty();
     private boolean           isHeadless    = false;
     private boolean           hasJsonParams = false;
@@ -49,6 +52,10 @@ public class LaunchOptions {
     }
 
     private void initOptions() {
+        Option nameSimOpt = Option.builder(NAME_OPTION_KEY).longOpt(NAME_OPTION_KEY_L)
+                .desc("name of the simulation, if any")
+                .hasArg().argName("NAME_FILE")
+                .required(false).build();
         Option statFileOpt = Option.builder(STATS_OPTION_KEY).longOpt(STATS_OPTION_KEY_L)
                 .desc("store statistics in a CSV file")
                 .hasArg().argName("STAT_FILE")
@@ -70,6 +77,7 @@ public class LaunchOptions {
                 .hasArg(false)
                 .required(false).build();
 
+        cliOptions.addOption(nameSimOpt);
         cliOptions.addOption(statFileOpt);
         cliOptions.addOption(speedOpt);
         cliOptions.addOption(guiOpt);
@@ -102,6 +110,10 @@ public class LaunchOptions {
                 showHelpAndExit();
             }
 
+            if (cmd.hasOption(NAME_OPTION_KEY)) {
+                nameSim = Optional.of(cmd.getOptionValue(NAME_OPTION_KEY));
+            }
+
             if (cmd.hasOption(HEADLESS_OPTION_KEY)) {
                 isHeadless = true;
             }
@@ -124,26 +136,12 @@ public class LaunchOptions {
     }
 
     /**
-     * creates the given stats file if required and checks the
-     * application has write access.
+     * sets the stat file to write stats at the end of simulation
      *
      * @param filename file where stats will be stored
      */
     private void initStatsFile(String filename) {
         File file = new File(filename);
-        try {
-            //noinspection ResultOfMethodCallIgnored
-            file.createNewFile();
-        } catch (IOException e) {
-            System.err.println("Cannot create stats file: " + filename);
-            return;
-        }
-
-        if (!file.canWrite()) {
-            System.err.println("Cannot write to file: " + filename);
-            return;
-        }
-
         System.out.println("Simulation statistics will be written to " + file.getAbsolutePath());
         statsFile = Optional.of(file);
     }
@@ -186,6 +184,10 @@ public class LaunchOptions {
 
     public Optional<Integer> getSpeedFactor() {
         return speedFactor;
+    }
+
+    public Optional<String> getNameSimulation() {
+        return nameSim;
     }
 
     public boolean isHeadless() {

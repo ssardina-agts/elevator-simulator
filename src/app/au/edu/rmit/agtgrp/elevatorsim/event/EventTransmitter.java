@@ -4,8 +4,10 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.net.SocketException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -217,38 +219,64 @@ public class EventTransmitter implements EventQueue.Listener, NetworkHelper.List
 		 */
 		private void dumpStats(File file)
 		{
+			boolean newFile = false;	// is the stat file new?
+
 			List<Table> statistics = model.getStatistics();
-			try (FileWriter writer = new FileWriter(file, true))
+
+			if(!file.exists()) {
+				try {
+				   	file.createNewFile();
+					newFile = true;
+				} catch (Exception e) {
+					System.err.println("Cannot create CSV file: " + e.getMessage());
+					return;
+				}
+			 }
+
+			try (FileWriter csvWriter = new FileWriter(file, true))
 			{
-				if (file.length() == 0)
-				{
+				if (newFile) {	// write the header of the csv
 					StringBuilder columnNamesStr = new StringBuilder();
-					columnNamesStr.append("seed, speed factor, ");
-					for (Table table : statistics)
-					{
-						for (int i = 0; i < table.getColumnCount(); i++)
-						{
-							columnNamesStr.append(
-									"avg " + table.getName() + " " +
-										table.getColumn(i).getHeading() + ", "
-							);
+					columnNamesStr.append("id");
+					columnNamesStr.append(",");
+					columnNamesStr.append("timestamp");
+					columnNamesStr.append(",");
+					columnNamesStr.append("seed");
+					columnNamesStr.append(",");
+					columnNamesStr.append("speed_factor");
+					for (Table table : statistics) {
+						for (int i = 0; i < table.getColumnCount(); i++) {
+							columnNamesStr.append(",");
+							String colName = String.format("avg_%s_%s", table.getName(),
+									table.getColumn(i).getHeading());
+							columnNamesStr.append(colName);
 						}
 					}
-					writer.write(columnNamesStr.substring(0, columnNamesStr.lastIndexOf(",")) + "\n");
+					// write the header, but up to the very last , added!
+					csvWriter.write(columnNamesStr.toString());
+					csvWriter.write("\n");
+
 				}
-				
+
 				StringBuilder statsRow = new StringBuilder();
-				statsRow.append("" + model.getSeed() + ", " +
-						LaunchOptions.get().getSpeedFactor().orElse(0) + ", ");
+				statsRow.append(LaunchOptions.get().getNameSimulation().orElse("none"));
+				statsRow.append(",");
+				statsRow.append(new SimpleDateFormat("dd-MM-yyyy HH:mm:ss").format(new Date()));
+				statsRow.append(",");
+				statsRow.append(model.getSeed());
+				statsRow.append(",");
+				statsRow.append(LaunchOptions.get().getSpeedFactor().orElse(0));
 				for (Table table : statistics)
 				{
 					for (int i = 0; i < table.getColumnCount(); i++)
 					{
-						statsRow.append("" + table.getColumn(i).getAverage() + ", ");
+						statsRow.append(",");
+						statsRow.append(table.getColumn(i).getAverage());
 					}
 				}
-				
-				writer.write(statsRow.substring(0, statsRow.lastIndexOf(",")) + "\n");
+
+				csvWriter.write(statsRow.toString());
+				csvWriter.write("\n");
 			}
 			catch (IOException e)
 			{
