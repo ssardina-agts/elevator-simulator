@@ -145,3 +145,5 @@ jackagt.jar
 # Project specific ignores
 elsimsettings.json
 *.csv
+.project
+simulator-params-AOPD21.json
