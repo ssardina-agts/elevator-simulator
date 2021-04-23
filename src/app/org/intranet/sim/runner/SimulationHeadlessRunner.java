@@ -19,32 +19,41 @@ public class SimulationHeadlessRunner {
     }
 
     public void run(Simulator simulator, int speedFactor) {
-        new Thread(() -> {
-            Controller controller = simulator.getController();
+        Thread proc = new Thread(new Runnable() {
+            public void run() {
+                Controller controller = simulator.getController();
 
-            LOG.info("Starting simulation with {} using following parameters:", simulator.getController());
-            for (SingleValueParameter param : simulator.getParameters()) {
-                LOG.info("{}: {}", param.getDescription(), param.getValue());
+                LOG.info("Starting simulation with {} using following parameters:", simulator.getController());
+                for (SingleValueParameter param : simulator.getParameters()) {
+                    LOG.info("{}: {}", param.getDescription(), param.getValue());
+                }
+                LOG.info(controller.getInitMessage());
+
+                ControllerCliMessageView cdc = new ControllerCliMessageView();
+                try {
+                    simulator.initialize(new RealTimeClock.RealTimeClockFactory());
+                    Clock clock = simulator.getClock();
+
+                    // set the speed factor as given
+                    RealTimeClock rtClock = (RealTimeClock) simulator.getClock();
+                    rtClock.setTimeConversion(speedFactor);
+
+                    clock.start();
+                    LOG.debug("Simulator initialised");
+                } catch (RuntimeException e) {
+                    // Unrecoverable error while initializing sim. Show error and close application.
+                    // TODO: Change exception type?
+                    cdc.showErrorDialog(e.getMessage());
+                }
+                controller.setControllerDialogCreator(cdc);
             }
-            LOG.info(controller.getInitMessage());
-
-            ControllerCliMessageView cdc = new ControllerCliMessageView();
-            try {
-                simulator.initialize(new RealTimeClock.RealTimeClockFactory());
-                Clock clock = simulator.getClock();
-
-                // set the speed factor as given
-                RealTimeClock rtClock = (RealTimeClock) simulator.getClock();
-                rtClock.setTimeConversion(speedFactor);
-
-                clock.start();
-                LOG.debug("Simulator initialised");
-            } catch (RuntimeException e) {
-                // Unrecoverable error while initializing sim. Show error and close application.
-                // TODO: Change exception type?
-                cdc.showErrorDialog(e.getMessage());
-            }
-            controller.setControllerDialogCreator(cdc);
-        }).start();
+        });
+        proc.start();
+        try {
+            proc.join();
+        } catch(InterruptedException e) 
+        {
+            System.err.println("Error!");
+        }
     }
 }
