@@ -11,10 +11,14 @@ import org.slf4j.LoggerFactory;
 
 import java.lang.invoke.MethodHandles;
 
-public class SimulationRunner {
+public class SimulationHeadlessRunner {
     private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass().getSimpleName());
 
     public void run(Simulator simulator) {
+        run(simulator, 1);
+    }
+
+    public void run(Simulator simulator, int speedFactor) {
         new Thread(() -> {
             Controller controller = simulator.getController();
 
@@ -28,6 +32,11 @@ public class SimulationRunner {
             try {
                 simulator.initialize(new RealTimeClock.RealTimeClockFactory());
                 Clock clock = simulator.getClock();
+
+                // set the speed factor as given
+                RealTimeClock rtClock = (RealTimeClock) simulator.getClock();
+                rtClock.setTimeConversion(speedFactor);
+
                 clock.start();
                 LOG.debug("Simulator initialised");
             } catch (RuntimeException e) {

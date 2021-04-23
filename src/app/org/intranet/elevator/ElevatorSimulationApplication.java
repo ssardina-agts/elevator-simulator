@@ -13,7 +13,8 @@ import org.intranet.elevator.view.BuildingView;
 import org.intranet.sim.Model;
 import org.intranet.sim.SimulationApplication;
 import org.intranet.sim.Simulator;
-import org.intranet.sim.runner.SimulationRunner;
+import org.intranet.sim.clock.RealTimeClock;
+import org.intranet.sim.runner.SimulationHeadlessRunner;
 import org.intranet.sim.ui.ApplicationUI;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,11 +45,12 @@ public class ElevatorSimulationApplication
         LaunchOptions.createFromCliArgs(args);
 
         LOG.debug("Starting Application {}", APPLICATION_NAME);
-        if (LaunchOptions.get().isHeadless()) {
+        if (LaunchOptions.get().isHeadless()) { // headless mode selected
             Simulator loadedSimulator = null;
 
             if (LaunchOptions.get().hasJsonParams()) {
                 try {
+                    // Load and build an object of class Simulator
                     loadedSimulator = ClassLoader.instantiate(SimulatorParams.instance().getActiveSimulatorClass(), Simulator.class);
                     LOG.debug("Simulator loaded from JSON parameters");
                 } catch (IllegalStateException e) {
@@ -63,9 +65,10 @@ public class ElevatorSimulationApplication
 
             LOG.debug("Simulator class loaded: {}", loadedSimulator);
 
-            SimulationRunner runner = new SimulationRunner();
-            runner.run(loadedSimulator);
-        } else {
+            // Finally run a headless version of the simulator
+            SimulationHeadlessRunner runner = new SimulationHeadlessRunner();
+            runner.run(loadedSimulator, LaunchOptions.get().getSpeedFactor().orElse(1));
+        } else {    // GUI mode
             ElevatorSimulationApplication sc = new ElevatorSimulationApplication();
             new ApplicationUI(sc);
         }

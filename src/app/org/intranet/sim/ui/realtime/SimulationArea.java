@@ -125,6 +125,8 @@ public class SimulationArea
             public void stateChanged(ChangeEvent e) {
                 if (!sim.isInitialized()) return;
 
+                // get the clock from the simulator object sim and change it 
+                // with what the spinner widget has now
                 int factor = ((Number) spinnerNumberModel.getValue()).intValue();
                 RealTimeClock rtClock = (RealTimeClock) sim.getClock();
                 synchronized (rtClock) {

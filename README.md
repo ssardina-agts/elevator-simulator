@@ -1,11 +1,12 @@
-# RMIT Elevator Simulator #
+# RMIT Elevator Simulator
+
 ## What is this repository for?
 
 * Fork of [elevatorsim](http://sourceforge.net/projects/elevatorsim)
-* Adapted original simulator to allow control over a network
-* Forked from r162 (0.4+)
-* Developed by final year RMIT CSIT students as part of their capstone project
-under the supervision of A/Prof. Sebastian Sardina
+* Adapted original simulator to allow control over a network.
+* Forked from r162 (0.4+).
+* Developed by final year RMIT CS students as part of their capstone project under the supervision of A/Prof. Sebastian Sardina.
+
 ### Changes from r162 (0.4+) version 
 
 * Network connectivity to simulation; allows controllers to run outside simulator.
@@ -13,6 +14,7 @@ under the supervision of A/Prof. Sebastian Sardina
 * People repress floor button if unable to enter car due to lack of capacity.
 * Generate special event when car passes through each floor while traveling.
 * Many bugs fixed.
+
 ## Running the simulator
 
 You can run the simulation via CLI, Maven, or inside an IDE like Eclipse. The main class is `org.intranet.elevator.ElevatorSimulationApplication`.
@@ -21,9 +23,9 @@ The easiest way is to just obtain the latest JAR file from the [release](https:/
 
 To get the options available:
 
-```bash
+```shell
 
-[ssardina@Thinkpad-X1 elevator-simulator.git]$ java -jar target/elevator-simulator-1.1-jar-with-dependencies.jar  -h
+$ java -jar target/elevator-simulator-1.1-jar-with-dependencies.jar  -h
 usage: elevator [-f <STAT_FILE>] [-g] [-h] [-j <JSON_PARAM>] [-s <SPEED>]
  -f,--filestats <STAT_FILE>   store statistics in a CSV file
  -g,--headless                create a headless instance
@@ -31,12 +33,12 @@ usage: elevator [-f <STAT_FILE>] [-g] [-h] [-j <JSON_PARAM>] [-s <SPEED>]
  -j,--json <JSON_PARAM>       JSON formatted parameter file for simulators
  -s,--speed <SPEED>           run simulation at speed factor times
                               real-time
-``` 
+```
 
 Notes:
 
 * In the csv file, one line will be appended to the file for every simulation that is run. The same csv file should not be used across different application versions.
-* the JSON file contains various simulation configurations and a chosen  active one to be used. See example `simulator-params.json`
+* the JSON file contains various simulation configurations and a chosen _active_ one to be used. Change the `activeSimulator` to select the concrete simulation configuration to run. See an example in `simulator-params.json`
 
 The application will generate `elsimsettings.json` in the working directory if it does not already exist:
 
@@ -73,10 +75,12 @@ One can also run the simulator with no GUI display using the `-g` option:
 
 ```bash
 
-java -jar target/elevator-simulator-1.1-jar-with-dependencies.jar   -g
+java -jar target/elevator-simulator-1.1-jar-with-dependencies.jar   -g -s 5 -f stats.csv -j simulator-params.json
 ```
 
-This will run the simulator as a server (so that controllers can connect as clients) in a default simulation (10 floors, 3 elevators of capacity 8 and 20 people).
+This will run the simulator as a headless server. The simulation will be the one specified in file `simulator-params.json`, it will run at speed factor 5. Results stats will be dumped into file `stats.csv`.
+
+If no JSON file is given, the default set-up is 10 floors, 3 elevators of capacity 8, and 20 people in the building.
 
 One can specify various types of simulation configurations and the "active" one in a json file and use it as follows to run the simulator headless:
 
