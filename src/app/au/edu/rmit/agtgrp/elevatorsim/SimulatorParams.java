@@ -41,6 +41,17 @@ public class SimulatorParams {
         return _instance;
     }
 
+
+    public boolean setActiveSimulator(String newSimulator) {
+        try {
+            activeSimulator = simulators.getJSONObject(newSimulator);
+            return true;
+        } catch (JSONException e) {
+            LOG.error(e.getMessage());
+            return false;
+        }
+    }
+
     /**
      * Load the simulation parameters from JSON formatted file
      *
